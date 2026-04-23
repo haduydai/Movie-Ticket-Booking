@@ -8,7 +8,8 @@
 > - <Loại>(Issue <Số>): <Tóm tắt ngắn gọn bằng Tiếng Việt>
 >    - <Chi tiết 1>(đã sửa gì thì ghi dô)
 >    - <Chi tiết 2>
->  **Hướng dẫn sử dụng :** 
+>   
+> **Hướng dẫn sử dụng :** 
 > - Đánh dấu `[x]` khi hoàn thành, `[/]` khi đang làm.
 > - Điền tên vào mục **Assignee** khi nhận task.
 > - Ghi chú các lỗi phát sinh (nếu có) vào mục **Ghi chú**.
