@@ -5,8 +5,8 @@
 > - ui: Khi chỉ căn chỉnh lại giao diện CSS, HTML, hình ảnh mà không đụng tới logic Java.
 > - refactor: Khi dọn dẹp lại code cho gọn gàng hơn mà tính năng không đổi.
 > - Commit theo form sau:
-> - <Loại>(Issue <Số>): <Tóm tắt ngắn gọn bằng Tiếng Việt>
->    - <Chi tiết 1>(đã sửa gì thì ghi dô)
+> - <Loại>(Issue <Số>): <Tóm tắt vấn đề con đã giải quyết>
+>    - <Chi tiết 1>(đã sửa gì thì ghi dô)(có thể có hoặc hog)
 >    - <Chi tiết 2>
 >   
 > **Hướng dẫn sử dụng :** 
