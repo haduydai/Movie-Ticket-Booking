@@ -19,6 +19,7 @@ public class RegisterServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(req, resp);
     }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,76 +34,90 @@ public class RegisterServlet extends HttpServlet {
         // check input validation
         // check username
         if(username == null || username.isBlank()) {
-        	backToPage("Vui lòng nhập tên đăng nhập!", request, response);
+            sendJsonResponse(response, "error", "Vui lòng nhập tên đăng nhập!");
             return;
         }
         if(!username.matches("^[a-z0-9]+$")) {
-        	backToPage("Tên đăng nhập chỉ gồm chữ thường và số.", request, response);
+            sendJsonResponse(response, "error", "Tên đăng nhập chỉ gồm chữ thường và số.");
             return;
         }
         if(username.length() < 3 || username.length() > 30) {
-        	backToPage("Tên đăng nhập phải có độ dài 3-20 kí tự.", request, response);
+            sendJsonResponse(response, "error", "Tên đăng nhập phải có độ dài 3-20 kí tự.");
             return;
         }
         // check username is exist
         UserDAO dao = new UserDAO();
         if (dao.checkUser(username) != null) {
-            backToPage("Tên đăng nhập đã tồn tại! Vui lòng chọn tên khác.", request, response);
+            sendJsonResponse(response, "error", "Tên đăng nhập đã tồn tại! Vui lòng chọn tên khác.");
             return;
         }
         
         // check email
         if (email == null || email.isBlank()) {
-            backToPage("Email không được để trống.", request, response);
+            sendJsonResponse(response, "error", "Email không được để trống.");
             return;
         }
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            backToPage("Email không hợp lệ.", request, response);
+            sendJsonResponse(response, "error", "Email không hợp lệ.");
+            return;
+        }
+        
+        // Kiểm tra xem Email đã tồn tại chưa
+        if (dao.getUserByEmail(email) != null) {
+            sendJsonResponse(response, "error", "Email này đã tồn tại.");
             return;
         }
         
         // check phonenumber
         if (phone == null || phone.isBlank()) {
-            backToPage("Số điện thoại không được để trống.", request, response);
+            sendJsonResponse(response, "error", "Số điện thoại không được để trống.");
             return;
         }
         if (!phone.matches("^0\\d{9}$")) {
-            backToPage("Số điện thoại không hợp lệ", request, response);
+            sendJsonResponse(response, "error", "Số điện thoại không hợp lệ");
             return;
         }
+        if (dao.getUserByPhone(phone) != null) {
+            sendJsonResponse(response, "error", "Số điện thoại đã tồn tại.");
+            return;
+        }
+
         
         // check password
         if (pass == null || pass.length() == 0) {
-            backToPage("Mật khẩu không được để trống.", request, response);
+            sendJsonResponse(response, "error", "Mật khẩu không được để trống.");
             return;
         }
         if (pass.length() > 40) {
-            backToPage("Mật khẩu tối đa 40 kí tự.", request, response);
+            sendJsonResponse(response, "error", "Mật khẩu tối đa 40 kí tự.");
             return;
         }
         if (!pass.matches("^[a-z0-9]+$")) {
-            backToPage("Mật khẩu chỉ được chứa chữ thường và số.", request, response);
+            sendJsonResponse(response, "error", "Mật khẩu chỉ được chứa chữ thường và số.");
             return;
         } 
         if (!pass.equals(rePass)) {
-            backToPage("Mật khẩu xác nhận không khớp!", request, response);
+            sendJsonResponse(response, "error", "Mật khẩu xác nhận không khớp!");
             return;
         }
 
         User newUser = new User(username, pass, email, phone, Role.USER);
-        dao.addUser(newUser);
-        response.sendRedirect("login");
+        if (dao.addUser(newUser)) {
+            sendJsonResponse(response, "success", "login");
+        } else {
+            sendJsonResponse(response, "error", "Đã có lỗi hệ thống xảy ra. Không thể tạo tài khoản lúc này.");
+        }
     }
-    
-    // Back to register page if fail validation
-    private void backToPage(String message, HttpServletRequest request, HttpServletResponse response) {
+
+        //  biến Servlet thành API trả về JSON
+    private void sendJsonResponse(HttpServletResponse response, String status, String message) {
         try {
-        	request.setAttribute("error", message);
-			request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-		} catch (ServletException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            response.setContentType("application/json; charset=UTF-8");
+            String json = String.format("{\"status\":\"%s\", \"message\":\"%s\"}", status, message);
+            response.getWriter().write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }
