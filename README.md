@@ -8,7 +8,7 @@
 ## 1. Authentication (Xác thực & Bảo mật)
 - [/] **1. Đăng ký (Register):** Kiểm tra validation, check trùng email, giữ lại dữ liệu khi lỗi, ẩn/hiện mật khẩu.
   - *Files:* `controller/RegisterServlet.java`, `dao/UserDAO.java`, `register.jsp`
-  - *Assignee:* 
+  - *Assignee:Hà Duy Đại* 
   - *Ghi chú:*
 - [ ] **2. Đăng nhập (Login):** Bắt ngoại lệ, kiểm tra cú pháp, giữ lại username khi lỗi.
   - *Files:* `controller/LoginServlet.java`, `login.jsp`
