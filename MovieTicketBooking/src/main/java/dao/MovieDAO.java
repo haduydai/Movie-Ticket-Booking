@@ -261,6 +261,33 @@ public class MovieDAO implements IMovieDAO {
 		return update;
 	}
 
+	// Get movies by cinema id
+	@Override
+	public List<Movie> getMoviesByCinemaId(int cinemaId) {
+		List<Movie> list = new ArrayList<>();
+		try {
+			// Query string to get data
+			String queryString = "SELECT DISTINCT m.movie_id, m.movie_name, m.movie_type, m.director_name, m.names_of_actors, m.movie_description,"
+					+ " m.movie_duration, m.movie_country, m.movie_image_url, m.movie_status "
+					+ " FROM movies m JOIN showtimes s ON m.movie_id = s.movie_id WHERE s.cinema_id = ?";
+			// Create connection
+			Connection connect = JDBCConnection.getConnection();
+			PreparedStatement ps = connect.prepareStatement(queryString);
+			ps.setInt(1, cinemaId);
+			ResultSet rs = ps.executeQuery();
+			// Iterate result set to get data
+			while (rs.next()) {
+				list.add(mapResultSetToMovie(rs));
+			}
+			rs.close();
+			ps.close();
+			connect.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	private Movie mapResultSetToMovie(ResultSet rs) {
 		Movie movie = null;
 		try {

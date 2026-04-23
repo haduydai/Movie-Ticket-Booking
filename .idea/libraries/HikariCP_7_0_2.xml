@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="HikariCP-7.0.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/HikariCP-7.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/jakarta.activation-api-2.1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/jakarta.mail-2.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/jakarta.mail-api-2.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/jakarta.servlet.jsp.jstl-3.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/jakarta.servlet.jsp.jstl-api-3.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/jbcrypt-0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/mysql-connector-java-8.0.29.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MovieTicketBooking/src/main/webapp/WEB-INF/lib/slf4j-api-2.0.17.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
