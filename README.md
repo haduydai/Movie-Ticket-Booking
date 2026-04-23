@@ -1,6 +1,14 @@
 # Kế Hoạch Phát Triển & Phân Công Nhiệm Vụ (Project Plan)
-
-> **Hướng dẫn sử dụng cho team:** 
+> **Hướng dẫn form commit:** 
+> - feat (Feature): Khi làm xong một tính năng mới hoặc một giải pháp hoàn chỉnh (Ví dụ: Thêm AJAX, làm xong mã OTP).
+> - fix: Khi sửa một lỗi hệ thống hoặc một bug nhỏ (Ví dụ: Sửa lỗi 404, sửa lỗi nhập sai pass).
+> - ui: Khi chỉ căn chỉnh lại giao diện CSS, HTML, hình ảnh mà không đụng tới logic Java.
+> - refactor: Khi dọn dẹp lại code cho gọn gàng hơn mà tính năng không đổi.
+> - Commit theo form sau:
+> - <Loại>(Issue <Số>): <Tóm tắt ngắn gọn bằng Tiếng Việt>
+>    - <Chi tiết 1>(đã sửa gì thì ghi dô)
+>    - <Chi tiết 2>
+> **Hướng dẫn sử dụng :** 
 > - Đánh dấu `[x]` khi hoàn thành, `[/]` khi đang làm.
 > - Điền tên vào mục **Assignee** khi nhận task.
 > - Ghi chú các lỗi phát sinh (nếu có) vào mục **Ghi chú**.
