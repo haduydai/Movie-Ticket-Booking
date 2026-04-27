@@ -24,6 +24,8 @@
 	/* Layout: Chiều rộng max và bo góc nhẹ */
 	--max-width: 1400px;
 	--border-radius: 4px;
+	--cols:10px;
+	--spacing-xl:100px;
 }
 /* Reset CSS: Xóa margin/padding mặc định, box-sizing cho responsive */
 * {
@@ -807,14 +809,17 @@ section .cinema-grid {
   display: grid;
   gap: 6px;
 
-  grid-template-columns: repeat(var(--cols), 38px);
-  width: fit-content;
+	width: fit-content;
   max-width: 100%;
   margin: 0 auto;
 
   background: #333;
   padding: var(--spacing-sm);
   border-radius: var(--border-radius);
+}
+
+.seat-grid {
+	grid-template-columns: repeat(var(--cols), 38px);
 }
 
 .screen {
@@ -1780,6 +1785,29 @@ section .cinema-grid {
     color: var(--primary-color);
 }
 /*-------------------------------------------------End Profile Page Enhancements------------------------------------------*/
+.password-wrapper{
+	position:relative;/*vị trí tương đối*/
+	/*input chừa ra 40px bên phải để không bị chữ đè lên con mắt */
+.password-wrapper input{
+	width:100%;
+	padding-right:40px !important;
+	box-sizing: border-box;
+
+}.toggle-password-icon{
+	position:absolute;
+	right:12px;
+	top:50%;
+	 transform: translateY(-50%);
+	 cursor: pointer;
+	 user-select: none; /* Tránh bị bôi đen khi click nhanh */
+ }
+	/* Hiệu ứng nhỏ khi di chuột vào con mắt */
+	.toggle-password-icon:hover {
+		opacity: 0.7;
+	}
+ }
+
+
 
 
 

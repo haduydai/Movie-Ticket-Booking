@@ -34,14 +34,20 @@
 
                 <div class="form-group-auth">
                     <label for="password">Mật Khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                        <span class="toggle-password-icon" onclick="togglePassword('password', this)" title="Hiện mật khẩu">👁️</span>
+                    </div>
                 </div>
 
                 <div class="form-group-auth">
                     <label for="confirm-password">Xác Nhận Mật Khẩu</label>
-                    <input type="password" id="confirm-password" name="confirmPassword" placeholder="Nhập lại mật khẩu"
-                        required>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirm-password" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+                        <span class="toggle-password-icon" onclick="togglePassword('confirm-password', this)" title="Hiện mật khẩu">👁️</span>
+                    </div>
                 </div>
+
 
                 <p id="errorMsg" style="color: red; text-align: center; margin-bottom: 10px; display: none;"></p>
 
@@ -99,7 +105,28 @@
                         document.getElementById("errorMsg").style.display = "block";
                     });
             });
+
+            // Hàm xử lý sự kiện Ẩn/Hiện mật khẩu
+            function togglePassword(inputId, iconElement) {
+                // Tìm thẻ input dựa vào ID được truyền vào
+                const input = document.getElementById(inputId);
+
+                // Nếu nó đang là password (bị ẩn) -> Đổi thành text (hiện chữ)
+                if (input.type === "password") {
+                    input.type = "text";
+                    iconElement.innerText = "🙈"; // Đổi icon thành chú khỉ che mắt
+                    iconElement.title = "Ẩn mật khẩu";
+                }
+                // Nếu nó đang là text (hiện chữ) -> Đổi lại thành password (ẩn đi)
+                else {
+                    input.type = "password";
+                    iconElement.innerText = "👁️"; // Đổi icon về lại con mắt
+                    iconElement.title = "Hiện mật khẩu";
+                }
+            }
+
         </script>
+
     </body>
 
     </html>
