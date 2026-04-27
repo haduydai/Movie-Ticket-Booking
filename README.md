@@ -15,7 +15,7 @@
 > - Ghi chú các lỗi phát sinh (nếu có) vào mục **Ghi chú**.
 
 ## 1. Authentication (Xác thực & Bảo mật)
-- [/] **1. Đăng ký (Register):** Kiểm tra validation, check trùng email, giữ lại dữ liệu khi lỗi, ẩn/hiện mật khẩu.
+- [x] **1. Đăng ký (Register):** Kiểm tra validation, check trùng email, giữ lại dữ liệu khi lỗi, ẩn/hiện mật khẩu.
   - *Files:* `controller/RegisterServlet.java`, `dao/UserDAO.java`, `register.jsp`
   - *Assignee:Hà Duy Đại* 
   - *Ghi chú:*
