@@ -1,2 +1,22 @@
-/build/
+# Eclipse
+/.metadata/
+/Servers/
 /.settings/
+.project
+.classpath
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Compiled outputs (Đây là thủ phạm gây lỗi Merge Conflict lúc nãy!)
+/build/
+/out/
+/classes/
+*.class
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db
