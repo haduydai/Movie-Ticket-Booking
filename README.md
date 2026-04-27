@@ -21,7 +21,7 @@
   - *Ghi chú:*
 - [/] **2. Đăng nhập (Login):** Bắt ngoại lệ, kiểm tra cú pháp, giữ lại username khi lỗi.
   - *Files:* `controller/LoginServlet.java`, `login.jsp`
-  - *Assignee:* 
+  - *Assignee:Hà Duy Đại* 
   - *Ghi chú:*
 - [ ] **3. Xác thực Email:** Gửi mã OTP qua email khi đăng ký.
   - *Files:* `controller/VerifyOTPServlet.java`, thư viện `JavaMail`, `verify.jsp`
