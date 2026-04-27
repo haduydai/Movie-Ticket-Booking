@@ -19,7 +19,7 @@
   - *Files:* `controller/RegisterServlet.java`, `dao/UserDAO.java`, `register.jsp`
   - *Assignee:Hà Duy Đại* 
   - *Ghi chú:*
-- [ ] **2. Đăng nhập (Login):** Bắt ngoại lệ, kiểm tra cú pháp, giữ lại username khi lỗi.
+- [/] **2. Đăng nhập (Login):** Bắt ngoại lệ, kiểm tra cú pháp, giữ lại username khi lỗi.
   - *Files:* `controller/LoginServlet.java`, `login.jsp`
   - *Assignee:* 
   - *Ghi chú:*
