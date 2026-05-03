@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import utils.PasswordUtils;
+import jakarta.servlet.http.HttpSession;
+import utils.EmailUtils;
+
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
@@ -102,11 +105,25 @@ public class RegisterServlet extends HttpServlet {
         }
 
         User newUser = new User(username, pass, email, phone, Role.USER);
-        if (dao.addUser(newUser)) {
-            sendJsonResponse(response, "success", "login");
-        } else {
-            sendJsonResponse(response, "error", "Đã có lỗi hệ thống xảy ra. Không thể tạo tài khoản lúc này.");
-        }
+       try {
+           //tạo mã otp ngâu nhiên
+           String otp = EmailUtils.generateOTP();
+           //gửi mã vào email của người dùng
+           EmailUtils.sendEmail(email,"Xác thực đăng ký MyCinema","Mã otp của bạn là:");
+           //tạo session lưu tạm user vào
+                //khỏi tạo session
+                HttpSession session = request.getSession();
+                session.setAttribute("newUser",newUser);
+                //lưu tạm otp
+                session.setAttribute("otp",otp);
+                //tụ huỷ sau 5p
+                session.setMaxInactiveInterval(300);
+                sendJsonResponse(response,"success","verify-otp");
+
+       } catch (Exception e) {
+           e.printStackTrace();
+           sendJsonResponse(response, "error", "Lỗi gửi email! Vui lòng đảm bảo email của bạn có thật.");
+       }
     }
 
         //  biến Servlet thành API trả về JSON
