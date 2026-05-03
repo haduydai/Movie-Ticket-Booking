@@ -24,8 +24,11 @@
 			</div>
 
 			<div class="form-group-auth">
-				<label for="password">Mật Khẩu</label> <input type="password"
-					id="password" name="password" placeholder="Nhập mật khẩu" required>
+				<label for="password">Mật Khẩu</label>
+				<div class="password-wrapper">
+					<input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+					<span class="toggle-password-icon" onclick="togglePassword('password',this)" title="hiện mật khẩu">👁️</span>
+				</div>
 			</div>
 
 			<a href="forgot-password"
@@ -33,10 +36,7 @@
 				mật khẩu?</a>
 
 			<p id="errorMsg" style="color: red; text-align: center; margin-bottom: 10px; display: none;"></p>
-x`
-
 			<button type="submit" class="auth-btn">Đăng Nhập</button>
-
 			<div class="social-login">
 				<p>Hoặc đăng nhập bằng</p>
 				<a href="#" class="social-btn google-btn">Đăng nhập với Google</a> <a
@@ -83,6 +83,20 @@ x`
 						document.getElementById("errorMsg").style.display = "block";
 					});
 		});
+		function togglePassword(inputId,iconElement){
+			const input = document.getElementById(inputId);
+			if(input.type ==="password"){
+				input.type="text";
+				iconElement.innerText = "🙈";
+				iconElement.title="Ẩn mật khẩu";
+
+			}else{
+				input.type="password";
+				iconElement.innerText="👁️";
+				iconElement.title="Hiện mật khẩu";
+			}
+
+		}
 	</script>
 
 </body>

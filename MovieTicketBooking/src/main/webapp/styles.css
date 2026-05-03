@@ -1785,9 +1785,10 @@ section .cinema-grid {
     color: var(--primary-color);
 }
 /*-------------------------------------------------End Profile Page Enhancements------------------------------------------*/
-.password-wrapper{
-	position:relative;/*vị trí tương đối*/
+.password-wrapper {
+	position: relative; /*vị trí tương đối*/
 	/*input chừa ra 40px bên phải để không bị chữ đè lên con mắt */
+}
 .password-wrapper input{
 	width:100%;
 	padding-right:40px !important;
@@ -1805,7 +1806,7 @@ section .cinema-grid {
 	.toggle-password-icon:hover {
 		opacity: 0.7;
 	}
- }
+
 
 
 
