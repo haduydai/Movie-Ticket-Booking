@@ -55,38 +55,41 @@ public class LoginServlet extends HttpServlet {
         UserDAO dao = new UserDAO();
         User user = dao.checkUser(username);
         if (user == null) {
-            request.setAttribute("error", "Tài khoản không tồn tại. <a href='register'>Đăng ký ngay</a>");
-            request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+            backToPage("Tài khoản không tồn tại.", request, response);
         } else {
+
             // Trường hợp: Tài khoản có tồn tại, kiểm tra mật khẩu
         	//mã hóa mật khẩu người dùng vừa nhập vào form để so sánh với dữ liệu mật khẩu được mã hóa dưới database
-            
-        	if (PasswordUtils.checkPassword(pass, user.getPassword())) {
+
+            if (PasswordUtils.checkPassword(pass, user.getPassword())) {
                 // Đăng nhập thành công -> Lưu vào Session
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
-                
-                response.sendRedirect("home");
+
+                // TRẢ VỀ JSON THÀNH CÔNG (Thay vì sendRedirect)
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"status\": \"success\", \"message\": \"home\"}");
             } else {
-                // Sai mật khẩu
-                request.setAttribute("error", "Sai mật khẩu! Vui lòng thử lại.");
-                request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+                // Sai mật khẩu -> Gọi hàm báo lỗi JSON
+                backToPage("Sai mật khẩu! Vui lòng thử lại.", request, response);
             }
-        	
+
+
         }
     }
     
- // Back to register page if fail validation
-    private void backToPage(String message, HttpServletRequest request, HttpServletResponse response) {
-        try {
-        	request.setAttribute("error", message);
-			request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+
+ // Trả về lỗi dạng JSON thay vì tải lại trang
+ private void backToPage(String message, HttpServletRequest request, HttpServletResponse response) {
+     try {
+         response.setContentType("application/json");
+         response.setCharacterEncoding("UTF-8");
+         String json = "{\"status\": \"error\", \"message\": \"" + message + "\"}";
+         response.getWriter().write(json);
+     } catch (IOException e) {
+         e.printStackTrace();
+     }
+ }
+
 }

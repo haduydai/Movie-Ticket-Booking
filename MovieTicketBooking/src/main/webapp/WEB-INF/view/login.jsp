@@ -9,9 +9,9 @@
 </head>
 <body>
 	<div class="auth-container">
-		
-		<form class="auth-form" action="login" method="post">
-			<div class="auth-logo">
+
+		<form class="auth-form" id="loginForm">
+		<div class="auth-logo">
 				<a href="home" class="logo">MyCinema</a>
 			</div>
 
@@ -32,7 +32,8 @@
 				style="color: var(--text-muted); font-size: 12px; text-align: right; display: block; margin-bottom: var(--spacing-md);">Quên
 				mật khẩu?</a>
 
-			<p style="color: red; text-align: center; margin-bottom: 10px;">${error}</p>
+			<p id="errorMsg" style="color: red; text-align: center; margin-bottom: 10px; display: none;"></p>
+x`
 
 			<button type="submit" class="auth-btn">Đăng Nhập</button>
 
@@ -49,6 +50,40 @@
 			</div>
 		</form>
 	</div>
+	<script>
+		// Bắt sự kiện submit của form đăng nhập
+		document.getElementById("loginForm").addEventListener("submit", function (event) {
+			event.preventDefault(); // Tuyệt đối không cho trình duyệt tự tải lại trang
+
+			const form = this;
+			const formData = new URLSearchParams(new FormData(form)); // Gói dữ liệu
+
+			// Gửi dữ liệu đi bằng Fetch API
+			fetch("login", {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: formData.toString()
+			})
+					.then(response => response.json()) // Dịch kết quả từ Backend sang JSON
+					.then(data => {
+						if (data.status === "success") {
+							// Thành công: Chuyển hướng sang trang chủ
+							window.location.href = data.message;
+						} else {
+							// Thất bại: Hiển thị lỗi, form VẪN GIỮ NGUYÊN không bị mất chữ!
+							document.getElementById("errorMsg").innerHTML = data.message;
+							document.getElementById("errorMsg").style.display = "block";
+						}
+					})
+					.catch(error => {
+						console.error("Error:", error);
+						document.getElementById("errorMsg").innerText = "Lỗi kết nối máy chủ!";
+						document.getElementById("errorMsg").style.display = "block";
+					});
+		});
+	</script>
 
 </body>
 </html>
