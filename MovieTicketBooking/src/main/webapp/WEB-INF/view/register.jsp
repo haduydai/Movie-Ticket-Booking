@@ -106,6 +106,13 @@
                             document.getElementById("errorMsg").innerText = data.message;
                             document.getElementById("errorMsg").style.display = "block";
 
+                            // ---- THÊM ĐOẠN NÀY ĐỂ BẬT LẠI NÚT ----
+                            const submitBtn = document.querySelector('#registerForm button[type="submit"]');
+                            submitBtn.disabled = false;
+                            submitBtn.innerText = "Đăng Ký";
+                            submitBtn.style.opacity = "1";
+                            submitBtn.style.cursor = "pointer";
+
 
                         }
                     })
@@ -116,8 +123,9 @@
                         document.getElementById("errorMsg").style.display = "block";
 
                         // Khôi phục lại nút bấm nếu lỗi
+                        const submitBtn = document.querySelector('#registerForm button[type="submit"]');
                         submitBtn.disabled = false;
-                        submitBtn.innerText = originalBtnText;
+                        submitBtn.innerText = "Đăng Ký";
                         submitBtn.style.opacity = "1";
                         submitBtn.style.cursor = "pointer";
                     });
