@@ -35,10 +35,15 @@
 
             <button type="submit" class="auth-btn">Xác Nhận</button>
 
-            <%-- Link quay lại --%>
-            <div class="auth-link">
-                <p><a href="forgot-password">Gửi lại mã?</a> hoặc <a href="login">Quay về đăng nhập</a></p>
+            <%-- Các link điều hướng phụ trợ --%>
+            <div class="auth-link" style="margin-top: 15px; font-size: 14px;">
+                <p>
+                    <a href="register">Sửa thông tin đăng ký</a> <br><br>
+                    <a href="forgot-password">Thử lại quên mật khẩu</a> <br><br>
+                    <a href="login">Quay về đăng nhập</a>
+                </p>
             </div>
+
         </form>
     </div>
     <script>
