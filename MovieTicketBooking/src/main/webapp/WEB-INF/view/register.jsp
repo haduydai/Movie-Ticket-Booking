@@ -72,8 +72,18 @@
             // Bắt sự kiện submit của form
             document.getElementById("registerForm").addEventListener("submit", function (event) {
                 event.preventDefault(); // Ngăn form gửi dữ liệu theo cách thông thường
-
                 const form = this; // Lấy form
+
+                //Xử lý UX Nút bấm ---
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerText;
+
+                // Disable button và hiển thị trạng thái loading
+                submitBtn.disabled = true;
+                submitBtn.innerText = "Đang gửi mã OTP...";
+                submitBtn.style.opacity = "0.7";
+                submitBtn.style.cursor = "not-allowed";
+
                 //Bọc FormData vào URLSearchParams
                 const formData = new URLSearchParams(new FormData(form));
 
@@ -85,7 +95,6 @@
                     },
                     body: formData.toString()
                 })
-
                     .then(response => response.json()) // Chuyển response sang JSON
                     .then(data => {
                         // Xử lý kết quả từ server
@@ -96,6 +105,8 @@
                             // Hiển thị thông báo lỗi
                             document.getElementById("errorMsg").innerText = data.message;
                             document.getElementById("errorMsg").style.display = "block";
+
+
                         }
                     })
                     .catch(error => {
@@ -103,6 +114,12 @@
                         console.error("Error:", error);
                         document.getElementById("errorMsg").innerText = "Đã có lỗi xảy ra. Vui lòng thử lại.";
                         document.getElementById("errorMsg").style.display = "block";
+
+                        // Khôi phục lại nút bấm nếu lỗi
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.style.opacity = "1";
+                        submitBtn.style.cursor = "pointer";
                     });
             });
 
