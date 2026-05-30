@@ -24,14 +24,39 @@ public class VerifyOTPServlet extends HttpServlet {
         String inputOtp = request.getParameter("otp");
         HttpSession session = request.getSession();
         String sessionOtp = (String) session.getAttribute("otp");
-
+        // Kiểm tra OTP
         if (sessionOtp != null && sessionOtp.equals(inputOtp)) {
-            // OTP đúng -> Cho phép đổi mật khẩu (Chuyển sang trang reset)
-            response.sendRedirect("reset-password");
-        } else {
-            // OTP sai
-            request.setAttribute("error", "Mã OTP không chính xác hoặc đã hết hạn!");
-            request.getRequestDispatcher("/WEB-INF/view/verify-otp.jsp").forward(request, response);
+            // Lấy object newUser từ session (được set ở RegisterServlet)
+            model.User newUser = (model.User) session.getAttribute("newUser");
+        if(newUser!=null){
+            //TH1:ĐĂNG KÝ
+            dao.UserDAO dao = new dao.UserDAO();
+            boolean isAdded = dao.addUser(newUser);
+            if(isAdded){
+                session.removeAttribute("newUser");//xóa vì đã tồn tại user này
+                session.removeAttribute("otp");//xóa otp
+                sendJsonResponse(response,"succes","login");
+            }else {
+                sendJsonResponse(response, "eror", "Đăng ký thất bại vui lòng thử lại");
+            }
+        }else{
+            //TH2:QUÊN MẬT KHẨU
+            sendJsonResponse(response, "success", "reset-password");
         }
+        }
+    }
+    private void sendJsonResponse(HttpServletResponse response,String status, String message){
+        try{
+            response.setContentType("application/json; charset = UTF-8");
+            String json = String.format("{\"status\":\"%s\",\"message\":\"%s\"}",status,message);
+            response.getWriter().write(json);
+
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }

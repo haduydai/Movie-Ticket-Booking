@@ -98,7 +98,21 @@ public class UserDAO implements IUserDAO {
 	    }
 	    return user;
 	}
-
+	@Override
+	public User getUserByPhone(String phone) {
+		User user = null;
+		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE phonenumber = ?";
+		try (Connection connect = JDBCConnection.getConnection();
+		     PreparedStatement st = connect.prepareStatement(query);) {
+			st.setString(1, phone);
+			try (ResultSet rs = st.executeQuery();) {
+				if (rs.next()) {
+					user = mapResultSetToUser(rs);
+				}
+			} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e) { e.printStackTrace(); }
+		return user;
+	}
 	// Add new user (register user)
 	@Override
 	public boolean addUser(User user) {

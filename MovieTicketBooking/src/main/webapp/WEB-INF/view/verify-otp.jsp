@@ -11,8 +11,8 @@
 </head>
 <body>
     <div class="auth-container">
-        <form class="auth-form" action="verify-otp" method="post">
-            <div class="auth-logo">
+        <form class="auth-form" id="verifyOtpForm">
+        <div class="auth-logo">
                 <a href="home" class="logo">MyCinema</a>
             </div>
 
@@ -30,17 +30,75 @@
             </div>
 
             <%-- Thông báo lỗi --%>
-            <c:if test="${not empty error}">
-                <p style="color: red; text-align: center; margin-bottom: 10px;">${error}</p>
-            </c:if>
+            <p id="errorMsg" style="color: red; text-align: center; margin-bottom: 10px; display: none;"></p>
+
 
             <button type="submit" class="auth-btn">Xác Nhận</button>
 
-            <%-- Link quay lại --%>
-            <div class="auth-link">
-                <p><a href="forgot-password">Gửi lại mã?</a> hoặc <a href="login">Quay về đăng nhập</a></p>
+            <%-- Các link điều hướng phụ trợ --%>
+            <div class="auth-link" style="margin-top: 15px; font-size: 14px;">
+                <p>
+                    <a href="register">Sửa thông tin đăng ký</a> <br><br>
+                    <a href="forgot-password">Thử lại quên mật khẩu</a> <br><br>
+                    <a href="login">Quay về đăng nhập</a>
+                </p>
             </div>
+
         </form>
     </div>
+    <script>
+        document.getElementById("verifyOtpForm").addEventListener("submit", function (event) {
+            event.preventDefault()  ; // Ngăn form tự động tải lại trang
+
+            const form = this ;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+
+            // Vô hiệu hóa nút và đổi trạng thái thành loading
+            submitBtn.disabled= true ;
+            submitBtn.innerText = "Đang xác thực...";
+            submitBtn.style.opacity= "0.7";
+            submitBtn.style.cursor  ="not-allowed" ;
+
+            const formData = new URLSearchParams(new FormData(form)) ;
+
+            fetch("verify-otp" , {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success")  {
+                        // Thành công -> Servlet bảo đi đâu thì mình chuyển hướng tới đó (login hoặc reset-password)
+                        window.location.href = data.message;
+                    } else {
+                        // Sai mã OTP -> Hiện thông báo lỗi
+                        document.getElementById("errorMsg").innerText = data.message;
+                        document.getElementById("errorMsg").style.display = "block" ;
+
+                        // Bật lại nút
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.style.opacity = "1";
+                        submitBtn.style.cursor = "pointer";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("errorMsg").innerText = "Lỗi kết nối. Vui lòng thử lại sau.";
+                    document.getElementById("errorMsg").style.display = "block";
+
+                    // Bật lại nút
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.style.opacity = "1";
+                    submitBtn.style.cursor = "pointer";
+                });
+        });
+    </script>
+
 </body>
 </html>

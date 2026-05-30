@@ -10,6 +10,7 @@ public interface IUserDAO {
 	User getUserById(int id);
 	User checkUser(String username);
 	User getUserByEmail(String email);
+	User getUserByPhone(String phone);
     boolean addUser(User user);
     void updateUser(User user);
 	boolean deleteUser(int id);
