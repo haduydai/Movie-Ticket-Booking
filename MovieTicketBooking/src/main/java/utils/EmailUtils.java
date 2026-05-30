@@ -19,16 +19,16 @@ public class EmailUtils {
         return String.valueOf(otp);
     }
 
-    public static void sendEmail(String toEmail, String subject, String body) {
+    public static void sendEmail(String toEmail, String subject, String body) throws Exception {
         // Cấu hình SMTP (Ví dụ dùng Gmail)
-        final String fromEmail = "23130079@st.hcmuaf.edu.vn"; // Điền email của bạn
-        final String password = "qykfkkqsjtmvwqsf"; // Điền App Password
+        final String fromEmail = "23130079@st.hcmuaf.edu.vn";
+        final String password = "qykfkkqsjtmvwqsf"; // Đảm bảo App Password này còn hạn nhé!
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com"); 
-        props.put("mail.smtp.port", "587"); 
-        props.put("mail.smtp.auth", "true"); 
-        props.put("mail.smtp.starttls.enable", "true"); 
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
@@ -37,16 +37,14 @@ public class EmailUtils {
             }
         });
 
-        try {
-            MimeMessage msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(fromEmail));
-            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-            msg.setSubject(subject, "UTF-8");
-            msg.setText(body, "UTF-8");
+        // Bỏ try-catch ở đây để ném lỗi thẳng ra cho RegisterServlet bắt
+        MimeMessage msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress(fromEmail));
+        msg.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+        msg.setSubject(subject, "UTF-8");
+        msg.setText(body, "UTF-8");
 
-            Transport.send(msg);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Transport.send(msg);
     }
+
 }

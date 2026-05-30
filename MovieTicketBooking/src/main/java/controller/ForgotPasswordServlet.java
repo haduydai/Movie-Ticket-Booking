@@ -63,9 +63,13 @@ public class ForgotPasswordServlet extends HttpServlet {
 		String otp = EmailUtils.generateOTP();
 
 		// 2. Gửi Email (Có thể mất vài giây)
-		EmailUtils.sendEmail(email, "Mã xác thực quên mật khẩu - MyCinema", "Mã OTP của bạn là: " + otp);
+        try {
+            EmailUtils.sendEmail(email, "Mã xác thực quên mật khẩu - MyCinema", "Mã OTP của bạn là: " + otp);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-		// 3. Lưu OTP và Email vào Session
+        // 3. Lưu OTP và Email vào Session
 		HttpSession session = request.getSession();
 		session.setAttribute("otp", otp);
 		session.setAttribute("resetEmail", email);

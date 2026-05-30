@@ -109,7 +109,8 @@ public class RegisterServlet extends HttpServlet {
            //tạo mã otp ngâu nhiên
            String otp = EmailUtils.generateOTP();
            //gửi mã vào email của người dùng
-           EmailUtils.sendEmail(email,"Xác thực đăng ký MyCinema","Mã otp của bạn là:");
+           EmailUtils.sendEmail(email, "Xác thực đăng ký MyCinema", "Mã otp của bạn là: " + otp);
+
            //tạo session lưu tạm user vào
                 //khỏi tạo session
                 HttpSession session = request.getSession();
