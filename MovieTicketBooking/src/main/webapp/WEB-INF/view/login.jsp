@@ -39,7 +39,7 @@
 			<button type="submit" class="auth-btn">Đăng Nhập</button>
 			<div class="social-login">
 				<p>Hoặc đăng nhập bằng</p>
-				<a href="#" class="social-btn google-btn">Đăng nhập với Google</a> <a
+				<a href="google-login" class="social-btn google-btn">Đăng nhập với Google</a>
 					href="#" class="social-btn facebook-btn">Đăng nhập với Facebook</a>
 			</div>
 
