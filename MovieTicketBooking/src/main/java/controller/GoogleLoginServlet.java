@@ -13,8 +13,8 @@ import java.nio.charset.StandardCharsets;
 @WebServlet("/google-login")
 public class GoogleLoginServlet extends HttpServlet {
     //thay 2 final nay bang credential tu gg cloud
-    private static final String CLIENT_ID = "";
-    private static final String CLIENT_SECRET = "";
+    private static final String CLIENT_ID = "1050658086752-iqpu6b01r89jf8sh2p1h1ok7c3fa7lv5.apps.googleusercontent.com";
+    private static final String CLIENT_SECRET = "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";
     private static final String REDIRECT_URI = "http://localhost:8080/MovieTicketBooking/google-login";
     //end point api
     private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -26,7 +26,7 @@ public class GoogleLoginServlet extends HttpServlet {
         String code = req.getParameter("code");
         if(code == null){
             String authorizationUrl = GOOGLE_AUTH_URL+"?"
-                    +"client_id"+ URLEncoder.encode(CLIENT_ID, StandardCharsets.UTF_8)
+                    +"client_id="+ URLEncoder.encode(CLIENT_ID, StandardCharsets.UTF_8)
                     +"&redirect_uri="+URLEncoder.encode(REDIRECT_URI, StandardCharsets.UTF_8)
                     +"&response_type=code"
                     +"&scope="+URLEncoder.encode("email profile", StandardCharsets.UTF_8);

@@ -40,7 +40,7 @@
 			<div class="social-login">
 				<p>Hoặc đăng nhập bằng</p>
 				<a href="google-login" class="social-btn google-btn">Đăng nhập với Google</a>
-					href="#" class="social-btn facebook-btn">Đăng nhập với Facebook</a>
+				<a href="#" class="social-btn facebook-btn">Đăng nhập với Facebook</a>
 			</div>
 
 			<div class="auth-link">
