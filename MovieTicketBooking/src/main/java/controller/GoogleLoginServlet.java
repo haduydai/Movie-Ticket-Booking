@@ -43,20 +43,34 @@ public class GoogleLoginServlet extends HttpServlet {
         //new
         // gọi API lấy Access  Token
         //test
+        // --- CODE MỚI BƯỚC 2.3: Lấy thông tin Email và Name ---
         try {
             String accessToken = getAccessToken(code);
-
-            resp.setContentType("text/html;charset=UTF-8");
             if (accessToken != null) {
-                resp.getWriter().println("<h3> Đổi Access Token thành công!</h3>");
-                resp.getWriter().println("<p>Mã Access Token nhận được từ Google: </p>");
-                resp.getWriter().println("<textarea rows='5' cols='80' readonly>" + accessToken + "</textarea>");
-                resp.getWriter().println("<p><i>-- màn hình kết quả --</i></p>");
+                //Gọi  API lấy thông tin người dùng từ Google
+                String userInfoJson = getUserInfo(accessToken);
+                String email = getJsonKeyValue(userInfoJson, "email");
+                String name = getJsonKeyValue(userInfoJson, "name");
+
+                //in ra log console của Server để  debug
+                System.out.println("========= GOOGLE USER INFO =========");
+                System.out.println("Email: " + email);
+                System.out.println("Name: " + name);
+                System.out.println("====================================");
+
+                //  hiển thị thông tin trực tiếp ra màn hình trình duyệt để test
+                resp.setContentType("text/html;charset=UTF-8");
+                resp.getWriter().println("<h3>Đăng nhập Google thành công!</h3>");
+                resp.getWriter().println("<p><b>Email của bạn:</b> " + email + "</p>");
+                resp.getWriter().println("<p><b>Tên của bạn:</b> " + name + "</p>");
+                resp.getWriter().println("<p><i>Hệ thống đã kết nối Google thành công</i></p>");
             } else {
-                resp.getWriter().println("<h3>Lỗi: Không lấy được Access Token từ Google!</h3>");
+                resp.setContentType("text/html;charset=UTF-8");
+                resp.getWriter().println("<h3>Lỗi: Không lấy được Access Token!</h3>");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            resp.setContentType("text/html;charset=UTF-8");
             resp.getWriter().println("Lỗi hệ thống: " + e.getMessage());
         }
     }
@@ -93,6 +107,23 @@ public class GoogleLoginServlet extends HttpServlet {
         if (matcher.find()) {
             return matcher.group(1);
         }
+        return null;
+    }
+    // Hàm gửi Get  request kèm Access Token để lấy thông tin cá nhân từ   Google
+    private String getUserInfo(String accessToken) throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(GOOGLE_USERINFO_URL))
+                .header("Authorization", "Bearer " + accessToken)  //Gửi token lên header
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 200) {
+            return response.body();    // Trả về  chuỗi JSON chứa thông tin người   dùng
+        }
+        System.err.println("Yêu cầu UserInfo thất bại: " + response.body());
         return null;
     }
 }
