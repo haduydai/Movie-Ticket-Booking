@@ -13,6 +13,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @WebServlet("/google-login")
@@ -38,10 +40,59 @@ public class GoogleLoginServlet extends HttpServlet {
             resp.sendRedirect(authorizationUrl);
             return;
         }
-        // Đọc mã code từ Google và in thẳng ra màn hình
-        resp.setContentType("text/html;charset=UTF-8");
-        resp.getWriter().println("<h3>[Bước 2.1] Nhận mã Code thành công!</h3>");
-        resp.getWriter().println("<p>Mã Code nhận được: <b>" + code + "</b></p>");
+        //new
+        // gọi API lấy Access  Token
+        //test
+        try {
+            String accessToken = getAccessToken(code);
 
+            resp.setContentType("text/html;charset=UTF-8");
+            if (accessToken != null) {
+                resp.getWriter().println("<h3> Đổi Access Token thành công!</h3>");
+                resp.getWriter().println("<p>Mã Access Token nhận được từ Google: </p>");
+                resp.getWriter().println("<textarea rows='5' cols='80' readonly>" + accessToken + "</textarea>");
+                resp.getWriter().println("<p><i>-- màn hình kết quả --</i></p>");
+            } else {
+                resp.getWriter().println("<h3>Lỗi: Không lấy được Access Token từ Google!</h3>");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println("Lỗi hệ thống: " + e.getMessage());
+        }
+    }
+    // Hàm gửi POST request tới Google để đổi mã "code" lấy "access_token"
+    private String getAccessToken(String code) throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+
+        // cấu hình  tham số gửi đi   theo chuẩn   OAuth2
+        String parameters = "client_id=" + URLEncoder.encode(CLIENT_ID, StandardCharsets.UTF_8)
+                + "&client_secret=" + URLEncoder.encode(CLIENT_SECRET, StandardCharsets.UTF_8)
+                + "&redirect_uri=" + URLEncoder.encode(REDIRECT_URI, StandardCharsets.UTF_8)
+                + "&code=" + URLEncoder.encode(code, StandardCharsets.UTF_8)
+                + "&grant_type=authorization_code";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(GOOGLE_TOKEN_URL))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(parameters))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 200) {
+            // Trích xuất access_token từ JSON trả về
+            return getJsonKeyValue(response.body(), "access_token");
+        }
+        System.err.println("Yêu cầu Token thất bại: " + response.body());
+        return null;
+    }
+
+    // Hàm phụ trợ dùng Regex để tách chuỗi giá trị từ JSON phản hồi
+    private String getJsonKeyValue(String json, String key) {
+        Pattern pattern = Pattern.compile("\"" + key + "\":\\s*\"([^\"]+)\"");
+        Matcher matcher = pattern.matcher(json);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 }
