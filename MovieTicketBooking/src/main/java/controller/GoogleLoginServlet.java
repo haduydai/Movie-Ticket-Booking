@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dao.UserDAO;
+import model.Role;
 import model.User;
 
 @WebServlet("/google-login")
@@ -56,21 +57,48 @@ public class GoogleLoginServlet extends HttpServlet {
                 String email = getJsonKeyValue(userInfoJson, "email");
                 String name = getJsonKeyValue(userInfoJson, "name");
 
-                // A. Kiểm tra xem email này đã tồn tại trong DB chưa
+                //  Kiểm tra xem email này đã tồn tại trong DB chưa
                 User user = userDAO.getUserByEmail(email);
 
                 resp.setContentType("text/html;charset=UTF-8");
                 if (user != null) {
-                    // THỨ 1: ĐÃ TỒN TẠI -> Lưu vào Session và chuyển hướng về trang chủ
+                    //ĐÃ TỒN TẠI -> Lưu vào Session và chuyển hướng về trang chủ
                     req.getSession().setAttribute("user", user);
 
-                    // Chuyển hướng về trang chủ
+                    //Chuyển hướng về trang chủ
                     resp.sendRedirect(req.getContextPath() + "/home");
                 } else {
-                    // THỨ 2: CHƯA TỒN TẠI -> Tạm thời in thông báo để kiểm tra (Sẽ code tiếp ở Bước 3.2)
-                    resp.getWriter().println("<h3> Kết nối thành công!</h3>");
-                    resp.getWriter().println("<p>Email <b>" + email + "</b> chưa tồn tại trong DB.</p>");
-                    resp.getWriter().println("<p><i>Hệ thống cần tự động tạo tài khoản ...</i></p>");
+                    //- CHƯA TỒN TẠI -> Tự động đăng ký tài khoản mới ---
+
+                    // 1 Tách lấy phần trước chữ @ của email làm username
+                    String username = email.substring(0, email.indexOf("@"));
+
+                    // 2. Kiểm tra xem username này có bị trùng trong DB không
+                    if (userDAO.checkUser(username) != null) {
+                        // Nếu trùng, ghép thêm 3 số ngẫu nhiên ở cuối để đảm bảo duy nhất
+                        username = username + "_" + (int)(Math.random() * 900 + 100);
+                    }
+
+                    // sinh mật khẩu ngẫu nhiên cho tài khoản (8 ký tự đầu của UUID)
+                    String randomPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
+
+                    //  Tạo đối tượng User mới (số điện thoại mặc định để trống "", Role là USER)
+                    User newUser = new User(username, randomPassword, email, "", Role.USER);
+
+                    //Lưu tài khoản mới vào cơ sở dữ liệu
+                    if (userDAO.addUser(newUser)) {
+                        // Lấy lại thông tin user từ DB (để có trường ID tự tăng do MySQL sinh ra)
+                        user = userDAO.getUserByEmail(email);
+                        if (user != null) {
+                            req.getSession().setAttribute("user", user);
+                            resp.sendRedirect(req.getContextPath() + "/home");
+                            return;
+                        }
+                    }
+
+                    // Nếu gặp lỗi khi thêm vào DB
+                    resp.setContentType("text/html;charset=UTF-8");
+                    resp.getWriter().println("<h3>Lỗi: Không thể tự động tạo tài khoản thành viên mới!</h3>");
                 }
             } else {
                 resp.setContentType("text/html;charset=UTF-8");
