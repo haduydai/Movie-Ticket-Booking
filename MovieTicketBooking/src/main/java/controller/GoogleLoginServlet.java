@@ -16,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dao.UserDAO;
+import model.User;
 
 @WebServlet("/google-login")
 public class GoogleLoginServlet extends HttpServlet {
@@ -27,6 +29,8 @@ public class GoogleLoginServlet extends HttpServlet {
     private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
     private static final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
     private static final String GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
+
+    private final UserDAO userDAO = new UserDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,27 +47,31 @@ public class GoogleLoginServlet extends HttpServlet {
         //new
         // gọi API lấy Access  Token
         //test
-        // --- CODE MỚI BƯỚC 2.3: Lấy thông tin Email và Name ---
+        // --- Lấy thông tin Email và Name ---
+        // ---  Kiểm tra DB và xử lý đăng nhập ---
         try {
             String accessToken = getAccessToken(code);
             if (accessToken != null) {
-                //Gọi  API lấy thông tin người dùng từ Google
                 String userInfoJson = getUserInfo(accessToken);
                 String email = getJsonKeyValue(userInfoJson, "email");
                 String name = getJsonKeyValue(userInfoJson, "name");
 
-                //in ra log console của Server để  debug
-                System.out.println("========= GOOGLE USER INFO =========");
-                System.out.println("Email: " + email);
-                System.out.println("Name: " + name);
-                System.out.println("====================================");
+                // A. Kiểm tra xem email này đã tồn tại trong DB chưa
+                User user = userDAO.getUserByEmail(email);
 
-                //  hiển thị thông tin trực tiếp ra màn hình trình duyệt để test
                 resp.setContentType("text/html;charset=UTF-8");
-                resp.getWriter().println("<h3>Đăng nhập Google thành công!</h3>");
-                resp.getWriter().println("<p><b>Email của bạn:</b> " + email + "</p>");
-                resp.getWriter().println("<p><b>Tên của bạn:</b> " + name + "</p>");
-                resp.getWriter().println("<p><i>Hệ thống đã kết nối Google thành công</i></p>");
+                if (user != null) {
+                    // THỨ 1: ĐÃ TỒN TẠI -> Lưu vào Session và chuyển hướng về trang chủ
+                    req.getSession().setAttribute("user", user);
+
+                    // Chuyển hướng về trang chủ
+                    resp.sendRedirect(req.getContextPath() + "/home");
+                } else {
+                    // THỨ 2: CHƯA TỒN TẠI -> Tạm thời in thông báo để kiểm tra (Sẽ code tiếp ở Bước 3.2)
+                    resp.getWriter().println("<h3> Kết nối thành công!</h3>");
+                    resp.getWriter().println("<p>Email <b>" + email + "</b> chưa tồn tại trong DB.</p>");
+                    resp.getWriter().println("<p><i>Hệ thống cần tự động tạo tài khoản ...</i></p>");
+                }
             } else {
                 resp.setContentType("text/html;charset=UTF-8");
                 resp.getWriter().println("<h3>Lỗi: Không lấy được Access Token!</h3>");
