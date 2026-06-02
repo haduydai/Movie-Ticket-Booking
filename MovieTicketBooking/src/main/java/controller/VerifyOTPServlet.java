@@ -20,30 +20,40 @@ public class VerifyOTPServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String inputOtp = request.getParameter("otp");
         HttpSession session = request.getSession();
         String sessionOtp = (String) session.getAttribute("otp");
-        // Kiểm tra OTP
-        if (sessionOtp != null && sessionOtp.equals(inputOtp)) {
-            // Lấy object newUser từ session (được set ở RegisterServlet)
-            model.User newUser = (model.User) session.getAttribute("newUser");
-        if(newUser!=null){
-            //TH1:ĐĂNG KÝ
+
+        // kiem tra OTP hợp lệ hay không
+        if (sessionOtp == null) {
+            sendJsonResponse(response, "error", "Mã OTP đã hết hạn hoặc không tồn tại. Vui lòng gửi lại OTP!");
+            return;
+        }
+
+        if (!sessionOtp.equals(inputOtp)) {
+            sendJsonResponse(response, "error", "Mã OTP không chính xác!");
+            return;
+        }
+
+        //lấy object newUser từ session (được set ở RegisterServlet)
+        model.User newUser = (model.User) session.getAttribute("newUser");
+        if (newUser != null) {
+            // TH1: ĐĂNG KÝ
             dao.UserDAO dao = new dao.UserDAO();
             boolean isAdded = dao.addUser(newUser);
-            if(isAdded){
-                session.removeAttribute("newUser");//xóa vì đã tồn tại user này
-                session.removeAttribute("otp");//xóa otp
-                sendJsonResponse(response,"succes","login");
-            }else {
-                sendJsonResponse(response, "eror", "Đăng ký thất bại vui lòng thử lại");
+            if (isAdded) {
+                session.removeAttribute("newUser"); // xóa vì đã tồn tại user này
+                session.removeAttribute("otp"); // xóa otp
+                sendJsonResponse(response, "success", "login");
+            } else {
+                sendJsonResponse(response, "error", "Đăng ký thất bại vui lòng thử lại.");
             }
-        }else{
-            //TH2:QUÊN MẬT KHẨU
+        } else {
+            // TH2: QUÊN MẬT KHẨU
             sendJsonResponse(response, "success", "reset-password");
         }
-        }
+
     }
     private void sendJsonResponse(HttpServletResponse response,String status, String message){
         try{

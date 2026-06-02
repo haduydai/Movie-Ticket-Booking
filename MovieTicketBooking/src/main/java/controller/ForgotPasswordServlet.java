@@ -32,7 +32,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 		if (username != null) username = username.trim();
 		if (email != null) email = email.trim();
 
-		//1. Kiểm tra dữ liệu đầu vào
+		//1.kiểm tra dữ liệu đầu vào
 		if (username == null || username.isBlank()) {
 			sendJsonResponse(response, "error", "Vui lòng nhập tên đăng nhập!");
 			return;
@@ -42,7 +42,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 			return;
 		}
 
-		// 2. Kiểm tra tài khoản tồn tại không
+		// 2 Kiểm tra tài khoản tồn tại không
 		IUserDAO dao = new UserDAO();
 		User user = dao.checkUser(username);
 		if (user == null) {
@@ -50,7 +50,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 			return;
 		}
 
-		// 3. Kiểm tra email
+		//3. Kiểm tra email
 		if (email == null || email.isBlank()) {
 			sendJsonResponse(response, "error", "Email không được để trống.");
 			return;
@@ -60,7 +60,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 			return;
 		}
 
-		// 4. Kiểm tra email nhập vào có trùng khớp với email đăng ký của tài khoản không
+		//4.Kiểm tra email nhập vào có trùng khớp với email đăng ký của tài khoản không
 		if (!user.getEmail().equalsIgnoreCase(email)) {
 			sendJsonResponse(response, "error", "Email không khớp với email đăng ký của tài khoản!");
 			return;
@@ -69,7 +69,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 		// 5. Tạo mã OTP
 		String otp = EmailUtils.generateOTP();
 
-		// 6. Gửi Email OTP
+		// 6.gửi Email OTP
 		try {
 			EmailUtils.sendEmail(email, "Mã xác thực quên mật khẩu - MyCinema", "Mã OTP của bạn là: " + otp);
 		} catch (Exception e) {
@@ -80,6 +80,9 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 		// 7. Lưu OTP và Email vào Session
 		HttpSession session = request.getSession();
+		//xóa biến của luồng đăng ký
+		session.removeAttribute("newUser");
+
 		session.setAttribute("otp", otp);
 		session.setAttribute("resetEmail", email);
 		session.setAttribute("resetUsername", username);
