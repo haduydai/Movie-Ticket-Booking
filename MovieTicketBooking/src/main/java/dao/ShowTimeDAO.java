@@ -154,6 +154,32 @@ public class ShowTimeDAO implements IShowTimeDAO {
 		return true;
 	}
 
+	@Override
+	public boolean updateShowTime(ShowTime showTime) {
+		String sql = "UPDATE ShowTime SET cinema_id = ?, room_id = ?, movie_id = ?, price = ?, start_time = ? WHERE id = ?";
+		try (Connection conn = JDBCConnection.getConnection(); // 1. Đã sửa thành getConnection()
+		     PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setInt(1, showTime.getCinema().getId());
+			ps.setInt(2, showTime.getRoom().getId());
+			ps.setInt(3, showTime.getMovie().getId());
+
+			// 2. Đã sửa thành getPricePerTicket() nhận vào kiểu BigDecimal
+			ps.setBigDecimal(4, showTime.getPricePerTicket());
+
+			// 3. Sử dụng java.sql.Timestamp để ép kiểu từ LocalDateTime của startTime
+			ps.setTimestamp(5, java.sql.Timestamp.valueOf(showTime.getStartTime()));
+
+			ps.setInt(6, showTime.getId());
+
+			int rowAffected = ps.executeUpdate();
+			return rowAffected > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	private ShowTime mapResultSetToShowTime(ResultSet rs) {
 		ShowTime showTime = null;
 		try {
