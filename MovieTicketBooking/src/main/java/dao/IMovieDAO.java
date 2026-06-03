@@ -12,27 +12,32 @@ import model.Movie;
 import model.MovieStatus;
 
 public interface IMovieDAO {
-	// Get list of all movies in database
+	// lấy danh sách phim
 	List<Movie> getAllMovies();
 
 	// Get movie have name contains a string
 	List<Movie> getMoviesHaveNameLikeString(String str);
 
-	// Get movie by id
+	// tìm kiếm phim bằng id
 	Movie getMovieById(int id);
 
-	// Add movie to database
+	// thêm database
 	boolean addMovie(Movie movie);
 
-	// Delete movie by id
+	// xoá phim bằng id
 	int deleteMovieById(int id);
 	
-	// Update detail of movie with id
+	// update phim
 	
 	int updateMovie(int id, Movie newMovie);
 
-	// Update movie status by movie id
+	// Update tình trạng phim
 	int updateMovieStatusById(int id, MovieStatus status);
 	
 	List<Movie> getMoviesByCinemaId(int cinemaId);
+
+	// tìm kiếm phim theo thể loại
+	List<Movie> getMoviesByType(String type);
+
+
 }
