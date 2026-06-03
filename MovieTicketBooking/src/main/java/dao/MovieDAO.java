@@ -195,7 +195,7 @@ public class MovieDAO implements IMovieDAO {
 	    // Join bảng movies và cinema_movies để tìm phim
 	    String sql = "SELECT m.* FROM movies m " +
 	                 "JOIN cinema_movies cm ON m.movie_id = cm.movie_id " +
-	                 "WHERE cm.cinema_id = ? AND m.movie_status = 'NOW_SHOWING'"; 
+	                 "WHERE cm.cinema_id = ? AND m.movie_status = 'NOW_SHOWING'";
 	                 // Chỉ lấy phim ĐANG CHIẾU (bỏ dòng này nếu muốn hiện cả phim sắp chiếu)
 	    try {
 	        Connection connect = JDBCConnection.getConnection();
@@ -213,7 +213,7 @@ public class MovieDAO implements IMovieDAO {
 	             int duration = rs.getInt("movie_duration");
 	             String country = rs.getString("movie_country");
 	             String img = rs.getString("movie_image_url");
-	             
+
 	             String statusStr = rs.getString("movie_status");
 	             MovieStatus status = MovieStatus.COMING_SOON;
 	             if(statusStr != null) status = MovieStatus.valueOf(statusStr);
@@ -251,4 +251,28 @@ public class MovieDAO implements IMovieDAO {
 		}
 		return movie;
 	}
+
+	// tìm kiếm phim theo thể loại
+	@Override
+	public List<Movie> getMoviesByType(String type) {
+		List<Movie> list = new ArrayList<>();
+		String sql = "SELECT movie_name, movie_type, director_name, names_of_actors, movie_description, movie_duration, movie_country, movie_image_url, movie_status"
+				+ "FROM movies WHERE movie_type = ? ORDER BY movie_id DESC" ;
+		try {
+			Connection connect = JDBCConnection.getConnection();
+			PreparedStatement ps = connect.prepareStatement(sql);
+			ps.setString(1, type);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(mapResultSetToMovie(rs));
+			}
+			rs.close();
+			ps.close();
+			connect.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 }
