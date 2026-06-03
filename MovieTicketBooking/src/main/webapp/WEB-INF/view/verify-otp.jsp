@@ -36,13 +36,25 @@
             <button type="submit" class="auth-btn">Xác Nhận</button>
 
             <%-- Các link điều hướng phụ trợ --%>
-            <div class="auth-link" style="margin-top: 15px; font-size: 14px;">
-                <p>
-                    <a href="register">Sửa thông tin đăng ký</a> <br><br>
-                    <a href="forgot-password">Thử lại quên mật khẩu</a> <br><br>
-                    <a href="login">Quay về đăng nhập</a>
-                </p>
-            </div>
+                       <%-- Tùy chọn quay lại trang trước động dựa theo luồng đăng ký hoặc quên mật khẩu --%>
+                              <%-- Tùy chọn quay lại trang trước động dựa theo luồng đăng ký hoặc quên mật khẩu --%>
+               <div class="auth-link" style="margin-top: 15px; font-size: 14px;">
+                   <p>
+                       <c:choose>
+                           <c:when test="${not empty sessionScope.newUser}">
+                               <a href="register">Quay lại trang trước</a>
+                           </c:when>
+                           <c:when test="${not empty sessionScope.resetEmail}">
+                               <a href="forgot-password">Quay lại trang trước</a>
+                           </c:when>
+                           <c:otherwise>
+                               <a href="register">Quay lại trang trước</a>
+                           </c:otherwise>
+                       </c:choose>
+                       <br><br>
+                       <a href="login">Quay về đăng nhập</a>
+                   </p>
+               </div>
 
         </form>
     </div>

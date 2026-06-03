@@ -23,19 +23,10 @@
 					style="text-align: center; margin-bottom: 20px; color: var(--primary-color);">HỒ
 					SƠ CÁ NHÂN</h2>
 
-				<%-- Thông báo lỗi/thành công --%>
-				<c:if test="${not empty error}">
-					<p
-						style="color: #ff4444; text-align: center; background: rgba(255, 0, 0, 0.1); padding: 10px; border-radius: 4px; margin-bottom: 15px;">
-						${error}</p>
-				</c:if>
-				<c:if test="${not empty message}">
-					<p
-						style="color: #00C851; text-align: center; background: rgba(0, 200, 81, 0.1); padding: 10px; border-radius: 4px; margin-bottom: 15px;">
-						${message}</p>
-				</c:if>
+				<%-- Thông báo lỗi/thành công động --%>
+                <p id="msgAlert" style="text-align: center; padding: 10px; border-radius: 4px; margin-bottom: 15px; display: none;"></p>
 
-				<form action="profile" method="post">
+				<form id="profileForm">
 
 					<%-- THÔNG TIN CƠ BẢN --%>
 					<div class="profile-info">
@@ -192,14 +183,13 @@
 
 	<jsp:include page="footer.jsp" />
 
-	<%-- JAVASCRIPT --%>
+
 	<script>
         function togglePasswordForm() {
             var x = document.getElementById("passwordSection");
             // Kiểm tra và bật tắt hiển thị
             if (x.style.display === "none" || x.style.display === "") {
                 x.style.display = "block";
-                // Thêm animation CSS (nếu file CSS đã load)
                 x.style.animation = "fadeIn 0.5s ease-in-out";
             } else {
                 x.style.display = "none";
@@ -209,11 +199,77 @@
                 document.getElementById("confirmPass").value = "";
             }
         }
-        
-        // Logic phụ: Tự động mở form nếu Server trả về lỗi liên quan đến mật khẩu
-        <c:if test="${not empty error and (error.contains('Mật khẩu') or error.contains('password'))}">
-            document.getElementById("passwordSection").style.display = "block";
-        </c:if>
+
+        document.getElementById("profileForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Ngăn form reload trang
+
+            const form = this;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+            const alertMsg = document.getElementById("msgAlert");
+
+            // Hiệu ứng Loading
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Đang lưu thay đổi...";
+            submitBtn.style.opacity = "0.7";
+            submitBtn.style.cursor = "not-allowed";
+            alertMsg.style.display = "none";
+
+            const formData = new URLSearchParams(new FormData(form));
+
+            fetch("profile", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // Thành công -> Hiện thông báo màu xanh
+                    alertMsg.innerText = data.message;
+                    alertMsg.style.color = "#00C851";
+                    alertMsg.style.background = "rgba(0, 200, 81, 0.1)";
+                    alertMsg.style.display = "block";
+
+                    // Reset các ô nhập mật khẩu nếu có
+                    document.getElementById("currentPass").value = "";
+                    document.getElementById("newPass").value = "";
+                    document.getElementById("confirmPass").value = "";
+                    document.getElementById("passwordSection").style.display = "none";
+                } else {
+                    // Thất bại -> Hiện thông báo màu đỏ
+                    alertMsg.innerText = data.message;
+                    alertMsg.style.color = "#ff4444";
+                    alertMsg.style.background = "rgba(255, 0, 0, 0.1)";
+                    alertMsg.style.display = "block";
+
+                    // Tự động mở khung mật khẩu nếu lỗi liên quan đến mật khẩu
+                    if (data.message.includes("mật khẩu") || data.message.includes("Mật khẩu")) {
+                        document.getElementById("passwordSection").style.display = "block";
+                    }
+                }
+
+                // Khôi phục nút bấm
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+                submitBtn.style.opacity = "1";
+                submitBtn.style.cursor = "pointer";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alertMsg.innerText = "Lỗi kết nối máy chủ!";
+                alertMsg.style.color = "#ff4444";
+                alertMsg.style.background = "rgba(255, 0, 0, 0.1)";
+                alertMsg.style.display = "block";
+
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+                submitBtn.style.opacity = "1";
+                submitBtn.style.cursor = "pointer";
+            });
+        });
     </script>
 </body>
 </html>

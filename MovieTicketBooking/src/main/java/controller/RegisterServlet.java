@@ -114,12 +114,15 @@ public class RegisterServlet extends HttpServlet {
            //tạo session lưu tạm user vào
                 //khỏi tạo session
                 HttpSession session = request.getSession();
+                //xóa biến của luồng quên mật khẩu:
+                session.removeAttribute("resetEmail");
+                   session.removeAttribute("resetUsername");
                 session.setAttribute("newUser",newUser);
                 //lưu tạm otp
-                session.setAttribute("otp",otp);
+            session.setAttribute("otp",otp);
                 //tụ huỷ sau 5p
-                session.setMaxInactiveInterval(300);
-                sendJsonResponse(response,"success","verify-otp");
+            session.setMaxInactiveInterval(300);
+             sendJsonResponse(response,"success","verify-otp");
 
        } catch (Exception e) {
            e.printStackTrace();
