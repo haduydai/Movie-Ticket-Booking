@@ -1,0 +1,36 @@
+/*---------------MOVIE FILTER----------------*/
+.movie-filter {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    align-items: center;
+}
+
+.movie-filter select{
+    padding: 10px 14px;
+    border-radius: var(--border-radius);
+    border: 1px black;
+    background-color: var(--text-color);
+    font-size: var(--font-size-base);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+.movie-filter select:hover{
+    border-color: var(--primary-color);
+}
+.movie-filter button{
+    padding: 10px 16px;
+    background: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s;
+}
+.movie-filter button:hover{
+    background-color: #b20710;
+}
+
+
