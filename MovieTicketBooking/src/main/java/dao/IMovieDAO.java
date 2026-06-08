@@ -41,4 +41,8 @@ public interface IMovieDAO {
 
 	// Get movies by cinema id
 	List<Movie> getMoviesByCinemaId(int cinemaId);
+
+	// Lọc thể loại phim, tag, quốc gia
+	List<Movie> filterMovies(String type, String country,String tag);
+
 }
