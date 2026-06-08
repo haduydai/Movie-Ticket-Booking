@@ -10,12 +10,13 @@ public class Movie {
 	private int duration;
 	private String country;
 	private String imageUrl;
-	private MovieStatus movieStatus;
+	private model.MovieStatus movieStatus;
+	private String moiveTag;
 
-	public Movie() {}
+	public Movie(int id, String name, String type, String directorName, String actorsName, String description, int duration, String country, String imageUrl, model.MovieStatus movieStatus) {}
 	
 	public Movie(int id, String name, String type, String directorName, String actorsName, String description,
-			int duration, String country, String imageUrl, MovieStatus movieStatus) {
+			int duration, String country, String imageUrl, model.MovieStatus movieStatus, String moiveTag) {
 		this.id = id;
 		this.name = name;
 		this.type = type;
@@ -26,11 +27,12 @@ public class Movie {
 		this.country = country;
 		this.imageUrl = imageUrl;
 		this.movieStatus = movieStatus;
+		this.moiveTag = moiveTag;
 	}
 	
 	// Constructor without movie id
 	public Movie(String name, String type, String directorName, String actorsName, String description,
-			int duration, String country, String imageUrl, MovieStatus movieStatus) {
+			int duration, String country, String imageUrl, model.MovieStatus movieStatus, String moiveTag) {
 		this.name = name;
 		this.type = type;
 		this.directorName = directorName;
@@ -40,6 +42,8 @@ public class Movie {
 		this.country = country;
 		this.imageUrl = imageUrl;
 		this.movieStatus = movieStatus;
+		this.moiveTag = moiveTag;
+
 	}
 	
 	// Constructor for manage ticket by admin
@@ -109,11 +113,11 @@ public class Movie {
 		this.imageUrl = imageUrl;
 	}
 
-	public MovieStatus getMovieStatus() {
+	public model.MovieStatus getMovieStatus() {
 		return movieStatus;
 	}
 
-	public void setMovieStatus(MovieStatus movieStatus) {
+	public void setMovieStatus(model.MovieStatus movieStatus) {
 		this.movieStatus = movieStatus;
 	}
 
@@ -123,6 +127,14 @@ public class Movie {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	public String getMovieTag() {
+		return moiveTag;
+	}
+
+	public void setMovieTag(String moiveTag) {
+		this.moiveTag = moiveTag;
 	}
 	
 }
