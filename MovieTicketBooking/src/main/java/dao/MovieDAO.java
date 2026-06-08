@@ -93,7 +93,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		return list;
 	}
 
-	// Get movie have name contains a string
+	// Tìm kiếm phim theo tên
 	// Ex: if u want "The walking dead" just type "the walking"
 	@Override
 	public List<Movie> getMoviesHaveNameLikeKeyword(String keyword) {
@@ -101,7 +101,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		try {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
-					+ " movie_duration, movie_country, movie_image_url, movie_status FROM movies WHERE movie_name LIKE ? ORDER BY movie_id DESC;";
+					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag FROM movies WHERE movie_name LIKE ? ORDER BY movie_id DESC;";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
