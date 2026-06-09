@@ -55,9 +55,10 @@
 
     <div class="search-bar-header">
         <div class="search-container">
+<%--             Tìm kiếm phim theo tên--%>
             <form action="search" method="get">
                 <input type="text" name="keyword" placeholder="Tìm kiếm phim">
-                <button type="submit">Tìm Kiếm</button>
+                <button type="submit" class="btn">Tìm Kiếm</button>
             </form>
         </div>
     </div>
