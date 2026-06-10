@@ -7,7 +7,7 @@ public class Cinema {
 	private int id;
 	private String name;
 	private String address;
-	private List<Room> rooms;
+	private List<model.Room> rooms;
 	
 	public Cinema() {}
 	
@@ -46,11 +46,11 @@ public class Cinema {
 		this.address = address;
 	}
 
-	public List<Room> getRooms() {
+	public List<model.Room> getRooms() {
 		return rooms;
 	}
 
-	public void setRooms(List<Room> rooms) {
+	public void setRooms(List<model.Room> rooms) {
 		this.rooms = rooms;
 	}
 
@@ -58,6 +58,8 @@ public class Cinema {
 		return id;
 	}
 
-	
-	
+
+	public void setId(int id) {
+		this.id = id;
+	}
 }
