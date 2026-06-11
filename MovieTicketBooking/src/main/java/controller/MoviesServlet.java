@@ -60,6 +60,8 @@ public class MoviesServlet extends HttpServlet {
         request.setAttribute("listUpcoming", listUpcoming);
         request.setAttribute("selectType", type);
         request.setAttribute("selectCountry", country);
+        request.setAttribute("selectTag", tag);
+
 
 
 

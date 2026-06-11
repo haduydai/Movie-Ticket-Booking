@@ -352,9 +352,12 @@ public class MovieDAO implements dao.IMovieDAO {
 			String country = rs.getString("movie_country");
 			String imageUrl = rs.getString("movie_image_url");
 			String tag = rs.getString("movie_tag");
+			String trailer = rs.getString("trailer_url");
+
 			MovieStatus movieStatus = MovieStatus.valueOf(rs.getString("movie_status"));
+
 			movie = new Movie(id, name, type, directorName, actorsName, description, duration, country, imageUrl,
-					movieStatus, tag);
+					movieStatus, tag, trailer);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
