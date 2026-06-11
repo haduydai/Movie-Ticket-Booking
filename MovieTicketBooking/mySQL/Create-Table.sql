@@ -53,6 +53,7 @@ CREATE TABLE movies (
 
 ALTER TABLE movies
     ADD movie_tag VARCHAR(100);
+    ADD trailer_url VARCHAR(255);
 
 -- ==========================
 -- 5. Bảng SHOWTIMES
