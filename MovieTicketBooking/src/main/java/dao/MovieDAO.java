@@ -269,7 +269,7 @@ public class MovieDAO implements dao.IMovieDAO {
 			// Query string to get data
 			String queryString = "SELECT DISTINCT m.movie_id, m.movie_name, m.movie_type, m.director_name, m.names_of_actors, m.movie_description,"
 					+ " m.movie_duration, m.movie_country, m.movie_image_url, m.movie_status "
-					+ " FROM movies m JOIN showtimes s ON m.movie_id = s.movie_id WHERE s.cinema_id = ?";
+					+ " FROM movies m JOIN cinema_movies cm ON m.movie_id = cm.movie_id WHERE cm.cinema_id = ?";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
@@ -293,7 +293,7 @@ public class MovieDAO implements dao.IMovieDAO {
 	public List<Movie> filterMovies(String type, String country, String tag) {
 		List<Movie> list = new ArrayList<>();
 		try{
-			StringBuilder sql = new StringBuilder("SELECT movie_id, movie_name, ovie_type," +
+			StringBuilder sql = new StringBuilder("SELECT movie_id, movie_name, movie_type," +
 					" director_name,names_of_actors, movie_description,  " +
 					"movie_duration,  movie_country, movie_image_url, movie_status, movie_tag FROM movies WHERE 1=1");
 			// lọc phim thep thể loại
@@ -319,6 +319,9 @@ public class MovieDAO implements dao.IMovieDAO {
 			}
 			if(country != null && !country.trim().isEmpty()){
 				ps.setString(index++, country);
+			}
+			if(tag != null && !tag.trim().isEmpty()){
+				ps.setString(index++, tag);
 			}
 
 			ResultSet rs = ps.executeQuery();
