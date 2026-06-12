@@ -26,7 +26,7 @@
 		</c:if>
 		
 		<h1>Sửa thông tin phim</h1>
-		<form action="${pageContext.request.contextPath }/admin/movie/edit" method="post">
+		<form action="${pageContext.request.contextPath }/admin/movie/edit" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="id" value="${movie.id }">
 			<table>
 				<tr>
@@ -54,8 +54,14 @@
 					<td><input name="country" type="text" style="width:400px" class="form-control" value="${movie.country}"></td>
 				</tr>
 				<tr>
-					<td><label for="imageUrl">Đường dẫn hình ảnh poster</label></td>
-					<td><input name="imageUrl" type="text" style="width:1000px" class="form-control" value="${movie.imageUrl}"></td>
+					<td><label for="poster">Poster (ảnh) - để trống nếu không đổi</label></td>
+					<td>
+						<input name="poster" type="file" accept="image/*" class="form-control">
+						<div class="mt-2">
+							<img src="${movie.imageUrl}" alt="poster" style="width:120px;">
+						</div>
+						<input type="hidden" name="existingImageUrl" value="${movie.imageUrl}">
+					</td>
 				</tr>
 				<tr>
 					<td><label for="status">Trạng thái</label></td>
