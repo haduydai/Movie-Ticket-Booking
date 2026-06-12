@@ -294,8 +294,8 @@ public class MovieDAO implements dao.IMovieDAO {
 		List<Movie> list = new ArrayList<>();
 		try{
 			StringBuilder sql = new StringBuilder("SELECT movie_id, movie_name, movie_type," +
-					" director_name,names_of_actors, movie_description,  " +
-					"movie_duration,  movie_country, movie_image_url, movie_status, movie_tag FROM movies WHERE 1=1");
+					" director_name, names_of_actors, movie_description,  " +
+					"movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url FROM movies WHERE 1=1");
 			// lọc phim thep thể loại
 			if(type != null && !type.trim().isEmpty()){
 				sql.append(" AND movie_type = ?");
