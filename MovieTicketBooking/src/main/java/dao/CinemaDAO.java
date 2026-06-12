@@ -4,20 +4,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import model.Cinema;
-import model.Room;
+import model.CinemaStatus;
 
 public class CinemaDAO implements dao.ICinemaDAO {
+
+	private static final Logger logger = Logger.getLogger(CinemaDAO.class.getName());
+
 	// Get all cinema
 	@Override
 	public List<Cinema> getAllCinema() {
 		List<Cinema> list = new ArrayList<>();
 		try {
-			String query = "SELECT cinema_id, cinema_name, cinema_address FROM cinemas;";
+			String query = "SELECT cinema_id, cinema_name, cinema_address, cinema_status FROM cinemas;";
 			// Create connect
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -30,14 +34,24 @@ public class CinemaDAO implements dao.ICinemaDAO {
 				id = rs.getInt("cinema_id");
 				name = rs.getString("cinema_name");
 				address = rs.getString("cinema_address");
-				cinema = new Cinema(id, name, address);
+				String statusStr = null;
+				try {
+					statusStr = rs.getString("cinema_status");
+				} catch (SQLException ex) {
+					// column might not exist in older schema
+				}
+				if (statusStr != null) {
+					cinema = new Cinema(id, name, address, CinemaStatus.valueOf(statusStr));
+				} else {
+					cinema = new Cinema(id, name, address, CinemaStatus.OPEN);
+				}
 				list.add(cinema);
 			}
 			rs.close();
 			st.close();
 			connect.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in getAllCinema", e);
 		}
 		return list;
 	}
@@ -47,7 +61,7 @@ public class CinemaDAO implements dao.ICinemaDAO {
 	public Cinema getCinemaById(int id) {
 		Cinema cinema = null;
 		try {
-			String query = "SELECT cinema_id, cinema_name, cinema_address FROM cinemas WHERE cinema_id = ?;";
+			String query = "SELECT cinema_id, cinema_name, cinema_address, cinema_status FROM cinemas WHERE cinema_id = ?;";
 			// Create connect
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -59,13 +73,23 @@ public class CinemaDAO implements dao.ICinemaDAO {
 				id = rs.getInt("cinema_id");
 				name = rs.getString("cinema_name");
 				address = rs.getString("cinema_address");
-				cinema = new Cinema(id, name, address);
+				String statusStr = null;
+				try {
+					statusStr = rs.getString("cinema_status");
+				} catch (SQLException ex) {
+					// ignore
+				}
+				if (statusStr != null) {
+					cinema = new Cinema(id, name, address, CinemaStatus.valueOf(statusStr));
+				} else {
+					cinema = new Cinema(id, name, address, CinemaStatus.OPEN);
+				}
 			}
 			rs.close();
 			st.close();
 			connect.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in getCinemaById", e);
 		}
 		return cinema;
 	}
@@ -74,18 +98,31 @@ public class CinemaDAO implements dao.ICinemaDAO {
 	@Override
 	public boolean addCinema(Cinema cinema) {
 		try {
-			String query = "INSERT INTO cinemas (cinema_name, cinema_address) VALUES (?, ?);";
+			String query = "INSERT INTO cinemas (cinema_name, cinema_address, cinema_status) VALUES (?, ?, ?);";
 			// Create connect
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
 			st.setString(1, cinema.getName());
 			st.setString(2, cinema.getAddress());
+			st.setString(3, cinema.getStatus() != null ? cinema.getStatus().name() : model.CinemaStatus.OPEN.name());
 			st.executeUpdate();
 			st.close();
 			connect.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			// If column cinema_status doesn't exist, fallback to previous insert
+			try {
+				String query = "INSERT INTO cinemas (cinema_name, cinema_address) VALUES (?, ?);";
+				Connection connect = JDBCConnection.getConnection();
+				PreparedStatement st = connect.prepareStatement(query);
+				st.setString(1, cinema.getName());
+				st.setString(2, cinema.getAddress());
+				st.executeUpdate();
+				st.close();
+				connect.close();
+			} catch (SQLException ex) {
+				logger.log(Level.SEVERE, "Error in addCinema fallback", ex);
+				return false;
+			}
 		}
 		return true;
 	}
@@ -103,7 +140,7 @@ public class CinemaDAO implements dao.ICinemaDAO {
 			st.close();
 			connect.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in deleteCinemaById", e);
 			return false;
 		}
 		return true;
@@ -113,19 +150,20 @@ public class CinemaDAO implements dao.ICinemaDAO {
 	public int updateCinema(int id, Cinema newCinema) {
 		int update = 0;
 		// Query string to get data
-		String queryString = "UPDATE cinemas SET cinema_name = ?, cinema_address = ?  WHERE cinema_id = ?";
+		String queryString = "UPDATE cinemas SET cinema_name = ?, cinema_address = ?, cinema_status = ? WHERE cinema_id = ?";
 		try {
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
 			ps.setString(1, newCinema.getName());
 			ps.setString(2, newCinema.getAddress());
-			ps.setInt(3, id);
+			ps.setString(3, newCinema.getStatus() != null ? newCinema.getStatus().name() : model.CinemaStatus.OPEN.name());
+			ps.setInt(4, id);
 			update = ps.executeUpdate();
 			ps.close();
 			connect.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in updateCinema", e);
 		}
 		return update;
 	}

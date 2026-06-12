@@ -1,6 +1,8 @@
 package controller_admin;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.CinemaDAO;
 import jakarta.servlet.RequestDispatcher;
@@ -14,6 +16,7 @@ import model.Cinema;
 
 @WebServlet("/admin/cinema/add")
 public class AddCinemaServlet extends HttpServlet {
+	private static final Logger logger = Logger.getLogger(AddCinemaServlet.class.getName());
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("pageView", "/WEB-INF/admin/admin-addcinema.jsp");
@@ -38,17 +41,31 @@ public class AddCinemaServlet extends HttpServlet {
 				backToAddPage(request, response, "Thiếu địa chỉ");
 				return;
 			}
-		    Cinema cm = new Cinema(name, address);
-		    boolean res = new CinemaDAO().addCinema(cm);
-		    // Put message to session
-		    HttpSession session = request.getSession();
-		    if(res) {
-			    session.setAttribute("cinemaMessage", "Thêm rạp thành công!");
-		    }else {
-		    	session.setAttribute("cinemaMessage", "Thêm rạp thất bại!");
-		    }
-		} catch(NumberFormatException e) {
-			e.printStackTrace();
+			String status = request.getParameter("status");
+			model.CinemaStatus cStatus = null;
+			try {
+				cStatus = (status != null && !status.isBlank()) ? model.CinemaStatus.valueOf(status) : model.CinemaStatus.OPEN;
+			} catch (IllegalArgumentException ex) {
+				cStatus = model.CinemaStatus.OPEN;
+			}
+			Cinema cm = new Cinema(name, address);
+			cm.setStatus(cStatus);
+			HttpSession session = request.getSession();
+			try {
+				boolean res = new CinemaDAO().addCinema(cm);
+				if(res) {
+					session.setAttribute("cinemaMessage", "Thêm rạp thành công!");
+				} else {
+					session.setAttribute("cinemaMessage", "Thêm rạp thất bại!");
+				}
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, "Error adding cinema", e);
+				session.setAttribute("cinemaMessage", "Lỗi máy chủ khi thêm rạp. Vui lòng thử lại sau.");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Unexpected error in AddCinemaServlet", e);
+			request.getSession().setAttribute("cinemaMessage", "Lỗi không mong muốn. Vui lòng thử lại.");
 		}
 		
 	}

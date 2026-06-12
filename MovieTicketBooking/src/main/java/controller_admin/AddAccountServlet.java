@@ -11,12 +11,15 @@ import model.Role;
 import model.User;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.UserDAO;
 
 
 @WebServlet("/admin/user/add")
 public class AddAccountServlet extends HttpServlet {
+	private static final Logger logger = Logger.getLogger(AddAccountServlet.class.getName());
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("pageView", "/WEB-INF/admin/admin-addaccount.jsp");
@@ -70,17 +73,23 @@ public class AddAccountServlet extends HttpServlet {
 				return;
 			}
 			Role userRole = ("admin".equalsIgnoreCase(role)) ? Role.ADMIN : Role.USER;
-		    User user = new User(username, password, email, phonenumber, userRole);
-		    boolean res = new UserDAO().addUser(user);
-		    // Put message to session
-		    HttpSession session = request.getSession();
-		    if(res) {
-			    session.setAttribute("userMessage", "Thêm tài khoản thành công!");
-		    }else {
-		    	session.setAttribute("userMessage", "Thêm tài khoản thất bại!");
-		    }
-		} catch(NumberFormatException e) {
-			e.printStackTrace();
+			User user = new User(username, password, email, phonenumber, userRole);
+			HttpSession session = request.getSession();
+			try {
+				boolean res = new UserDAO().addUser(user);
+				if(res) {
+					session.setAttribute("userMessage", "Thêm tài khoản thành công!");
+				} else {
+					session.setAttribute("userMessage", "Thêm tài khoản thất bại!");
+				}
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, "Error adding user", e);
+				session.setAttribute("userMessage", "Lỗi máy chủ khi thêm tài khoản. Vui lòng thử lại sau.");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Unexpected error in AddAccountServlet", e);
+			request.getSession().setAttribute("userMessage", "Lỗi không mong muốn. Vui lòng thử lại.");
 		}
 		
 	}

@@ -1,12 +1,13 @@
 package dao;
 
-import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
+import model.CinemaStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +25,7 @@ import model.User;
 
 public class TicketDAO implements ITicketDAO {
 
+	private static final Logger logger = Logger.getLogger(TicketDAO.class.getName());
 	// get tickets by user id
 	@Override
 	public List<Ticket> getTicketsByUserId(int userId) {
@@ -43,15 +45,15 @@ public class TicketDAO implements ITicketDAO {
 				+ "WHERE u.user_id = ? "
 				+ "ORDER BY t.created_at DESC;";
 		try (Connection conn = JDBCConnection.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);){
+			 PreparedStatement ps = conn.prepareStatement(sql)){
 			ps.setInt(1, userId);
-			try (ResultSet rs = ps.executeQuery();){
+			try (ResultSet rs = ps.executeQuery()){
 				while (rs.next()) {
 					list.add(mapResultSetToTicket(rs));
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in getTicketsByUserId", e);
 		}
 
 		return list;
@@ -75,16 +77,15 @@ public class TicketDAO implements ITicketDAO {
 				+ "WHERE t.ticket_id = ? "
 				+ "ORDER BY t.created_at DESC;";
 		try (Connection conn = JDBCConnection.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);){
+			 PreparedStatement ps = conn.prepareStatement(sql)){
 			ps.setInt(1, ticketId);
-			try (ResultSet rs = ps.executeQuery();){
-				while (rs.next()) {
-					Ticket ticket = mapResultSetToTicket(rs);
-					return ticket;
+			try (ResultSet rs = ps.executeQuery()){
+				if (rs.next()) {
+					return mapResultSetToTicket(rs);
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in getTicketById", e);
 		}
 		return null;
 	}
@@ -107,14 +108,14 @@ public class TicketDAO implements ITicketDAO {
 				+ "JOIN rooms r ON s.room_id = r.room_id " 
 				+ "ORDER BY t.created_at DESC;";
 		try (Connection conn = JDBCConnection.getConnection();
-			Statement st = conn.createStatement();){
-			try (ResultSet rs = st.executeQuery(sql);){
+			 Statement st = conn.createStatement()){
+			try (ResultSet rs = st.executeQuery(sql)){
 				while (rs.next()) {
 					list.add(mapResultSetToTicket(rs));
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in getAllTickets", e);
 		}
 
 		return list;
@@ -169,7 +170,6 @@ public class TicketDAO implements ITicketDAO {
 				psSeat.addBatch();
 			}
 
-			psTicket.executeBatch();
 			int[] updateCounts = psSeat.executeBatch();
 
 			// Kiểm tra xem có ghế nào update thất bại không
@@ -184,12 +184,12 @@ public class TicketDAO implements ITicketDAO {
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in saveBooking", e);
 			try {
 				if (conn != null)
 					conn.rollback(); // Gặp lỗi thì hoàn tác
 			} catch (SQLException ex) {
-				ex.printStackTrace();
+				logger.log(Level.SEVERE, "Rollback failed in saveBooking", ex);
 			}
 			return false;
 		} finally {
@@ -197,6 +197,7 @@ public class TicketDAO implements ITicketDAO {
 				if (conn != null)
 					conn.close();
 			} catch (SQLException e) {
+				logger.log(Level.WARNING, "Failed to close connection in saveBooking", e);
 			}
 		}
 	}
@@ -221,7 +222,7 @@ public class TicketDAO implements ITicketDAO {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in updateTicketStatus", e);
 			return false;
 		}
 		return true;
@@ -233,8 +234,9 @@ public class TicketDAO implements ITicketDAO {
 			User user = new User(rs.getInt("user_id"), rs.getString("username"), null, rs.getString("email"),
 					rs.getString("phonenumber"), Role.valueOf(rs.getString("role")));
 
+			// Cinema constructor expects (int, String, String, CinemaStatus)
 			Cinema cinema = new Cinema(rs.getInt("cinema_id"), rs.getString("cinema_name"),
-					rs.getString("cinema_address"));
+					rs.getString("cinema_address"), CinemaStatus.OPEN);
 
 			Room room = new Room(rs.getInt("room_id"), rs.getString("room_name"));
 
@@ -250,7 +252,7 @@ public class TicketDAO implements ITicketDAO {
 					TicketStatus.valueOf(rs.getString("ticket_status")),
 					rs.getTimestamp("created_at").toLocalDateTime(), rs.getTimestamp("updated_at").toLocalDateTime());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error mapping ResultSet to Ticket", e);
 		}
 		return ticket;
 	}
