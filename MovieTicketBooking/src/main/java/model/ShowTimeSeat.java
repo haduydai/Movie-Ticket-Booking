@@ -1,19 +1,48 @@
 package model;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "showtimeseats")
+@Getter
+@Setter
 public class ShowTimeSeat {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "showtimeseat_id")
 	private int id;
+
+	@Column(name = "seat_name")
 	private String seatName;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_id")
 	private Room room;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
 	private User bookedBy;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "showtime_id")
 	private ShowTime showTime;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ticket_id")
+	private Ticket ticket;
+
+	@Column(name = "created_at", insertable = false, updatable = false)
 	private LocalDateTime createdAt;
+
+	@Column(name = "updated_at", insertable = false, updatable = false)
 	private LocalDateTime updatedAt;
-	
+
 	public ShowTimeSeat() {}
-	
-	// contructor use for get data from db
+
 	public ShowTimeSeat(int id, String seatName, Room room, User bookedBy, ShowTime showTime, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
 		this.seatName = seatName;
@@ -23,8 +52,7 @@ public class ShowTimeSeat {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
-	
-	// constructor use for user take show time seat (user can be null)
+
 	public ShowTimeSeat(String seatName, Room room, User bookedBy, ShowTime showTime) {
 		this.seatName = seatName;
 		this.room = room;
@@ -33,68 +61,21 @@ public class ShowTimeSeat {
 		this.createdAt = LocalDateTime.now();
 		this.updatedAt = createdAt;
 	}
-	
-	// constructor use for create show time seat
-		public ShowTimeSeat(String seatName, Room room, ShowTime showTime) {
-			this.seatName = seatName;
-			this.room = room;
-			this.bookedBy = null;
-			this.showTime = showTime;
-			this.createdAt = LocalDateTime.now();
-			this.updatedAt = createdAt;
-		}
-	
-	//Getter and Setter
-	public int getUserId() {
-		return bookedBy.getId();
+
+	public ShowTimeSeat(String seatName, Room room, ShowTime showTime) {
+		this.seatName = seatName;
+		this.room = room;
+		this.bookedBy = null;
+		this.showTime = showTime;
+		this.createdAt = LocalDateTime.now();
+		this.updatedAt = createdAt;
 	}
-	
+
+	public int getUserId() {
+		return bookedBy != null ? bookedBy.getId() : 0;
+	}
+
 	public int getShowTimeId() {
 		return showTime.getId();
 	}
-	
-	//Get seat name
-	public String getSeatName() {
-		return seatName;
-	}
-
-	
-	public void setSeat(String seatName) {
-		this.seatName = seatName;
-	}
-
-	public User getBookedBy() {
-		return bookedBy;
-	}
-
-	public void setBookedBy(User bookedBy) {
-		this.bookedBy = bookedBy;
-	}
-
-	public ShowTime getShowTime() {
-		return showTime;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public Room getRoom() {
-		return room;
-	}
-	
-	
-	
 }
