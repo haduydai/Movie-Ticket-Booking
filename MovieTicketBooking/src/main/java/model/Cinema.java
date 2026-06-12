@@ -11,7 +11,6 @@ public class Cinema {
 	private String address;
 	private CinemaStatus status = CinemaStatus.OPEN;
 	private List<Room> rooms;
-    
 	public Cinema() {}
     
 	public Cinema(int id, String name, String address, CinemaStatus status) {
@@ -50,11 +49,11 @@ public class Cinema {
 		this.address = address;
 	}
 
-	public List<Room> getRooms() {
+	public List<model.Room> getRooms() {
 		return rooms;
 	}
 
-	public void setRooms(List<Room> rooms) {
+	public void setRooms(List<model.Room> rooms) {
 		this.rooms = rooms;
 	}
 
@@ -70,6 +69,7 @@ public class Cinema {
 		this.status = status;
 	}
 
-	
-	
+	public void setId(int id) {
+		this.id = id;
+	}
 }

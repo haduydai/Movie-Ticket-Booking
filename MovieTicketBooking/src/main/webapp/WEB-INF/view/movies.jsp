@@ -34,7 +34,45 @@
             </div>
         </section>
 
-        <section class="section">
+            <section class="section">
+                <form action="movies" method="get">
+                <select name = "type">
+                    <option value=""> Tất cả thể loại</option>
+                    <option value="Action" ${selectType == 'Action' ? 'selected' : ''}> Hành động </option>
+                    <option value="Comedy" ${selectType == 'Comedy' ? 'selected' : ''}> Hài kịch </option>
+                    <option value="Drama" ${selectType == 'Drama' ? 'selected' : ''}> Chính kịch  </option>
+                    <option value="Horror" ${selectType == 'Horror' ? 'selected' : ''}> Kinh dị </option>
+                    <option value="Animation" ${selectType == 'Animation' ? 'selected' : ''}> Hoạt hình </option>
+                    <option value="Romance" ${selectType == 'Romance' ? 'selected' : ''}> Tình cảm </option>
+                    <option value="Sci-fi" ${selectType == 'Sci-fi' ? 'selected' : ''}> Khoa học viễn tưởng </option>
+                    <option value="Adventure" ${selectType == 'Adventure' ? 'selected' : ''}> Phiêu lưu </option>
+                    <option value="Action" ${selectType == 'Action' ? 'selected' : ''}> Hành động </option>
+                </select>
+
+
+                <select name ="country">
+                    <option value="">Tất cả </option>
+                    <option value="USA" ${selectCountry == 'USA' ? 'selected' :''}>Mỹ</option>
+                    <option value="VietNam" ${selectCountry == 'VietNam' ? 'selected' :''}>Việt Nam</option>
+                    <option value="Korea" ${selectCountry == 'Korea' ? 'selected' :''}>Hàn Quốc</option>
+                    <option value="Japan" ${selectCountry == 'Japan' ? 'selected' :''}>Nhật Bản</option>
+                    <option value="ThaiLan" ${selectCountry == 'ThaiLan' ? 'selected' :''}>Thái Lan</option>
+                    <option value="Indian" ${selectCountry == 'Indian' ? 'selected' :''}>Ấn Độ</option>
+                </select>
+
+                    <select name = "tag">
+                        <option value="">None </option>
+                        <option value="Marvel" ${selectTag == 'Marvel' ? 'selected':''}>Marvel </option>
+                        <option value="Anime" ${selectTag == 'Anime' ? 'selected':''}>Anime</option>
+                        <option value="HocDuong" ${selectTag == 'HocDuong' ? 'selected':''}>Học đường </option>
+                        <option value="Disney" ${selectTag == 'Disney' ? 'selected':''}>Disney </option>
+                    </select>
+
+                <button class = "btn" type="submit">Lọc phim</button>
+                <a href ="movies" class ="btn">Xoá lọc</a>
+                </form>
+            </section>
+            <section class="section">
             <h2>Phim Đang Chiếu</h2>
             <div class="movie-grid">
                 

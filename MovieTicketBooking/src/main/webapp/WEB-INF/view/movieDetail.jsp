@@ -220,11 +220,22 @@
 
         <%-- NỘI DUNG: Giữ phần mô tả chi tiết phim --%>
         <section class="md-content">
+            <div>
             <div class="md-card">
                 <h2>Mô tả chi tiết</h2>
                 <p class="md-desc">${empty movie.description ? 'Đang cập nhật nội dung phim.' : movie.description}</p>
             </div>
 
+<%--            trailer--%>
+            <div class="md-card" style="margin-top:20px ;">
+                <h2>Quảng cáo</h2>
+                <iframe width = "100%" height = "400"
+                        src="${movie.trailerUrl}"
+                        title="Movie Trailer"
+                        frameborder="0" allowfullscreen>
+                </iframe>
+            </div>
+            </div>
             <aside class="md-card">
                 <h3>Thông tin phim</h3>
                 <ul class="md-specs">

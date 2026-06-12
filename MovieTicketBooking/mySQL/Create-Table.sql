@@ -51,6 +51,10 @@ CREATE TABLE movies (
     movie_status ENUM('COMING_SOON', 'NOW_SHOWING', 'STOPPED_SHOWING') DEFAULT 'COMING_SOON'
 );
 
+ALTER TABLE movies
+    ADD movie_tag VARCHAR(100);
+    ADD trailer_url VARCHAR(255);
+
 -- ==========================
 -- 5. Bảng SHOWTIMES
 -- ==========================
