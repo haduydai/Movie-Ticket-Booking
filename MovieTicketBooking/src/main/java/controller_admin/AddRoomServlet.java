@@ -1,6 +1,8 @@
 package controller_admin;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.CinemaDAO;
 import dao.RoomDAO;
@@ -16,6 +18,7 @@ import model.Room;
 
 @WebServlet("/admin/room/add")
 public class AddRoomServlet extends HttpServlet {
+	private static final Logger logger = Logger.getLogger(AddRoomServlet.class.getName());
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("pageView", "/WEB-INF/admin/admin-addroom.jsp");
@@ -66,18 +69,24 @@ public class AddRoomServlet extends HttpServlet {
 				return;
 			}
 			
-		    Cinema cm = new CinemaDAO().getCinemaById(cinemaId);
-		    Room room = new Room(name, numberOfColumns, numberOfRows, cm);
-		    boolean res = new RoomDAO().addRoom(room, cinemaId);
-		    // Put message to session
-		    HttpSession session = request.getSession();
-		    if(res) {
-			    session.setAttribute("roomMessage", "Thêm phòng thành công!");
-		    }else {
-		    	session.setAttribute("roomMessage", "Thêm phòng thất bại!");
-		    }
-		} catch(NumberFormatException e) {
-			e.printStackTrace();
+			Cinema cm = new CinemaDAO().getCinemaById(cinemaId);
+			Room room = new Room(name, numberOfColumns, numberOfRows, cm);
+			HttpSession session = request.getSession();
+			try {
+				boolean res = new RoomDAO().addRoom(room, cinemaId);
+				if(res) {
+					session.setAttribute("roomMessage", "Thêm phòng thành công!");
+				} else {
+					session.setAttribute("roomMessage", "Thêm phòng thất bại!");
+				}
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, "Error adding room", e);
+				session.setAttribute("roomMessage", "Lỗi máy chủ khi thêm phòng. Vui lòng thử lại sau.");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+		} catch (NumberFormatException e) {
+			logger.log(Level.WARNING, "Invalid number format in AddRoomServlet", e);
+			backToAddPage(request, response, "Dữ liệu nhập không hợp lệ");
 		}
 		
 	}

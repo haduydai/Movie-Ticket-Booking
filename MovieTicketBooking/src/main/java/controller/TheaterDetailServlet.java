@@ -30,6 +30,10 @@ public class TheaterDetailServlet extends HttpServlet {
             // 2. Lấy thông tin Rạp (Tên, địa chỉ...)
             CinemaDAO cinemaDAO = new CinemaDAO();
             Cinema cinema = cinemaDAO.getCinemaById(cinemaId);
+            if(cinema == null){
+                response.sendRedirect("theaters");
+                return;
+            }
             
             // 3. Lấy danh sách phim chiếu tại rạp này
             MovieDAO movieDAO = new MovieDAO();

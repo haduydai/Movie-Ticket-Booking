@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.CinemaDAO;
 import dao.MovieDAO;
@@ -24,6 +26,7 @@ import model.ShowTime;
 
 @WebServlet("/admin/showtime/add")
 public class AddShowTimeServlet extends HttpServlet {
+	private static final Logger logger = Logger.getLogger(AddShowTimeServlet.class.getName());
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("pageView", "/WEB-INF/admin/admin-addshowtime.jsp");
@@ -70,25 +73,43 @@ public class AddShowTimeServlet extends HttpServlet {
 		    	backToAddPage(request, response, "Chưa nhập giá tiền mỗi vé");
 				return;
 			}
-		    BigDecimal price = new BigDecimal(priceStr);
-		    
-		    String start = request.getParameter("startTime");
-		    if(start == null || start.isBlank()) {
-		    	backToAddPage(request, response, "Chưa chọn thời gian bắt đầu");
+			BigDecimal price;
+			try {
+				price = new BigDecimal(priceStr);
+			} catch (NumberFormatException ex) {
+				backToAddPage(request, response, "Giá tiền không hợp lệ");
 				return;
 			}
-		    LocalDateTime startTime = LocalDateTime.parse(start);
-		    
-		    Room r = new RoomDAO().getRoomById(roomId);
-		    Cinema c = new CinemaDAO().getCinemaById(cinemaId);
-		    Movie m = new MovieDAO().getMovieById(movieId);
-		    ShowTime st = new ShowTime(c, r, m, price, startTime);
-		    boolean res = new ShowTimeDAO().addShowTime(st);
-		    // Put message to session
-		    HttpSession session = request.getSession();
-		    session.setAttribute("showtimeMessage", res ?  "Thêm suất chiếu thành công!" : "Thêm suất chiếu thất bại!");
-		} catch(NumberFormatException e) {
-			e.printStackTrace();
+            
+			String start = request.getParameter("startTime");
+			if(start == null || start.isBlank()) {
+				backToAddPage(request, response, "Chưa chọn thời gian bắt đầu");
+				return;
+			}
+			LocalDateTime startTime;
+			try {
+				startTime = LocalDateTime.parse(start);
+			} catch (Exception ex) {
+				backToAddPage(request, response, "Thời gian không hợp lệ");
+				return;
+			}
+            
+			Room r = new RoomDAO().getRoomById(roomId);
+			Cinema c = new CinemaDAO().getCinemaById(cinemaId);
+			Movie m = new MovieDAO().getMovieById(movieId);
+			ShowTime st = new ShowTime(c, r, m, price, startTime);
+			HttpSession session = request.getSession();
+			try {
+				boolean res = new ShowTimeDAO().addShowTime(st);
+				session.setAttribute("showtimeMessage", res ?  "Thêm suất chiếu thành công!" : "Thêm suất chiếu thất bại!");
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, "Error adding showtime", e);
+				session.setAttribute("showtimeMessage", "Lỗi máy chủ khi thêm suất chiếu. Vui lòng thử lại sau.");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+		} catch (NumberFormatException e) {
+			logger.log(Level.WARNING, "Invalid number format in AddShowTimeServlet", e);
+			backToAddPage(request, response, "Dữ liệu số không hợp lệ");
 		}
 		
 	}

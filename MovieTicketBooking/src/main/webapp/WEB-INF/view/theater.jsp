@@ -36,6 +36,13 @@
 
         <%-- DANH SÁCH RẠP (Lấy dữ liệu động từ Database) --%>
         <section class="section">
+            <div style = "margin-bottom: 20px; text-align: center;">
+                <form action="theaters" method="get">
+                    <input type = "text" name = "keyword" value ="${keyword}"
+                           placeholder="Nhập tên" style="padding: 10px; with:300px; border-radius: 5px;">
+                           <button type ="submit" style = padding 10px 15px;>Tìm kiếm</button>
+                </form>
+            </div>
             
             <div class="cinema-grid">
                 
@@ -52,8 +59,12 @@
                             <h3>${c.name}</h3>
                             <p><strong>Địa chỉ:</strong> ${c.address}</p>
                             <p class="cinema-hours">Giờ mở cửa: 8:00 - 24:00</p>
-                            
-                        </div>
+                            <a href="${pageContext.request.contextPath}/theater-detail?id=${c.id}" class="btn">
+                                Xem chi tiết
+                            </a>
+
+
+                         </div>
                     </div>
                 </c:forEach>
                 
