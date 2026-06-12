@@ -25,8 +25,21 @@ public class HibernateUtil {
     }
 
     private static void addAnnotatedClasses(Configuration configuration) {
-        // Chúng ta sẽ đăng ký các class được chú thích (annotated classes) ở đây sau khi mapping JPA xong.
-        // Ví dụ: configuration.addAnnotatedClass(model.User.class);
+        // Đăng ký toàn bộ các class thực thể JPA vào Hibernate
+        configuration.addAnnotatedClass(model.User.class);
+        configuration.addAnnotatedClass(model.Movie.class);
+        configuration.addAnnotatedClass(model.Cinema.class);
+        configuration.addAnnotatedClass(model.Room.class);
+        configuration.addAnnotatedClass(model.ShowTime.class);
+        configuration.addAnnotatedClass(model.ShowTimeSeat.class);
+        configuration.addAnnotatedClass(model.Ticket.class);
+        configuration.addAnnotatedClass(model.Seat.class);
+        configuration.addAnnotatedClass(model.Combo.class);
+        configuration.addAnnotatedClass(model.Promotion.class);
+        configuration.addAnnotatedClass(model.Booking.class);
+        configuration.addAnnotatedClass(model.OAuthAccount.class);
+        configuration.addAnnotatedClass(model.PaymentTransaction.class);
+        configuration.addAnnotatedClass(model.BookingAuditLog.class);
     }
 
     public static SessionFactory getSessionFactory() {
