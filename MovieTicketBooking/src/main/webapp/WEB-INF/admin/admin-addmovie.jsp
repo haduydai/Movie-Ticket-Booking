@@ -25,7 +25,7 @@
 		</c:if>
 		
 		<h1>Thêm phim mới</h1>
-		<form action="${pageContext.request.contextPath }/admin/movie/add" method="post">
+		<form action="${pageContext.request.contextPath }/admin/movie/add" method="post" enctype="multipart/form-data">
 			<table>
 				<tr>
 					<td><label for="name">Tên phim</label></td>
@@ -52,8 +52,8 @@
 					<td><input name="country" type="text" style="width:400px" class="form-control"></td>
 				</tr>
 				<tr>
-					<td><label for="imageUrl">Đường dẫn hình ảnh poster</label></td>
-					<td><input name="imageUrl" type="text" style="width:1000px" class="form-control"></td>
+					<td><label for="poster">Poster (ảnh)</label></td>
+					<td><input name="poster" type="file" accept="image/*" class="form-control"></td>
 				</tr>
 				<tr>
 					<td><label for="status">Trạng thái</label></td>

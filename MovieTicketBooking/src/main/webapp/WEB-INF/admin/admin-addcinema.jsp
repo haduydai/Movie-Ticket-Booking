@@ -35,6 +35,15 @@
 					<td><label for="address">Địa chỉ</label></td>
 					<td><input name="address" type="text" style="width:1000px" class="form-control"></td>
 				</tr>
+				<tr>
+					<td><label for="status">Trạng thái</label></td>
+					<td>
+						<select name="status" class="form-control" style="width:200px">
+							<option value="OPEN">Mở</option>
+							<option value="CLOSED">Đóng</option>
+						</select>
+					</td>
+				</tr>
 			</table>
 			<input type="submit" value="Thêm" class="btn btn-success">
 		</form>

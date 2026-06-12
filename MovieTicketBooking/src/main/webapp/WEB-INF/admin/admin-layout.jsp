@@ -66,6 +66,11 @@
 						<input type="submit" value="Quản lý tài khoản" class="nav-link p-3 text-white">
 					</form>
 				</li>
+				<li class="nav-item">
+					<form action="${pageContext.request.contextPath}/admin/revenue" id="revenue" method="get">
+						<input type="submit" value="Quản lý doanh thu" class="nav-link p-3 text-white">
+					</form>
+				</li>
 			</ul>
 			
 			<div class="nav-item d-flex justify-content-center align-items-center">
@@ -99,7 +104,7 @@
 	        li.classList.remove("active");
 	    });
 	
-	    const listId = ["movie", "cinema", "room", "showtime", "ticket", "user"];
+	    const listId = ["movie", "cinema", "room", "showtime", "ticket", "user", "revenue"];
 	 	// Duyệt mảng và set active
 	    for (let i = 0; i < listId.length; i++) {
 	        if (currentPage.includes(listId[i])) {

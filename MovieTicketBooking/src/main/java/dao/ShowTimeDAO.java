@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.math.BigDecimal;
@@ -18,6 +20,7 @@ import model.ShowTime;
 import model.ShowTimeSeat;
 
 public class ShowTimeDAO implements IShowTimeDAO {
+	private static final Logger logger = Logger.getLogger(ShowTimeDAO.class.getName());
 	private ICinemaDAO cinemaDAO;
 	private IRoomDAO roomDAO;
 	private IMovieDAO movieDAO;
@@ -101,12 +104,33 @@ public class ShowTimeDAO implements IShowTimeDAO {
 	// Add show time and seats of it
 	@Override
 	public boolean addShowTime(ShowTime showTime) {
-		String query = "INSERT INTO showtimes (showtime_price, start_time, movie_id, cinema_id, room_id) VALUES "
+		String conflictQuery = "SELECT COUNT(*) AS cnt FROM showtimes s JOIN movies m ON s.movie_id = m.movie_id "
+				+ "WHERE s.room_id = ? AND (? < DATE_ADD(s.start_time, INTERVAL m.movie_duration MINUTE)) "
+				+ "AND (s.start_time < DATE_ADD(?, INTERVAL ? MINUTE))";
+		String insertQuery = "INSERT INTO showtimes (showtime_price, start_time, movie_id, cinema_id, room_id) VALUES "
 				+ "(?, ?, ?, ?, ?);";
 		try {
 			Connection connect = JDBCConnection.getConnection();
+			// Check conflict
+			PreparedStatement chk = connect.prepareStatement(conflictQuery);
+			chk.setInt(1, showTime.getRoomId());
+			chk.setTimestamp(2, Timestamp.valueOf(showTime.getStartTime()));
+			chk.setTimestamp(3, Timestamp.valueOf(showTime.getStartTime()));
+			chk.setInt(4, showTime.getMovie().getDuration());
+			ResultSet rchk = chk.executeQuery();
+			if (rchk.next()) {
+				int cnt = rchk.getInt("cnt");
+				rchk.close();
+				chk.close();
+				connect.close();
+				if (cnt > 0) {
+					// conflict exists
+					return false;
+				}
+			}
+			// No conflict; insert
 			connect.setAutoCommit(false);
-			PreparedStatement st = connect.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+			PreparedStatement st = connect.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 			st.setBigDecimal(1, showTime.getPricePerTicket());
 			st.setTimestamp(2, Timestamp.valueOf(showTime.getStartTime()));
 			st.setInt(3, showTime.getMovieId());
@@ -115,12 +139,13 @@ public class ShowTimeDAO implements IShowTimeDAO {
 			st.executeUpdate();
 			ResultSet rs = st.getGeneratedKeys();
 			if (!rs.next()) {
+				connect.rollback();
+				st.close();
+				connect.close();
 				return false;
 			}
-
 			int newShowTimeId = rs.getInt(1);
 			rs.close();
-			
 			st.close();
 			connect.commit();
 			connect.close();
@@ -144,14 +169,17 @@ public class ShowTimeDAO implements IShowTimeDAO {
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
 			st.setInt(1, id);
-			st.executeUpdate();
+			int rowsAffected = st.executeUpdate();
 			st.close();
 			connect.close();
+			if (rowsAffected > 0) {
+				logger.log(Level.INFO, "Showtime deleted successfully with ID: " + id);
+				return true;
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			logger.log(Level.SEVERE, "Error deleting showtime: " + id, e);
 		}
-		return true;
+		return false;
 	}
 
 	private ShowTime mapResultSetToShowTime(ResultSet rs) {
@@ -166,7 +194,7 @@ public class ShowTimeDAO implements IShowTimeDAO {
 			Room room = roomDAO.getRoomById(rs.getInt("room_id"));
 			showTime = new ShowTime(id, cinema, room, movie, price, startTime, createdAt);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error mapping ResultSet to ShowTime", e);
 		}
 		return showTime;
 	}

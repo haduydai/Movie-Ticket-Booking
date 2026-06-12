@@ -3,21 +3,24 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.CinemaStatus;
+
 public class Cinema {
 	private int id;
 	private String name;
 	private String address;
-	private List<model.Room> rooms;
-	
+	private CinemaStatus status = CinemaStatus.OPEN;
+	private List<Room> rooms;
 	public Cinema() {}
-	
-	public Cinema(int id, String name, String address) {
+    
+	public Cinema(int id, String name, String address, CinemaStatus status) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
+		this.status = status;
 		this.rooms = new ArrayList<>();
 	}
-	
+    
 	public Cinema(String name, String address) {
 		this.name = name;
 		this.address = address;
@@ -58,6 +61,13 @@ public class Cinema {
 		return id;
 	}
 
+	public CinemaStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(CinemaStatus status) {
+		this.status = status;
+	}
 
 	public void setId(int id) {
 		this.id = id;

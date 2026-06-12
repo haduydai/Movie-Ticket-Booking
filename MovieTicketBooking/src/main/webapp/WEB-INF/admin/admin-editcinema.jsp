@@ -36,6 +36,15 @@
 					<td><label for="address">Thể địa chỉ</label></td>
 					<td><input name="address" type="text" style="width:1000px" class="form-control" value="${cinema.address}"></td>
 				</tr>
+				<tr>
+					<td><label for="status">Trạng thái</label></td>
+					<td>
+						<select name="status" class="form-control" style="width:200px">
+							<option value="OPEN" ${cinema.status == 'OPEN' ? 'selected' : ''}>Mở</option>
+							<option value="CLOSED" ${cinema.status == 'CLOSED' ? 'selected' : ''}>Đóng</option>
+						</select>
+					</td>
+				</tr>
 			</table>
 			<input type="submit" value="Cập nhật" class="btn btn-success">
 		</form>
