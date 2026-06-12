@@ -41,6 +41,12 @@ public class User extends AbsBaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Ticket> tickets = new ArrayList<>();
 
+	// 2 trường này để  upload ảnh đại diện lên Cloudinary
+	@Column(name = "avatar_url")
+	private String avatarUrl;
+	@Column(name = "avatar_public_id")
+	private String avatarPublicId;
+
 	public User() {}
 
 	// Constructor phục vụ việc tạo mới user

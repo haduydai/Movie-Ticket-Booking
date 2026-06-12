@@ -47,12 +47,15 @@ public class Movie extends AbsBaseEntity {
 	@Column(name = "movie_status")
 	private model.MovieStatus movieStatus;
 
-	// Giữ nguyên tên biến moiveTag bị viết sai chính tả từ trước để tránh lỗi compile các file khác
 	@Column(name = "movie_tag")
 	private String moiveTag;
 
 	@Column(name = "trailer_url")
 	private String trailerUrl;
+
+	// trường để  upload ảnh poster lên Cloudinary
+	@Column(name = "movie_image_public_id")
+	private String imagePublicId;
 
 	// Constructor không tham số bắt buộc phải có cho Hibernate hoạt động
 	public Movie() {}
