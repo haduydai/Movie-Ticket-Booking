@@ -20,3 +20,9 @@
 *.log
 .DS_Store
 Thumbs.db
+
+# IntelliJ compilation target inside src
+/src/main/java/production/
+
+# Gradle
+.gradle/
