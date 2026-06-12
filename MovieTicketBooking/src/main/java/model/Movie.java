@@ -30,7 +30,33 @@ public class Movie {
 		this.trailerUrl = trailerUrl;
 
 	}
-	
+	// Constructor 9 tham số phục vụ cho Add/Edit Movie Servlet
+	public Movie(String name, String type, String directorName, String actorsName, String description,
+	             int duration, String country, String imageUrl, model.MovieStatus movieStatus) {
+		this.name = name;
+		this.type = type;
+		this.directorName = directorName;
+		this.actorsName = actorsName;
+		this.description = description;
+		this.duration = duration;
+		this.country = country;
+		this.imageUrl = imageUrl;
+		this.movieStatus = movieStatus;
+	}
+	// Constructor 10 tham số (đầy đủ chức năng gán dữ liệu)
+	public Movie(int id, String name, String type, String directorName, String actorsName, String description,
+	             int duration, String country, String imageUrl, model.MovieStatus movieStatus) {
+		this.id = id;
+		this.name = name;
+		this.type = type;
+		this.directorName = directorName;
+		this.actorsName = actorsName;
+		this.description = description;
+		this.duration = duration;
+		this.country = country;
+		this.imageUrl = imageUrl;
+		this.movieStatus = movieStatus;
+	}
 	// Constructor without movie id
 	public Movie(String name, String type, String directorName, String actorsName, String description,
 			int duration, String country, String imageUrl, model.MovieStatus movieStatus, String moiveTag, String trailerUrl) {
