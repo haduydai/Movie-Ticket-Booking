@@ -1,5 +1,7 @@
 package controller_admin;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,7 +16,8 @@ import dao.UserDAO;
 
 @WebServlet("/admin/user/delete")
 public class DeleteAccountServlet extends HttpServlet {
-	
+	private static final Logger logger = Logger.getLogger(DeleteAccountServlet.class.getName());
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doPost(request, response);
@@ -31,11 +34,15 @@ public class DeleteAccountServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/admin/users");
             return;
         }
-        
-        boolean res = new UserDAO().deleteUser(id);
-
         HttpSession session = request.getSession();
-        session.setAttribute("userMessage", (res) ? "Xoá user thành công!" : "Xoá user thất bại!");
+        try {
+            boolean res = new UserDAO().deleteUser(id);
+            session.setAttribute("userMessage", (res) ? "Xoá user thành công!" : "Xoá user thất bại!");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error deleting user", e);
+            session.setAttribute("userMessage", "Lỗi máy chủ khi xoá user. Vui lòng thử lại sau.");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
 
         response.sendRedirect(request.getContextPath() + "/admin/users");
 	}

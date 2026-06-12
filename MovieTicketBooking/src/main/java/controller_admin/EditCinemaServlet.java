@@ -11,12 +11,15 @@ import model.Cinema;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import dao.CinemaDAO;
 
 
 @WebServlet("/admin/cinema/edit")
 public class EditCinemaServlet extends HttpServlet {
+	private static final Logger logger = Logger.getLogger(EditCinemaServlet.class.getName());
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("pageView", "/WEB-INF/admin/admin-editcinema.jsp");
@@ -64,19 +67,27 @@ public class EditCinemaServlet extends HttpServlet {
 				backToEditPage(request, response, "Thiếu địa chỉ");
 				return;
 			}
-		    Cinema cm = new Cinema(name, address);
-		    int update = new CinemaDAO().updateCinema(id, cm);
+			String status = request.getParameter("status");
+			model.CinemaStatus cStatus = null;
+			try {
+				cStatus = (status != null && !status.isBlank()) ? model.CinemaStatus.valueOf(status) : model.CinemaStatus.OPEN;
+			} catch (IllegalArgumentException ex) {
+				cStatus = model.CinemaStatus.OPEN;
+			}
+			Cinema cm = new Cinema(name, address);
+			cm.setStatus(cStatus);
+			int update = new CinemaDAO().updateCinema(id, cm);
 		    // Put message to session
 		    HttpSession session = request.getSession();
 			// check movie have update in database
-		    if(update > 0) {
-			    session.setAttribute("cinemaMessage", "Cập nhật thành công!");
-		    } else {
-		    	session.setAttribute("cinemaMessage", "Không cập nhật!");
-		    }
-		} catch(NumberFormatException e) {
-			e.printStackTrace();
-		}
+	    if(update > 0) {
+		    session.setAttribute("cinemaMessage", "Cập nhật thành công!");
+	    } else {
+	    	session.setAttribute("cinemaMessage", "Không cập nhật!");
+	    }
+	} catch(NumberFormatException e) {
+		logger.log(Level.WARNING, "Invalid number format in EditCinemaServlet", e);
+	}
 	}
 	
 	// Back to edit page for edit again
