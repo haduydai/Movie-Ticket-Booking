@@ -10,7 +10,9 @@ public class ShowTimeSeat {
 	private ShowTime showTime;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	
+
+	private boolean vip;
+	private double price;
 	public ShowTimeSeat() {}
 	
 	// contructor use for get data from db
@@ -95,6 +97,14 @@ public class ShowTimeSeat {
 		return room;
 	}
 	
-	
+	public boolean isVip(){
+		return vip;
+	}
+	public void setVip(boolean vip){
+		this.vip = vip;
+	}
+	public void setPrice(doubl3e price){
+		this.price = price;
+	}
 	
 }

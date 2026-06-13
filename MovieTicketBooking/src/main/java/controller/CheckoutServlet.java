@@ -43,10 +43,24 @@ public class CheckoutServlet extends HttpServlet {
 
         int showtimeId = Integer.parseInt(request.getParameter("showtimeId"));
         String seatsStr = request.getParameter("selectedSeats"); // "A1,A2"
-        double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
+       //double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
+        // tính tổng tiền vé trong giỏ hàng
         String paymentMethod = request.getParameter("paymentMethod");
 
         String[] seats = seatsStr.split(",");
+        // tính tổng tiền vé dựa vào việc chọn ghế ngồi
+        double totalPrice = 0;
+        for(String seat : seats){
+            char row= seat.charAt(0);
+            if(row == 'A' || row == 'B'){
+                totalPrice += 120000;
+            }
+            else{
+                totalPrice += 90000;
+            }
+        }
+
+        request.setAttribute("totalPrice", totalPrice);
         
         TicketDAO dao = new TicketDAO();
         // Gọi hàm Transaction vừa viết ở DAO

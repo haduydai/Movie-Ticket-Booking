@@ -31,6 +31,19 @@ public class SelectSeatServlet extends HttpServlet {
 			
 			// Load toàn bộ ghế từ DB
 			List<ShowTimeSeat> seatList = stsDao.getShowTimeSeatsByShowTimeId(showtimeId);
+			// xác định ghế vip và giá của nó
+			for(ShowTimeSeat seat : seatList){
+				String seatName = seat.gếtatName();
+				char row = seatName.charAt(0);
+				if(row == 'A' || row == 'B'){
+					seat.setVip(true);
+					seat.setPrice(12000);
+				}
+				else {
+					seat.setVip(false);
+					seat.setPrice(90000);
+				}
+			}
 			
 			// Lấy bảng alphabet để đánh dấu hàng ghế khi hiển thị
 			List<String> alphabet = new ArrayList<>();

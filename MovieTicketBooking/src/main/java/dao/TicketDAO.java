@@ -136,13 +136,11 @@ public class TicketDAO implements ITicketDAO {
 			// 1. Tạo mã vé (Ticket UID)
 			String ticketUid = UUID.randomUUID().toString();
 
-			double pricePerSeat = totalPrice / seats.length;
-
 			// 2. Insert vào bảng TICKETS (Giữ nguyên)
 			String sqlTicket = "INSERT INTO tickets (ticket_uid, ticket_price, payment_method, ticket_status, ticket_seats, user_id, showtime_id) VALUES (?, ?, ?, 'PAID', ?, ?, ?)";
 			psTicket = conn.prepareStatement(sqlTicket, Statement.RETURN_GENERATED_KEYS);
 			psTicket.setString(1, ticketUid);
-			psTicket.setBigDecimal(2, java.math.BigDecimal.valueOf(pricePerSeat));
+			psTicket.setBigDecimal(2, java.math.BigDecimal.valueOf(totalPrice));
 			psTicket.setString(3, paymentMethod);
 			psTicket.setString(4, convertListToString(seats));
 			psTicket.setInt(5, user.getId());
@@ -158,7 +156,7 @@ public class TicketDAO implements ITicketDAO {
 			}
 			// 3. Update bảng SHOWTIMESEATS (THAY ĐỔI Ở ĐÂY: Dùng UPDATE thay vì INSERT)
 			// Tìm đúng ghế của suất chiếu đó và cập nhật user_id
-			String sqlSeat = "UPDATE showtimeseats SET user_id = ?, ticket_id = ? WHERE showtime_id = ? AND seat_name = ?";
+			String sqlSeat = "UPDATE showtimeseats SET user_id = ?, ticket_id = ? WHERE showtime_id = ? AND seat_name = ? AND user_id IS NULL";
 			psSeat = conn.prepareStatement(sqlSeat);
 
 			for (String seat : seats) {
