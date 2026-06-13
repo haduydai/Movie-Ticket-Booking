@@ -79,6 +79,10 @@ public class HibernateUtil {
         configuration.setProperty("hibernate.hikari.idleTimeout", props.getProperty("hikari.idleTimeout", "30000"));
         configuration.setProperty("hibernate.hikari.connectionTimeout", props.getProperty("hikari.connectionTimeout", "30000"));
         configuration.setProperty("hibernate.hikari.maxLifetime", props.getProperty("hikari.maxLifetime", "1800000"));
+
+        // Đăng ký thêm phân hệ Giỏ hàng
+        configuration.addAnnotatedClass(model.Cart.class);
+        configuration.addAnnotatedClass(model.CartItem.class);
     }
 
     private static String required(Properties props, String key) {
