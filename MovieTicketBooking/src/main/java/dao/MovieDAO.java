@@ -19,7 +19,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		try {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
-					+ " movie_duration, movie_country, movie_image_url, movie_status FROM movies ORDER BY movie_id DESC";
+					+ " movie_duration, movie_country, movie_image_url, movie_status FROM movies WHERE deleted_at IS NULL ORDER BY movie_id DESC";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			Statement st = connect.createStatement();
@@ -45,7 +45,7 @@ public class MovieDAO implements dao.IMovieDAO {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
 					+ " movie_duration, movie_country, movie_image_url, movie_status"
-					+ " FROM movies WHERE movie_status = ? "
+					+ " FROM movies WHERE movie_status = ? AND deleted_at IS NULL "
 					+ " ORDER BY movie_id DESC LIMIT ?";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
@@ -74,7 +74,7 @@ public class MovieDAO implements dao.IMovieDAO {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
 					+ " movie_duration, movie_country, movie_image_url, movie_status"
-					+ " FROM movies WHERE movie_status = ? ORDER BY movie_id DESC";
+					+ " FROM movies WHERE movie_status = ? AND deleted_at IS NULL ORDER BY movie_id DESC";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
@@ -101,7 +101,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		try {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
-					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag FROM movies WHERE movie_name LIKE ? ORDER BY movie_id DESC;";
+					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag FROM movies WHERE movie_name LIKE ? AND deleted_at IS NULL ORDER BY movie_id DESC;";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
@@ -126,7 +126,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		Movie movie = null;
 		try {
 			// Query string to get data
-			String queryString = "SELECT * FROM movies WHERE movie_id = ?";
+			String queryString = "SELECT * FROM movies WHERE movie_id = ? AND deleted_at IS NULL";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
@@ -180,7 +180,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		int update = 0;
 		try {
 			// Query string to get data
-			String queryString = "DELETE FROM movies WHERE movie_id = ?;";
+			String queryString = "UPDATE movies SET deleted_at = NOW() WHERE movie_id = ?;";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
@@ -269,7 +269,7 @@ public class MovieDAO implements dao.IMovieDAO {
 			// Query string to get data
 			String queryString = "SELECT DISTINCT m.movie_id, m.movie_name, m.movie_type, m.director_name, m.names_of_actors, m.movie_description,"
 					+ " m.movie_duration, m.movie_country, m.movie_image_url, m.movie_status "
-					+ " FROM movies m JOIN cinema_movies cm ON m.movie_id = cm.movie_id WHERE cm.cinema_id = ?";
+					+ " FROM movies m JOIN cinema_movies cm ON m.movie_id = cm.movie_id WHERE cm.cinema_id = ? AND m.deleted_at IS NULL";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
@@ -295,7 +295,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		try{
 			StringBuilder sql = new StringBuilder("SELECT movie_id, movie_name, movie_type," +
 					" director_name, names_of_actors, movie_description,  " +
-					"movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url FROM movies WHERE 1=1");
+					"movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url FROM movies WHERE deleted_at IS NULL");
 			// lọc phim thep thể loại
 			if(type != null && !type.trim().isEmpty()){
 				sql.append(" AND movie_type = ?");
