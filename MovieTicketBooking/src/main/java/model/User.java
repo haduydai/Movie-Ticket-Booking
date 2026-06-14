@@ -1,22 +1,57 @@
 package model;
-import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+@Entity
+@Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET deleted_at = NOW() WHERE user_id = ?")
+@SQLRestriction("deleted_at IS NULL")
+@Getter
+@Setter
+public class User extends AbsBaseEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "user_id")
 	private int id;
+
+	@Column(name = "username", unique = true, nullable = false)
 	private String username;
+
+	@Column(name = "password", nullable = false)
 	private String password;
+
+	@Column(name = "email", unique = true, nullable = false)
 	private String email;
+
+	@Column(name = "phonenumber")
 	private String phoneNumber;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "role")
 	private Role role;
-	private List<Ticket> tickets;
-	
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Ticket> tickets = new ArrayList<>();
+
+	// 2 trường này để  upload ảnh đại diện lên Cloudinary
+	@Column(name = "avatar_url")
+	private String avatarUrl;
+	@Column(name = "avatar_public_id")
+	private String avatarPublicId;
+
 	public User() {}
-	
-	// Constructor for create user
+
+	// Constructor phục vụ việc tạo mới user
 	public User(String username, String password,
-			String email, String phoneNumber, Role role) {
+	            String email, String phoneNumber, Role role) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
@@ -24,10 +59,10 @@ public class User {
 		this.role = role;
 		this.tickets = new ArrayList<>();
 	}
-	
-	// Constructor for get user from db
+
+	// Constructor phục vụ việc lấy user từ database
 	public User(int id, String username, String password,
-			String email, String phoneNumber, Role role) {
+	            String email, String phoneNumber, Role role) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
@@ -36,60 +71,4 @@ public class User {
 		this.role = role;
 		this.tickets = new ArrayList<>();
 	}
-
-	//Getter and Setter
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public List<Ticket> getTickets() {
-		return tickets;
-	}
-
-	public void setTickets(List<Ticket> tickets) {
-		this.tickets = tickets;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	
-	
 }
