@@ -33,11 +33,11 @@ public class SelectSeatServlet extends HttpServlet {
 			List<ShowTimeSeat> seatList = stsDao.getShowTimeSeatsByShowTimeId(showtimeId);
 			// xác định ghế vip và giá của nó
 			for(ShowTimeSeat seat : seatList){
-				String seatName = seat.gếtatName();
+				String seatName = seat.getSeatName();
 				char row = seatName.charAt(0);
 				if(row == 'A' || row == 'B'){
 					seat.setVip(true);
-					seat.setPrice(12000);
+					seat.setPrice(120000);
 				}
 				else {
 					seat.setVip(false);

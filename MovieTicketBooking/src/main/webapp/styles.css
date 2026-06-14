@@ -891,7 +891,13 @@ section .cinema-grid {
 .seat-cell.available:hover {
   background: rgba(255, 215, 0, 0.3);
 }
-
+.seat-cell.vip{
+	background: #ff9800;
+	color: white;
+}
+.legend-color.vip{
+	background: #ff9800;
+}
 .seat-cell.selected {
   background: #ffd700;
   color: #000;

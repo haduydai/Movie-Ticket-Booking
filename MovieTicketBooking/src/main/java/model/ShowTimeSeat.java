@@ -103,8 +103,11 @@ public class ShowTimeSeat {
 	public void setVip(boolean vip){
 		this.vip = vip;
 	}
-	public void setPrice(doubl3e price){
+	public void setPrice(double price){
 		this.price = price;
+	}
+	public double getPrice(){
+		return price;
 	}
 	
 }

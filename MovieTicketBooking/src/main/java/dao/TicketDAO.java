@@ -174,7 +174,7 @@ public class TicketDAO implements ITicketDAO {
 			for (int count : updateCounts) {
 				if (count == 0) {
 					// Nếu count == 0 tức là không tìm thấy ghế để update (Sai tên hoặc sai ID)
-					System.out.println("LỖI: Không tìm thấy ghế trong DB để update. Kiểm tra lại tên ghế!");
+//					System.out.println("LỖI: Không tìm thấy ghế trong DB để update. Kiểm tra lại tên ghế!");
 					throw new SQLException("Lỗi: Ghế không tồn tại hoặc đã bị người khác đặt.");
 				}
 			}

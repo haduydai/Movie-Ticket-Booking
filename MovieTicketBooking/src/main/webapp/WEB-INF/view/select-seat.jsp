@@ -46,6 +46,7 @@
             
             <div class="seat-legend">
                 <div class="legend-item"><div class="legend-color available"></div><span>Ghế thường</span></div>
+                <div class="legend-item"><div class="legend-color vip"></div><span>Ghế VIP</span></div>
                 <div class="legend-item"><div class="legend-color selected"></div><span>Ghế chọn</span></div>
                 <div class="legend-item"><div class="legend-color taken"></div><span>Ghế đã đặt</span></div>
             </div>
