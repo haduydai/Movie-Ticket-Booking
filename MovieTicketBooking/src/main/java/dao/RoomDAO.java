@@ -17,7 +17,7 @@ public class RoomDAO implements IRoomDAO{
 	public List<Room> getAllRoom() {
 		List<Room> list = new ArrayList<>();
 		try {
-			String query = "SELECT room_id, room_name, number_of_columns, number_of_rows, cinema_id FROM rooms";
+			String query = "SELECT room_id, room_name, number_of_columns, number_of_rows, cinema_id FROM rooms WHERE deleted_at IS NULL";
 			// Create connect
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -39,7 +39,7 @@ public class RoomDAO implements IRoomDAO{
 	public Room getRoomById(int roomId) {
 		Room room = null;
 		try {
-			String query = "SELECT room_id, room_name, number_of_columns, number_of_rows, cinema_id FROM rooms WHERE room_id = ?";
+			String query = "SELECT room_id, room_name, number_of_columns, number_of_rows, cinema_id FROM rooms WHERE room_id = ? AND deleted_at IS NULL";
 			// Create connect
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -62,7 +62,7 @@ public class RoomDAO implements IRoomDAO{
 	public List<Room> getRoomByCinemaId(int id){
 		List<Room> list = new ArrayList<>();
 		try {
-			String query = "SELECT room_id, room_name, number_of_columns, number_of_rows, cinema_id FROM rooms WHERE cinema_id = ?;";
+			String query = "SELECT room_id, room_name, number_of_columns, number_of_rows, cinema_id FROM rooms WHERE cinema_id = ? AND deleted_at IS NULL;";
 			// Create connect
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -112,7 +112,7 @@ public class RoomDAO implements IRoomDAO{
 		int update = 0;
 		try {
 			// Query string to get data
-			String queryString = "DELETE FROM rooms WHERE room_id = ?";
+			String queryString = "UPDATE rooms SET deleted_at = NOW() WHERE room_id = ?";
 			// Create connection
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(queryString);

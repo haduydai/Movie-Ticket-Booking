@@ -1,25 +1,56 @@
 package model;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
-public class ShowTime {
+@Entity
+@Table(name = "showtimes")
+@SQLDelete(sql = "UPDATE showtimes SET deleted_at = NOW() WHERE showtime_id = ?")
+@SQLRestriction("deleted_at IS NULL")
+@Getter
+@Setter
+public class ShowTime extends AbsBaseEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "showtime_id")
 	private int id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cinema_id")
 	private Cinema cinema;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_id")
 	private Room room;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "movie_id")
 	private Movie movie;
+
+	@Column(name = "showtime_price")
 	private BigDecimal pricePerTicket;
+
+	@Column(name = "start_time", nullable = false)
 	private LocalDateTime startTime;
+
+	@Column(name = "created_at", insertable = false, updatable = false)
 	private LocalDateTime createdAt;
-	
+
 	public ShowTime() {}
-	
+
 	public ShowTime(Cinema cinema, Room room, Movie movie, BigDecimal pricePerTicket,
-			LocalDateTime startTime) {
+	                LocalDateTime startTime) {
 		this.cinema = cinema;
 		this.room = room;
 		this.movie = movie;
@@ -27,9 +58,9 @@ public class ShowTime {
 		this.startTime = startTime;
 		this.createdAt = LocalDateTime.now();
 	}
-	
+
 	public ShowTime(int id, Cinema cinema, Room room, Movie movie, BigDecimal pricePerTicket,
-			LocalDateTime startTime, LocalDateTime createdAt) {
+	                LocalDateTime startTime, LocalDateTime createdAt) {
 		this.id = id;
 		this.cinema = cinema;
 		this.room = room;
@@ -38,8 +69,7 @@ public class ShowTime {
 		this.startTime = startTime;
 		this.createdAt = createdAt;
 	}
-	
-	//Create show time seat have name EX: A1 - Z10000
+
 	public List<ShowTimeSeat> createListShowTimeSeats(){
 		int rows = room.getNumberOfRows();
 		int columns = room.getNumberOfColumns();
@@ -58,89 +88,39 @@ public class ShowTime {
 				seatNumber = 1;
 				seatLetter++;
 			}
-
 		}
 		return seats;
 	}
-	
+
 	public int getCinemaId() {
 		return cinema.getId();
 	}
-	
+
 	public int getRoomId() {
 		return room.getId();
 	}
-	
+
 	public int getMovieId() {
 		return movie.getId();
 	}
 
-	// Get cinema name and address
 	public String getCinemaInfo() {
 		return cinema.getAllInfo();
 	}
-	
-	// Get room name
+
 	public String getRoomName() {
 		return room.getName();
 	}
-	
-	// Get movie name
+
 	public String getMovieName() {
 		return movie.getName();
 	}
-	
-	// Getter and Setter
-	public Room getRoom() {
-		return room;
-	}
 
-	public Cinema getCinema() {
-		return cinema;
-	}
-
-	public void setCinema(Cinema cinema) {
-		this.cinema = cinema;
-	}
-
-	public void setRoom(Room room) {
-		this.room = room;
-	}
-
-	public Movie getMovie() {
-		return movie;
-	}
-
-	public void setMovie(Movie movie) {
-		this.movie = movie;
-	}
-
-	public BigDecimal getPricePerTicket() {
-		return pricePerTicket;
-	}
-
-	public LocalDateTime getStartTime() {
-		return startTime;
-	}
-
-	public int getId() {
-		return id;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-	
 	public Date getStartTimeAsDate() {
-	    return Timestamp.valueOf(this.startTime);
+		return Timestamp.valueOf(this.startTime);
 	}
 
 	public Date getCreatedAtAsDate() {
-	    return Timestamp.valueOf(this.createdAt);
+		return Timestamp.valueOf(this.createdAt);
 	}
-	
 }

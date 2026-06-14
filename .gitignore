@@ -1,22 +1,69 @@
-# Eclipse
-/.metadata/
-/Servers/
-/.settings/
-.project
-.classpath
+# ==========================================
+# 1. Các file biên dịch (Compiled outputs)
+# ==========================================
+*.class
+*.log
+*.ctxt
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
 
-# IntelliJ IDEA
+# Các thư mục chứa file build của Java/Gradle/Maven
+build/
+out/
+classes/
+bin/
+target/
+production/
+
+# ==========================================
+# 2. Cấu hình IntelliJ IDEA (.idea)
+# ==========================================
 .idea/
 *.iml
 *.iws
+*.ipr
+out/
 
-# Compiled outputs (Đây là thủ phạm gây lỗi Merge Conflict lúc nãy!)
-/build/
-/out/
-/classes/
-*.class
+# Nếu muốn giữ lại cấu hình chạy chung của IntelliJ (như run configurations)
+# thì có thể bỏ ignore .idea/runConfigurations/ nhưng khuyến khích ignore hết cho nhẹ.
 
-# Logs & OS files
-*.log
+# ==========================================
+# 3. Cấu hình Eclipse
+# ==========================================
+.metadata/
+.classpath
+.project
+.settings/
+/Servers/
+*.emx
+*.wfx
+
+# ==========================================
+# 4. File cấu hình Gradle
+# ==========================================
+.gradle/
+build/
+gradle-app.setting
+
+# Không nên ignore file gradlew, gradlew.bat và thư mục gradle/wrapper/
+# vì các thành viên khác cần chúng để chạy gradle mà không cần cài sẵn gradle.
+
+# ==========================================
+# 5. File của Hệ điều hành (OS files)
+# ==========================================
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+
+# ==========================================
+# 6. File cấu hình nhạy cảm chứa Password/Token (nếu có)
+# ==========================================
+# application-local.properties
+# .env

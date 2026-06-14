@@ -8,9 +8,9 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class JDBCConnection {
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/movie_ticket_booking";
+	private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/movie_ticket_booking";
     private static final String USER = "root";
-    private static final String PASS = "123123";
+    private static final String PASS = "";
     private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;

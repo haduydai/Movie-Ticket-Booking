@@ -33,7 +33,6 @@ public class ProfileServlet extends HttpServlet {
 	    request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
 	}
 
-	// XỬ LÝ ĐỔI THÔNG TIN
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -44,94 +43,101 @@ public class ProfileServlet extends HttpServlet {
 		// Lấy user từ session
 		HttpSession session = request.getSession();
 		User currentUser = (User) session.getAttribute("user");
-		
-		String email = request.getParameter("email").trim();
-		String phone = request.getParameter("phone").trim();
-		String currentPass = request.getParameter("currentPass").trim();
-		String newPass = request.getParameter("newPass").trim();
-		String confirmPass = request.getParameter("confirmPass").trim();
-		
-		
+
+		if (currentUser == null) {
+			sendJsonResponse(response, "error", "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+			return;
+		}
+
+		String email = request.getParameter("email");
+		String phone = request.getParameter("phone");
+		String currentPass = request.getParameter("currentPass");
+		String newPass = request.getParameter("newPass");
+		String confirmPass = request.getParameter("confirmPass");
+
+		if (email != null) email = email.trim();
+		if (phone != null) phone = phone.trim();
+		if (currentPass != null) currentPass = currentPass.trim();
+		if (newPass != null) newPass = newPass.trim();
+		if (confirmPass != null) confirmPass = confirmPass.trim();
+
 		// check email
-        if (email == null || email.isBlank()) {
-            backToPage("Email không được để trống.", request, response);
-            return;
-        }
-        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            backToPage("Email không hợp lệ.", request, response);
-            return;
-        }
-        
-        // check phonenumber
-        if (phone == null || phone.isBlank()) {
-            backToPage("Số điện thoại không được để trống.", request, response);
-            return;
-        }
-        if (!phone.matches("^0\\d{9}$")) {
-            backToPage("Số điện thoại không hợp lệ", request, response);
-            return;
-        }
-		
-		// Xử lý logic Đổi Mật Khẩu
+		if (email == null || email.isBlank()) {
+			sendJsonResponse(response, "error", "Email không được để trống.");
+			return;
+		}
+		if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+			sendJsonResponse(response, "error", "Email không hợp lệ.");
+			return;
+		}
+
+		// check phonenumber
+		if (phone == null || phone.isBlank()) {
+			sendJsonResponse(response, "error", "Số điện thoại không được để trống.");
+			return;
+		}
+		if (!phone.matches("^0\\d{9}$")) {
+			sendJsonResponse(response, "error", "Số điện thoại không hợp lệ.");
+			return;
+		}
+
+		// Xử lý logic Đổi Mật Khẩu (nếu người dùng có nhập mật khẩu mới)
 		if (newPass != null && !newPass.isEmpty()) {
+			if (currentPass == null || currentPass.isEmpty()) {
+				sendJsonResponse(response, "error", "Vui lòng nhập mật khẩu hiện tại!");
+				return;
+			}
 
-			// Kiểm tra mật khẩu hiện tại từ input với mật khẩu hash từ user
 			try {
-				String currentPassHash = PasswordUtils.hashPassword(currentPass);
-
+				// Kiểm tra mật khẩu hiện tại từ input với mật khẩu băm từ database
 				if (!PasswordUtils.checkPassword(currentPass, currentUser.getPassword())) {
-					backToPage("Mật khẩu hiện tại không đúng!", request, response);
+					sendJsonResponse(response, "error", "Mật khẩu hiện tại không đúng!");
 					return;
 				}
-				
+
 				// Kiểm tra xác nhận mật khẩu
 				if (!newPass.equals(confirmPass)) {
-					backToPage("Mật khẩu xác nhận không khớp!", request, response);
+					sendJsonResponse(response, "error", "Mật khẩu xác nhận không khớp!");
 					return;
 				}
 
-				// Kiểm tra độ dài (Tùy chọn)
-				if (newPass.length() < 5) {
-					backToPage("Mật khẩu mới phải từ 6 ký tự trở lên!", request, response);
+				// Kiểm tra độ dài mật khẩu mới (phải từ 6 ký tự trở lên)
+				if (newPass.length() < 6) {
+					sendJsonResponse(response, "error", "Mật khẩu mới phải từ 6 ký tự trở lên!");
 					return;
 				}
 
-				// Mã hóa mật khẩu mới và cập nhật vào object User
+				// Mã hóa mật khẩu mới và cập nhật vào đối tượng User
 				String newPassHash = PasswordUtils.hashPassword(newPass);
-
 				currentUser.setPassword(newPassHash);
 			} catch (Exception e) {
 				e.printStackTrace();
+				sendJsonResponse(response, "error", "Có lỗi xảy ra khi mã hóa mật khẩu.");
+				return;
 			}
-
 		}
 
 		// Cập nhật các thông tin cá nhân khác
 		currentUser.setEmail(email);
 		currentUser.setPhoneNumber(phone);
 
-		// lưu xuống Database
+		// Lưu xuống Database
 		UserDAO dao = new UserDAO();
-		dao.updateUser(currentUser); // Bạn cần đảm bảo đã thêm hàm updateUser vào UserDAO như hướng dẫn trước
+		dao.updateUser(currentUser);
 
-		// Cập nhật lại Session (để hiển thị thông tin mới ngay lập tức)
+		// Cập nhật lại Session để hiển thị thông tin mới
 		session.setAttribute("user", currentUser);
 
-		// Thông báo thành công và reload trang
-		request.setAttribute("message", "Cập nhật thông tin thành công!");
-		doGet(request, response);
+		// Trả về JSON báo thành công
+		sendJsonResponse(response, "success", "Cập nhật thông tin thành công!");
 	}
-	
-	// Back to register page if fail validation
-    private void backToPage(String message, HttpServletRequest request, HttpServletResponse response) {
-        try {
-        	request.setAttribute("error", message);
-			request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
-		} catch (ServletException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+	private void sendJsonResponse(HttpServletResponse response, String status, String message) {
+		try {
+			response.setContentType("application/json; charset=UTF-8");
+			String json = String.format("{\"status\":\"%s\",\"message\":\"%s\"}", status, message);
+			response.getWriter().write(json);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
-
+	}
 }
