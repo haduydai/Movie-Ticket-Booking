@@ -31,27 +31,27 @@
 			<table>
 				<tr>
 					<td><label for="name">Tên phim</label></td>
-					<td><input name="name" type="text" style="width:400px" class="form-control" value="${movie.name }"></td>
+					<td><input name="name" type="text" style="width:400px" class="form-control" value="${not empty param.name ? param.name : movie.name}"></td>
 				</tr>
 				<tr>
 					<td><label for="type">Thể loại</label></td>
-					<td><input name="type" type="text" style="width:400px" class="form-control" value="${movie.type }"></td>
+					<td><input name="type" type="text" style="width:400px" class="form-control" value="${not empty param.type ? param.type : movie.type}"  ></td>
 				</tr>
 				<tr>
 					<td><label for="directorName">Tên đạo diễn</label></td>
-					<td><input name="directorName" type="text" style="width:400px" class="form-control" value="${movie.directorName}"></td>
+					<td><input name="directorName" type="text" style="width:400px" class="form-control" value="${not empty param.directorName ? param.directorName : movie.directorName}"></td>
 				</tr>
 				<tr>
 					<td><label for="actorsName">Tên các diễn viên</label></td>
-					<td><input name="actorsName" type="text" style="width:400px" class="form-control" value="${movie.actorsName}"></td>
+					<td><input name="actorsName" type="text" style="width:400px" class="form-control" value="${not empty param.actorsName ? param.actorsName : movie.actorsName}"	></td>
 				</tr>
 				<tr>
 					<td><label for="duration">Thời lượng</label></td>
-					<td><input name="duration" type="number" min="0" style="width:400px" class="form-control" value="${movie.duration}"></td>
+					<td><input name="duration" type="number" min="0" style="width:400px" class="form-control" value="${not empty param.duration ? param.duration : movie.duration}"></td>
 				</tr>
 				<tr>
 					<td><label for="country">Quốc gia</label></td>
-					<td><input name="country" type="text" style="width:400px" class="form-control" value="${movie.country}"></td>
+					<td><input name="country" type="text" style="width:400px" class="form-control" value="${not empty param.country ? param.country : movie.country}"></td>
 				</tr>
 				<tr>
 					<td><label for="poster">Poster (ảnh) - để trống nếu không đổi</label></td>
@@ -66,15 +66,15 @@
 				<tr>
 					<td><label for="status">Trạng thái</label></td>
 					<td><select name="status">
-						<option value="COMING_SOON">Sắp chiếu</option>
-						<option value="NOW_SHOWING">Đang chiếu</option>
-						<option value="STOPPED_SHOWING">Ngừng chiếu</option>
+						<option value="COMING_SOON" ${(not empty param.status ? param.status : movie.status) == 'COMING_SOON' ? 'selected' : ''}>Sắp chiếu</option>
+						<option value="NOW_SHOWING" ${(not empty param.status ? param.status : movie.status) == 'NOW_SHOWING' ? 'selected' : ''}>Đang chiếu</option>
+						<option value="STOPPED_SHOWING" ${(not empty param.status ? param.status : movie.status) == 'STOPPED_SHOWING' ? 'selected' : ''}>Ngừng chiếu</option>
 					</select></td>
 				</tr>
 			</table>
 			<div class="mt-2 mb-2">
 				<label class="form-label">Mô tả</label>
-        		<textarea name="description" rows="4" col="8" class="form-control">${movie.description}
+        		<textarea name="description" rows="4" col="8" class="form-control">${not empty param.description ? param.description : movie.description}
                  </textarea>
 			</div>
 			<input type="submit" value="Cập nhật" class="btn btn-success">

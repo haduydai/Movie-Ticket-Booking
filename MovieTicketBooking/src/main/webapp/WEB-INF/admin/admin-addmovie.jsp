@@ -29,27 +29,27 @@
 			<table>
 				<tr>
 					<td><label for="name">Tên phim</label></td>
-					<td><input name="name" type="text" style="width:400px" class="form-control"></td>
+					<td><input name="name" type="text" style="width:400px" class="form-control" value="${param.name}"></td>
 				</tr>
 				<tr>
 					<td><label for="type">Thể loại</label></td>
-					<td><input name="type" type="text" style="width:400px" class="form-control"></td>
+					<td><input name="type" type="text" style="width:400px" class="form-control" value="${param.type}"></td>
 				</tr>
 				<tr>
 					<td><label for="directorName">Tên đạo diễn</label></td>
-					<td><input name="directorName" type="text" style="width:400px" class="form-control"></td>
+					<td><input name="directorName" type="text" style="width:400px" class="form-control" value="${param.directorName}"></td>
 				</tr>
 				<tr>
 					<td><label for="actorsName">Tên các diễn viên</label></td>
-					<td><input name="actorsName" type="text" style="width:400px" class="form-control"></td>
+					<td><input name="actorsName" type="text" style="width:400px" class="form-control" value="${param.actorsName}"></td>
 				</tr>
 				<tr>
 					<td><label for="duration">Thời lượng</label></td>
-					<td><input name="duration" type="number" min="0" style="width:400px" class="form-control"></td>
+					<td><input name="duration" type="number" min="0" style="width:400px" class="form-control" value="${param.duration}"></td>
 				</tr>
 				<tr>
 					<td><label for="country">Quốc gia</label></td>
-					<td><input name="country" type="text" style="width:400px" class="form-control"></td>
+					<td><input name="country" type="text" style="width:400px" class="form-control" value="${param.country}"></td>
 				</tr>
 				<tr>
 					<td><label for="poster">Poster (ảnh)</label></td>
@@ -58,15 +58,14 @@
 				<tr>
 					<td><label for="status">Trạng thái</label></td>
 					<td><select name="status">
-						<option value="COMING_SOON">Sắp chiếu</option>
-						<option value="NOW_SHOWING">Đang chiếu</option>
+						<option value="COMING_SOON" ${param.status == 'COMING_SOON' ? 'selected' : ''}>Sắp chiếu</option>
+						<option value="NOW_SHOWING" ${param.status == 'NOW_SHOWING' ? 'selected' : ''}>Đang chiếu</option>
 					</select></td>
 				</tr>
 			</table>
 			<div class="mt-2 mb-2">
 				<label class="form-label">Mô tả</label>
-        		<textarea name="description" rows="4" col="8" class="form-control">
-                 </textarea>
+        		<textarea name="description" rows="4" col="8" class="form-control">${param.description}</textarea>
 			</div>
 			<input type="submit" value="Thêm" class="btn btn-success">
 		</form>
