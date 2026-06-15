@@ -57,7 +57,7 @@ public class Movie extends AbsBaseEntity {
 	@Column(name = "movie_image_public_id")
 	private String imagePublicId;
 
-	// Constructor không tham số bắt buộc phải có cho Hibernate hoạt động
+	// Constructor không tham số  cho Hibernate hoạt động
 	public Movie() {}
 
 	public Movie(int id, String name, String type, String directorName, String actorsName, String description,

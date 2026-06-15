@@ -150,8 +150,8 @@ public class MovieDAO implements dao.IMovieDAO {
 	public boolean addMovie(Movie movie) {
 		try {
 			// Query string to get data
-			String queryString = "INSERT INTO movies (movie_name, movie_type, director_name, names_of_actors, movie_description, movie_duration, movie_country, movie_image_url, movie_status)"
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			String queryString = "INSERT INTO movies (movie_name, movie_type, director_name, names_of_actors, movie_description, movie_duration, movie_country, movie_image_url, movie_status,movie_image_public_id)"
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?);";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
@@ -164,6 +164,7 @@ public class MovieDAO implements dao.IMovieDAO {
 			ps.setString(7, movie.getCountry());
 			ps.setString(8, movie.getImageUrl());
 			ps.setString(9, movie.getMovieStatus().toString());
+			ps.setString(10, movie.getImagePublicId());
 			ps.executeUpdate();
 			ps.close();
 			connect.close();
@@ -204,7 +205,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		String queryString = "UPDATE movies SET movie_name = ? , movie_type = ? , "
 				+ "director_name = ? , names_of_actors = ? , movie_description = ? ,"
 				+ "movie_duration = ? , movie_country = ? , movie_image_url = ? ,"
-				+ "movie_status = ? WHERE movie_id = ?";
+				+ "movie_status = ? , movie_image_public_id = ? WHERE movie_id = ?";
 		try {
 			connect = dao.JDBCConnection.getConnection();
 			connect.setAutoCommit(false);
@@ -218,7 +219,9 @@ public class MovieDAO implements dao.IMovieDAO {
 			ps.setString(7, newMovie.getCountry());
 			ps.setString(8, newMovie.getImageUrl());
 			ps.setString(9, newMovie.getMovieStatus().toString());
-			ps.setInt(10, id);
+			ps.setString(10, newMovie.getImagePublicId());
+
+			ps.setInt(11, id);
 			update = ps.executeUpdate();
 			connect.commit();
 		} catch (SQLException e) {
@@ -353,11 +356,13 @@ public class MovieDAO implements dao.IMovieDAO {
 			String imageUrl = rs.getString("movie_image_url");
 			String tag = rs.getString("movie_tag");
 			String trailer = rs.getString("trailer_url");
+			String pubId = rs.getString("movie_image_public_id");
 
 			MovieStatus movieStatus = MovieStatus.valueOf(rs.getString("movie_status"));
 
 			movie = new Movie(id, name, type, directorName, actorsName, description, duration, country, imageUrl,
 					movieStatus, tag, trailer);
+			movie.setImagePublicId(pubId);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
