@@ -41,6 +41,7 @@ public class AddMovieServlet extends HttpServlet {
 	
 	private void handlerAdd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			String publicId = null;
 			String name = request.getParameter("name");
 			if(name == null || name.isBlank()) {
 				backToAddPage(request, response, "Thiếu tên phim");
@@ -82,39 +83,39 @@ public class AddMovieServlet extends HttpServlet {
 		    	backToAddPage(request, response, "Thiếu tên quốc gia");
 				return;
 			}
-							String imageUrl = null;
-							// handle poster upload
-							try {
-								Part posterPart = request.getPart("poster");
-								if (posterPart != null && posterPart.getSize() > 0) {
-									String contentType = posterPart.getContentType();
-									if (contentType == null || !contentType.startsWith("image/")) {
-										backToAddPage(request, response, "File poster phải là ảnh");
-										return;
-									}
-									if (posterPart.getSize() > 5 * 1024 * 1024) { // 5MB limit
-										backToAddPage(request, response, "Kích thước poster tối đa 5MB");
-										return;
-									}
-									String submitted = Paths.get(posterPart.getSubmittedFileName()).getFileName().toString();
-									String fileName = System.currentTimeMillis() + "-" + submitted;
-									String uploadDir = request.getServletContext().getRealPath("/images/posters");
-									Path uploadPath = Paths.get(uploadDir);
-									if (!Files.exists(uploadPath)) {
-										Files.createDirectories(uploadPath);
-									}
-									Path filePath = uploadPath.resolve(fileName);
-									try (InputStream is = posterPart.getInputStream()) {
-										Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
-									}
-									imageUrl = request.getContextPath() + "/images/posters/" + fileName;
-								} else {
-									imageUrl = request.getParameter("imageUrl");
-								}
-							} catch (IllegalStateException ex) {
-								backToAddPage(request, response, "File tải lên quá lớn");
-								return;
-							}
+			String imageUrl = null;
+			// handle poster upload dung cloudinary
+			try {
+				Part posterPart = request.getPart("poster");
+				if (posterPart != null && posterPart.getSize() > 0) {
+					String contentType = posterPart.getContentType();
+					if (contentType == null || !contentType.startsWith("image/")) {
+						backToAddPage(request, response, "File poster phải là ảnh");
+						return;
+					}
+					if (posterPart.getSize() > 5 * 1024 * 1024) { // 5MB limit
+						backToAddPage(request, response, "Kích thước poster tối đa 5MB");
+						return;
+					}
+					String submitted = Paths.get(posterPart.getSubmittedFileName()).getFileName().toString();
+					String fileName = System.currentTimeMillis() + "-" + submitted;
+
+					// goi cloudinary de upload thoi
+					try (InputStream is = posterPart.getInputStream()) {
+						java.util.Map<?, ?> ketQua = utils.CloudinaryUtil.uploadImage(is, fileName, "movies", null);
+						imageUrl = (String) ketQua.get("url");
+						publicId = (String) ketQua.get("public_id"); // Luu lai id de xoa/sua sau nay
+						System.out.println("upload Cloudinary ok, url: " + imageUrl + ", id: " + publicId);
+					}
+				} else {
+					imageUrl = request.getParameter("imageUrl");
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				logger.log(Level.WARNING, "Loi khi tai poster len cloud", ex);
+				backToAddPage(request, response, "Lỗi tải ảnh lên Cloudinary");
+				return;
+			}
 		    if(imageUrl == null || imageUrl.isBlank()) {
 		    	backToAddPage(request, response, "Thiếu đường dẫn hình");
 				return;
@@ -122,6 +123,7 @@ public class AddMovieServlet extends HttpServlet {
 		    String status = request.getParameter("status");
 		    String description = request.getParameter("description");
 			Movie movie = new Movie(name, type, directorName, actorsName, description, duration, country, imageUrl, MovieStatus.valueOf(status));
+			movie.setImagePublicId(publicId);
 			HttpSession session = request.getSession();
 			try {
 				boolean res = new MovieDAO().addMovie(movie);

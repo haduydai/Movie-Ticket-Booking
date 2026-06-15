@@ -66,6 +66,11 @@ public class EditMovieServlet extends HttpServlet {
 		try {
 			// Get parameter and check error
 			int id = Integer.parseInt(request.getParameter("id"));
+
+			Movie existingMovie = new MovieDAO().getMovieById(id);
+			String existingPublicId = existingMovie != null ? existingMovie.getImagePublicId() : null;
+			String publicId = existingPublicId;
+
 			String name = request.getParameter("name");
 			if(name == null || name.isBlank()) {
 				backToEditPage(request, response, "Thiếu tên phim");
@@ -116,21 +121,27 @@ public class EditMovieServlet extends HttpServlet {
 					}
 					String submitted = Paths.get(posterPart.getSubmittedFileName()).getFileName().toString();
 					String fileName = System.currentTimeMillis() + "-" + submitted;
-					String uploadDir = request.getServletContext().getRealPath("/images/posters");
-					Path uploadPath = Paths.get(uploadDir);
-					if (!Files.exists(uploadPath)) {
-						Files.createDirectories(uploadPath);
+
+					// Xoa ảnh	 cu tren Cloudinary neu co
+					if (existingPublicId != null && !existingPublicId.trim().isEmpty()) {
+						utils.CloudinaryUtil.deleteImage(existingPublicId);
+						System.out.println("đã xóa ảnh cũ trên cloud, id: " + existingPublicId);
 					}
-					Path filePath = uploadPath.resolve(fileName);
+
+					// Upload anh moi len Cloudinary
 					try (InputStream is = posterPart.getInputStream()) {
-						Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
+						java.util.Map<?, ?> ketQua = utils.CloudinaryUtil.uploadImage(is, fileName, "movies", null);
+						imageUrl = (String) ketQua.get("url");
+						publicId = (String) ketQua.get("public_id");
+						System.out.println("đã xóa ảnh mới trên cloud, url: " + imageUrl);
 					}
-					imageUrl = request.getContextPath() + "/images/posters/" + fileName;
 				} else {
 					imageUrl = request.getParameter("existingImageUrl");
 				}
-			} catch (IllegalStateException ex) {
-				backToEditPage(request, response, "File tải lên quá lớn");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				backToEditPage(request, response, "Lỗi khi xử lý ảnh trên Cloudinary");
+
 				return;
 			}
 		    if(imageUrl == null || imageUrl.isBlank()) {
@@ -140,6 +151,7 @@ public class EditMovieServlet extends HttpServlet {
 		    String status = request.getParameter("status");
 		    String description = request.getParameter("description");
 			Movie movie = new Movie(name, type, directorName, actorsName, description, duration, country, imageUrl, MovieStatus.valueOf(status));
+			movie.setImagePublicId(publicId);
 		    int update = new MovieDAO().updateMovie(id, movie);
 		    // Put message to session
 		    HttpSession session = request.getSession();
