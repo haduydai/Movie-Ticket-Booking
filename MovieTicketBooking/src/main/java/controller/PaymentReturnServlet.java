@@ -21,11 +21,32 @@ public class PaymentReturnServlet extends HttpServlet {
         Ticket ticket = ticketDAO.getTicketById(Integer.parseInt(ticketId));
         if(ticket != null){
             if("00".equals(responseCode)){
-                ticketDAO.updateTicketStatus(ticket, TicketStatus.PAID);
-                request.setAttribute("message", "Thanh toán thành công");
+                if (ticket.getStatus() == TicketStatus.CANCELLED) {
+                    request.setAttribute("message", "Thanh toán thất bại: Thời gian giữ ghế (30 giây) đã hết hạn và ghế đã bị giải phóng.");
+                } else {
+                    ticketDAO.updateTicketStatus(ticket, TicketStatus.PAID);
+                    if (ticket.getBooking() != null) {
+                        String txnRef = request.getParameter("vnp_TransactionNo");
+                        if (txnRef == null || txnRef.trim().isEmpty()) {
+                            txnRef = "TXN-" + System.currentTimeMillis();
+                        }
+                        String paymentUrl = request.getRequestURL() + (request.getQueryString() != null ? "?" + request.getQueryString() : "");
+                        ticketDAO.savePaymentTransaction(
+                            ticket.getBooking().getId(),
+                            ticket.getTotalPrice().doubleValue(),
+                            ticket.getPaymentMethod().name(),
+                            txnRef,
+                            paymentUrl,
+                            "SUCCESS"
+                        );
+                    }
+                    request.setAttribute("message", "Thanh toán thành công");
+                }
             }
             else{
-                ticketDAO.updateTicketStatus(ticket, TicketStatus.CANCELLED);
+                if (ticket.getStatus() != TicketStatus.CANCELLED) {
+                    ticketDAO.updateTicketStatus(ticket, TicketStatus.CANCELLED);
+                }
                 request.setAttribute("message", "Thanh toán thất bại");
             }
             request.setAttribute("ticket", ticket);

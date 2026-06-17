@@ -23,7 +23,7 @@
     <jsp:include page="header.jsp" />
 
     <main>
-        <%-- Movie Hero (Tái sử dụng style của trang chi tiết nhưng gọn hơn) --%>
+        
         <section class="movie-hero" style="min-height: auto; padding: 20px 0;">
             <div class="movie-details" style="width: 100%; text-align: center; padding: 0;">
                 <h1 style="font-size: 24px; margin-bottom: 5px;">${showTime.movie.name}</h1>
@@ -37,7 +37,7 @@
             </div>
         </section>
 
-        <%-- Seat Map Section (Copy cấu trúc từ movieDetail.jsp) --%>
+        
         <section class="seat-map active" style="display: block; margin-top: 20px;">
             <div class="seat-map-header">
                 <h3>Sơ Đồ Ghế</h3>
@@ -70,19 +70,19 @@
 			</div>
         </section>
 
-        <%-- Booking Summary (Copy cấu trúc từ movieDetail.jsp) --%>
+        
         <div class="booking-summary">
             <h2>Tổng Kết Đặt Vé</h2>
             <div class="total-price" id="total-price-display">Tổng Tiền: 0 VNĐ</div>
             <p id="seats-display" style="color: #bbb; margin-bottom: 15px;">Ghế đang chọn: Chưa chọn</p>
             
-            <%-- Form ẩn để gửi dữ liệu đi --%>
+            
             <form action="checkout" method="post" id="bookingForm">
                 <input type="hidden" name="showtimeId" value="${showTime.id}">
                 <input type="hidden" name="selectedSeats" id="inputSeats">
                 <input type="hidden" name="totalPrice" id="inputTotal">
                 
-                <button type="button" class="book-btn" onclick="submitBooking()">Xác Nhận & Thanh Toán</button>
+                <button type="button" class="book-btn" onclick="submitBooking()">CHƯA THANH TOÁN</button>
             </form>
             
             <p style="color: var(--text-muted); font-size: 12px; text-align: center; margin-top: var(--spacing-md);">

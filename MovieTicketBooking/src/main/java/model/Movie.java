@@ -53,11 +53,11 @@ public class Movie extends AbsBaseEntity {
 	@Column(name = "trailer_url")
 	private String trailerUrl;
 
-	// trường để  upload ảnh poster lên Cloudinary
+
 	@Column(name = "movie_image_public_id")
 	private String imagePublicId;
 
-	// Constructor không tham số  cho Hibernate hoạt động
+
 	public Movie() {}
 
 	public Movie(int id, String name, String type, String directorName, String actorsName, String description,
@@ -76,7 +76,7 @@ public class Movie extends AbsBaseEntity {
 		this.trailerUrl = trailerUrl;
 	}
 
-	// Constructor 9 tham số phục vụ cho Add/Edit Movie Servlet
+
 	public Movie(String name, String type, String directorName, String actorsName, String description,
 	             int duration, String country, String imageUrl, model.MovieStatus movieStatus) {
 		this.name = name;
@@ -90,7 +90,7 @@ public class Movie extends AbsBaseEntity {
 		this.movieStatus = movieStatus;
 	}
 
-	// Constructor 10 tham số (đầy đủ chức năng gán dữ liệu)
+
 	public Movie(int id, String name, String type, String directorName, String actorsName, String description,
 	             int duration, String country, String imageUrl, model.MovieStatus movieStatus) {
 		this.id = id;

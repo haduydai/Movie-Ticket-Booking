@@ -17,7 +17,7 @@ public class MovieDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Hỗ trợ cả 2 kiểu param: movieId hoặc id (để khỏi lỗi link cũ)
+
         String movieIdStr = request.getParameter("movieId");
         if (movieIdStr == null || movieIdStr.isBlank()) {
             movieIdStr = request.getParameter("id");

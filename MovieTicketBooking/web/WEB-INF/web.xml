@@ -3,4 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+         
+    <!-- Đăng ký DbContextListener để tự động chạy khi khởi động/tắt ứng dụng -->
+    <listener>
+        <listener-class>utils.DbContextListener</listener-class>
+    </listener>
+    
+    <!-- Đăng ký TransactionFilter -->
+    <filter>
+        <filter-name>TransactionFilter</filter-name>
+        <filter-class>utils.TransactionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>TransactionFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
 </web-app>

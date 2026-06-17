@@ -29,7 +29,7 @@
 
         <section class="section">
             <div class="movie-grid">
-                <%-- Vòng lặp lấy dữ liệu từ MovieUpcomingServlet --%>
+                
                 <c:forEach items="${fullListUpcoming}" var="m">
                     <div class="movie-card">
                         <img src="${m.imageUrl}" alt="${m.name}" loading="lazy"

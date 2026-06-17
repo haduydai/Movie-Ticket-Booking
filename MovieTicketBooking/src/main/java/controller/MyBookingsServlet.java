@@ -24,10 +24,10 @@ public class MyBookingsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        // Lấy user trong session
+
         User user = (User) session.getAttribute("user"); 
 
-        // Lấy danh sách vé của user từ CSDL
+
         List<Ticket> ticketList = ticketDAO.getTicketsByUserId(user.getId());
         
         request.setAttribute("ticketList", ticketList);

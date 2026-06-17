@@ -22,22 +22,22 @@
                 Vui lòng kiểm tra email và nhập mã OTP 6 số vào bên dưới.
             </p>
 
-            <%-- Ô nhập OTP --%>
+            
             <div class="form-group-auth">
                 <label for="otp">Mã OTP</label>
                 <input type="text" id="otp" name="otp" placeholder="Nhập mã 6 số (VD: 123456)" required 
                        style="letter-spacing: 2px; font-weight: bold; text-align: center;">
             </div>
 
-            <%-- Thông báo lỗi --%>
+            
             <p id="errorMsg" style="color: red; text-align: center; margin-bottom: 10px; display: none;"></p>
 
 
             <button type="submit" class="auth-btn">Xác Nhận</button>
 
-            <%-- Các link điều hướng phụ trợ --%>
-                       <%-- Tùy chọn quay lại trang trước động dựa theo luồng đăng ký hoặc quên mật khẩu --%>
-                              <%-- Tùy chọn quay lại trang trước động dựa theo luồng đăng ký hoặc quên mật khẩu --%>
+            
+                       
+                              
                <div class="auth-link" style="margin-top: 15px; font-size: 14px;">
                    <p>
                        <c:choose>

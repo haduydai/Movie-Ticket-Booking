@@ -7,11 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import model.Room;
 import model.Cinema;
 
 public class RoomDAO implements IRoomDAO{
+	private static final Logger logger = Logger.getLogger(RoomDAO.class.getName());
 	// Get all rooms
 	@Override
 	public List<Room> getAllRoom() {
@@ -83,24 +86,75 @@ public class RoomDAO implements IRoomDAO{
 	// Add room with cinema id, then add seats of room
 	@Override
 	public boolean addRoom(Room room, int cinemaId) {
+		Connection connect = null;
+		PreparedStatement st = null;
 		try {
+			connect = JDBCConnection.getConnection();
+			connect.setAutoCommit(false);
+			
 			String query = "INSERT INTO rooms (room_name, number_of_columns, number_of_rows, cinema_id) VALUES (?, ?, ?, ?);";
-			// Create connect
-			Connection connect = JDBCConnection.getConnection();
-			PreparedStatement st = connect.prepareStatement(query);
+			st = connect.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS);
 			st.setString(1, room.getName());
 			st.setInt(2, room.getNumberOfColumns());
 			st.setInt(3, room.getNumberOfRows());
 			st.setInt(4, cinemaId);
-			
 			st.executeUpdate();
-			// Add seats of this room to db
 			
-			st.close();
-			connect.close();
+			int roomId = 0;
+			try (ResultSet rs = st.getGeneratedKeys()) {
+				if (rs.next()) {
+					roomId = rs.getInt(1);
+				}
+			}
+			
+			if (roomId > 0) {
+
+				String insertSeatQuery = "INSERT INTO seats (room_id, row_label, column_number, seat_type) VALUES (?, ?, ?, ?);";
+				try (PreparedStatement psSeat = connect.prepareStatement(insertSeatQuery)) {
+					int totalRows = room.getNumberOfRows();
+					int totalCols = room.getNumberOfColumns();
+					for (int r = 0; r < totalRows; r++) {
+						char rowLabel = (char) ('A' + r);
+						String seatType = "REGULAR";
+						
+
+						if (r == 0 || r == 1) {
+							seatType = "VIP";
+						} 
+
+						else if (r == totalRows - 1 && totalRows >= 4) {
+							seatType = "SWEETBOX";
+						}
+						
+						for (int c = 1; c <= totalCols; c++) {
+							psSeat.setInt(1, roomId);
+							psSeat.setString(2, String.valueOf(rowLabel));
+							psSeat.setInt(3, c);
+							psSeat.setString(4, seatType);
+							psSeat.addBatch();
+						}
+					}
+					psSeat.executeBatch();
+				}
+			}
+			connect.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in addRoom", e);
+			if (connect != null) {
+				try {
+					connect.rollback();
+				} catch (SQLException ex) {
+					logger.log(Level.SEVERE, "Rollback failed in addRoom", ex);
+				}
+			}
 			return false;
+		} finally {
+			try {
+				if (st != null) st.close();
+				if (connect != null) connect.close();
+			} catch (SQLException e) {
+				logger.log(Level.WARNING, "Failed to close connections in addRoom", e);
+			}
 		}
 		return true;
 	}
@@ -131,7 +185,7 @@ public class RoomDAO implements IRoomDAO{
 	public int updateRoom(int id, Room room) {
 		int update = 0;
 		// Query string to get data
-		String queryString = "UPDATE rooms SET room_name = ?  WHERE cinema_id = ?";
+		String queryString = "UPDATE rooms SET room_name = ?  WHERE room_id = ?";
 		try {
 			// Create connection
 			Connection connect = JDBCConnection.getConnection();
@@ -142,7 +196,7 @@ public class RoomDAO implements IRoomDAO{
 			ps.close();
 			connect.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error in updateRoom", e);
 		}
 		return update;
 	}

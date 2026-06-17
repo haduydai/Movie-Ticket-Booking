@@ -41,7 +41,7 @@ public class User extends AbsBaseEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Ticket> tickets = new ArrayList<>();
 
-	// 2 trường này để  upload ảnh đại diện lên Cloudinary
+
 	@Column(name = "avatar_url")
 	private String avatarUrl;
 	@Column(name = "avatar_public_id")
@@ -49,7 +49,7 @@ public class User extends AbsBaseEntity {
 
 	public User() {}
 
-	// Constructor phục vụ việc tạo mới user
+
 	public User(String username, String password,
 	            String email, String phoneNumber, Role role) {
 		this.username = username;
@@ -60,7 +60,7 @@ public class User extends AbsBaseEntity {
 		this.tickets = new ArrayList<>();
 	}
 
-	// Constructor phục vụ việc lấy user từ database
+
 	public User(int id, String username, String password,
 	            String email, String phoneNumber, Role role) {
 		this.id = id;

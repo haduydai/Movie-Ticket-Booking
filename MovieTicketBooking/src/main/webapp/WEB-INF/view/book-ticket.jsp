@@ -66,13 +66,13 @@
 			
 			                <c:set var="hasShowTime" value="true" />
 			
-			                <%-- Nếu chuyển sang rạp/phòng mới thì đóng list cũ (nếu list cũ đã bắt đầu) --%>
+			                
 			                <c:if test="${(prevCinema ne -1 or prevRoom ne -1) and (prevCinema ne st.cinema.id or prevRoom ne st.room.id)}">
-			                        </div> <!-- đóng showtime-list -->
-			                    </div> <!-- đóng theater-item -->
+			                        </div> 
+			                    </div> 
 			                </c:if>
 			
-			                <%-- Nếu là rạp/phòng mới thì mở block mới --%>
+			                
 			                <c:if test="${prevCinema ne st.cinema.id or prevRoom ne st.room.id}">
 			                    <div class="theater-item active" style="border: 1px solid #aa0000; margin-bottom:16px; padding:15px;">
 			                        <div class="theater-header">
@@ -87,20 +87,18 @@
 			                        <div class="showtime-list" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
 			                </c:if>
 			
-			                <%-- Showtime in cùng block --%>
+			                
 			                <a href="select-seat?showtimeId=${st.id}" class="showtime-slot" 
 			                    style="background:#c40000; text-decoration:none; color:white; text-align:center; padding:10px 14px; border-radius:6px;">
 			                    <span style="font-size: 18px; font-weight:bold;">
-									<fmt:formatDate value="${st.startTimeAsDate}" pattern="HH:mm">
-
-									</fmt:formatDate>
+									<fmt:formatDate value="${st.startTimeAsDate}" pattern="HH:mm" />
 			                    </span><br>
 			                    <span style="font-size: 12px; font-weight: normal; color:#fff;">
 			                        <fmt:formatNumber value="${st.pricePerTicket}" type="currency" currencySymbol="₫"/>
 			                    </span>
 			                </a>
 			
-			                <%-- Lưu rạp/phòng hiện tại --%>
+			                
 			                <c:set var="prevCinema" value="${st.cinema.id}" />
 			                <c:set var="prevRoom" value="${st.room.id}" />
 			
@@ -108,13 +106,13 @@
 			
 			        </c:forEach>
 			
-			        <%-- nếu có showtime thì đóng block cuối cùng --%>
+			        
 			        <c:if test="${hasShowTime}">
-			                </div> <!-- đóng showtime-list -->
-			            </div> <!-- đóng theater-item -->
+			                </div> 
+			            </div> 
 			        </c:if>
 			
-			        <%-- nếu không có showtime --%>
+			        
 			        <c:if test="${not hasShowTime}">
 			            <div style="text-align: center; padding: 40px; border: 1px dashed #444; border-radius: 8px; color: var(--text-muted);">
 			                <p>Chưa có lịch chiếu cho ngày này.</p>

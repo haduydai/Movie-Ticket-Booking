@@ -25,7 +25,7 @@
 
         <section class="section">
             <div class="movie-grid">
-                <%-- Vòng lặp lấy dữ liệu từ MovieShowingServlet --%>
+                
                 <c:forEach items="${fullListShowing}" var="m">
                     <div class="movie-card">
                         <img src="${m.imageUrl}" alt="${m.name}" loading="lazy"
@@ -40,7 +40,7 @@
                     </div>
                 </c:forEach>
                 
-                <%-- Thông báo nếu không có phim nào --%>
+                
                 <c:if test="${empty fullListShowing}">
                     <p>Hiện chưa có phim nào đang chiếu.</p>
                 </c:if>

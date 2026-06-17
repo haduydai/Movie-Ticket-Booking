@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Movie;
 import model.MovieStatus;
 
-// Định nghĩa URL /home cho trang chủ
+
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
     @Override

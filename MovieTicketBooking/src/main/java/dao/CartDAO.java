@@ -10,7 +10,7 @@ public class CartDAO implements ICartDAO {
 
     @Override
     public Cart getCartByUserId(int userId) {
-        // Lấy Session hiện tại (được liên kết với Request Thread nhờ TransactionFilter)
+
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         return session.createQuery(
                         "select distinct c from Cart c left join fetch c.items i " +

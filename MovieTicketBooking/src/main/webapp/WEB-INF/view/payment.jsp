@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -20,36 +21,28 @@
         </section>
 
         <div class="payment-hero">
-            <%-- Summary Vé --%>
+            
             <section class="payment-summary">
                 <h2>Tóm Tắt Đơn Hàng</h2>
                 <div class="summary-item">
-                    <span>Phim: Quái Thú Vô Hình</span>
-                    <span>TPHCM - 16:30</span>
+                    <span>Phim: <c:out value="${ticket.showTime.movie.name}" /></span>
+                    <span><c:out value="${ticket.showTime.cinema.name}" /> - <c:out value="${ticket.showTime.room.name}" /></span>
                 </div>
                 <div class="summary-item">
-                    <span>Ghế: B3, B10</span>
-                    <span>2 vé Standard</span>
+                    <span>Ghế: <c:out value="${ticket.seats}" /></span>
+                    <span>Suất: <c:out value="${ticket.showTime.startTime}" /></span>
                 </div>
                 <div class="summary-item">
-                    <span>Giá Vé</span>
-                    <span>90,000 VNĐ</span>
-                </div>
-                <div class="summary-item">
-                    <span>Phí Phục Vụ</span>
-                    <span>10,000 VNĐ</span>
-                </div>
-                <div class="summary-item">
-                    <span>Mã Ưu Đãi</span>
-                    <span>-20,000 VNĐ</span>
+                    <span>Phương thức thanh toán ban đầu</span>
+                    <span><c:out value="${ticket.paymentMethod}" /></span>
                 </div>
                 <div class="summary-total">
                     <span>Tổng Tiền</span>
-                    <span>80,000 VNĐ</span>
+                    <span><c:out value="${ticket.totalPrice}" /> VNĐ</span>
                 </div>
             </section>
 
-            <%-- Phương Thức Thanh Toán --%>
+            
             <section class="payment-methods">
                 <h2>Phương Thức Thanh Toán</h2>
                 <div class="method-option active">

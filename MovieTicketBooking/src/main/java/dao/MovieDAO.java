@@ -19,7 +19,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		try {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
-					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url FROM movies WHERE deleted_at IS NULL ORDER BY movie_id DESC";
+					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url, movie_image_public_id FROM movies WHERE deleted_at IS NULL ORDER BY movie_id DESC";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			Statement st = connect.createStatement();
@@ -44,7 +44,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		try {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
-					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url"
+					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url, movie_image_public_id"
 					+ " FROM movies WHERE movie_status = ? AND deleted_at IS NULL "
 					+ " ORDER BY movie_id DESC LIMIT ?";
 			// Create connection
@@ -73,7 +73,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		try {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
-					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url"
+					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url, movie_image_public_id"
 					+ " FROM movies WHERE movie_status = ? AND deleted_at IS NULL ORDER BY movie_id DESC";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
@@ -93,15 +93,15 @@ public class MovieDAO implements dao.IMovieDAO {
 		return list;
 	}
 
-	// Tìm kiếm phim theo tên
-	// Ex: if u want "The walking dead" just type "the walking"
+
+
 	@Override
 	public List<Movie> getMoviesHaveNameLikeKeyword(String keyword) {
 		List<Movie> list = new ArrayList<>();
 		try {
 			// Query string to get data
 			String queryString = "SELECT movie_id, movie_name, movie_type, director_name, names_of_actors, movie_description,"
-					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url FROM movies WHERE movie_name LIKE ? AND deleted_at IS NULL ORDER BY movie_id DESC;";
+					+ " movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url, movie_image_public_id FROM movies WHERE movie_name LIKE ? AND deleted_at IS NULL ORDER BY movie_id DESC;";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = connect.prepareStatement(queryString);
@@ -271,7 +271,7 @@ public class MovieDAO implements dao.IMovieDAO {
 		try {
 			// Query string to get data
 			String queryString = "SELECT DISTINCT m.movie_id, m.movie_name, m.movie_type, m.director_name, m.names_of_actors, m.movie_description,"
-					+ " m.movie_duration, m.movie_country, m.movie_image_url, m.movie_status, m.movie_tag, m.trailer_url "
+					+ " m.movie_duration, m.movie_country, m.movie_image_url, m.movie_status, m.movie_tag, m.trailer_url, m.movie_image_public_id "
 					+ " FROM movies m JOIN cinema_movies cm ON m.movie_id = cm.movie_id WHERE cm.cinema_id = ? AND m.deleted_at IS NULL";
 			// Create connection
 			Connection connect = dao.JDBCConnection.getConnection();
@@ -291,23 +291,23 @@ public class MovieDAO implements dao.IMovieDAO {
 		return list;
 	}
 
-	// lọc thể loại phim, tag, quốc gia
+
 	@Override
 	public List<Movie> filterMovies(String type, String country, String tag) {
 		List<Movie> list = new ArrayList<>();
 		try{
 			StringBuilder sql = new StringBuilder("SELECT movie_id, movie_name, movie_type," +
 					" director_name, names_of_actors, movie_description,  " +
-					"movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url FROM movies WHERE deleted_at IS NULL");
-			// lọc phim thep thể loại
+					"movie_duration, movie_country, movie_image_url, movie_status, movie_tag, trailer_url, movie_image_public_id FROM movies WHERE deleted_at IS NULL");
+
 			if(type != null && !type.trim().isEmpty()){
 				sql.append(" AND movie_type = ?");
 			}
-			// lọc phim theo quốc gia
+
 			if(country != null && !country.trim().isEmpty()){
 				sql.append(" AND movie_country = ?");
 			}
-			// lọc phim theo tag
+
 			if(tag != null && !tag.trim().isEmpty()){
 				sql.append(" AND movie_tag = ?");
 			}
@@ -370,6 +370,26 @@ public class MovieDAO implements dao.IMovieDAO {
 		return movie;
 	}
 
-
+	public List<Movie> getMoviesByRoomId(int roomId) {
+		List<Movie> list = new ArrayList<>();
+		try {
+			String queryString = "SELECT DISTINCT m.movie_id, m.movie_name, m.movie_type, m.director_name, m.names_of_actors, m.movie_description,"
+					+ " m.movie_duration, m.movie_country, m.movie_image_url, m.movie_status, m.movie_tag, m.trailer_url, m.movie_image_public_id "
+					+ " FROM movies m JOIN showtimes s ON m.movie_id = s.movie_id WHERE s.room_id = ? AND s.deleted_at IS NULL AND m.deleted_at IS NULL";
+			Connection connect = dao.JDBCConnection.getConnection();
+			PreparedStatement ps = connect.prepareStatement(queryString);
+			ps.setInt(1, roomId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(mapResultSetToMovie(rs));
+			}
+			rs.close();
+			ps.close();
+			connect.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 }

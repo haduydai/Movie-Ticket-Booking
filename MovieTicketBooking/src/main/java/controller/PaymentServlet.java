@@ -13,7 +13,7 @@ public class PaymentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String ticketId = request.getParameter("ticketId");
         String amount= request.getParameter("amount");
-        // Giả lập thanh toán
+
         response.sendRedirect(request.getContextPath()
                                 + "/payment-return"
                                 + "?ticketId="

@@ -55,7 +55,7 @@ public class MoviesServlet extends HttpServlet {
         }
 
 
-        // Gửi dữ liệu sang trang JSP
+
         request.setAttribute("listShowing", listShowing);
         request.setAttribute("listUpcoming", listUpcoming);
         request.setAttribute("selectType", type);
@@ -65,7 +65,7 @@ public class MoviesServlet extends HttpServlet {
 
 
 
-        // Chuyển hướng về trang giao diện
+
         request.getRequestDispatcher("/WEB-INF/view/movies.jsp").forward(request, response);
     }
 }

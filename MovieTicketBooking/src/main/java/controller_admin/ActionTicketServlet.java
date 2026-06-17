@@ -38,6 +38,15 @@ public class ActionTicketServlet extends HttpServlet {
 			TicketStatus newStatus = TicketStatus.CHECKEDIN;
 			dao.updateTicketStatus(ticket, newStatus);
 			session.setAttribute("ticketMessage", "Đã check in thành công");
+		} else if("refund".equals(action)) {
+			TicketStatus newStatus = TicketStatus.CANCELLED;
+			Ticket fullTicket = dao.getTicketById(ticketId);
+			if (fullTicket != null) {
+				dao.updateTicketStatus(fullTicket, newStatus);
+				session.setAttribute("ticketMessage", "Đã duyệt hoàn tiền và hủy vé thành công");
+			} else {
+				session.setAttribute("ticketMessage", "Không tìm thấy vé hợp lệ");
+			}
 		}
 		
 		response.sendRedirect(request.getContextPath() + "/admin/tickets");

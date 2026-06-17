@@ -45,8 +45,8 @@ public class GoogleLoginServlet extends HttpServlet {
             resp.sendRedirect(authorizationUrl);
             return;
         }
-        // --- Lấy thông tin Email và Name ---
-        // ---  Kiểm tra DB và xử lý đăng nhập ---
+
+
         try {
             String accessToken = getAccessToken(code);
             if (accessToken != null) {
@@ -54,37 +54,37 @@ public class GoogleLoginServlet extends HttpServlet {
                 String email = getJsonKeyValue(userInfoJson, "email");
                 String name = getJsonKeyValue(userInfoJson, "name");
 
-                //  Kiểm tra xem email này đã tồn tại trong DB chưa
+
                 User user = userDAO.getUserByEmail(email);
 
                 resp.setContentType("text/html;charset=UTF-8");
                 if (user != null) {
-                    //ĐÃ TỒN TẠI -> Lưu vào Session và chuyển hướng về trang chủ
+
                     req.getSession().setAttribute("user", user);
 
-                    //Chuyển hướng về trang chủ
+
                     resp.sendRedirect(req.getContextPath() + "/home");
                 } else {
-                    //- CHƯA TỒN TẠI -> Tự động đăng ký tài khoản mới ---
 
-                    // 1 Tách lấy phần trước chữ @ của email làm username
+
+
                     String username = email.substring(0, email.indexOf("@"));
 
-                    // 2. Kiểm tra xem username này có bị trùng trong DB không
+
                     if (userDAO.checkUser(username) != null) {
-                        // Nếu trùng, ghép thêm 3 số ngẫu nhiên ở cuối để đảm bảo duy nhất
+
                         username = username + "_" + (int)(Math.random() * 900 + 100);
                     }
 
-                    // sinh mật khẩu ngẫu nhiên cho tài khoản (8 ký tự đầu của UUID)
+
                     String randomPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
 
-                    //  Tạo đối tượng User mới (số điện thoại mặc định để trống "", Role là USER)
+
                     User newUser = new User(username, randomPassword, email, "", Role.USER);
 
-                    //Lưu tài khoản mới vào cơ sở dữ liệu
+
                     if (userDAO.addUser(newUser)) {
-                        // Lấy lại thông tin user từ DB (để có trường ID tự tăng do MySQL sinh ra)
+
                         user = userDAO.getUserByEmail(email);
                         if (user != null) {
                             req.getSession().setAttribute("user", user);
@@ -93,7 +93,7 @@ public class GoogleLoginServlet extends HttpServlet {
                         }
                     }
 
-                    // Nếu gặp lỗi khi thêm vào DB
+
                     resp.setContentType("text/html;charset=UTF-8");
                     resp.getWriter().println("<h3>Lỗi: Không thể tự động tạo tài khoản thành viên mới!</h3>");
                 }
@@ -107,11 +107,11 @@ public class GoogleLoginServlet extends HttpServlet {
             resp.getWriter().println("Lỗi hệ thống: " + e.getMessage());
         }
     }
-    // Hàm gửi POST request tới Google để đổi mã "code" lấy "access_token"
+
     private String getAccessToken(String code) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 
-        // cấu hình  tham số gửi đi   theo chuẩn   OAuth2
+
         String parameters = "client_id=" + URLEncoder.encode(CLIENT_ID, StandardCharsets.UTF_8)
                 + "&client_secret=" + URLEncoder.encode(CLIENT_SECRET, StandardCharsets.UTF_8)
                 + "&redirect_uri=" + URLEncoder.encode(REDIRECT_URI, StandardCharsets.UTF_8)
@@ -126,14 +126,14 @@ public class GoogleLoginServlet extends HttpServlet {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() == 200) {
-            // Trích xuất access_token từ JSON trả về
+
             return getJsonKeyValue(response.body(), "access_token");
         }
         System.err.println("Yêu cầu Token thất bại: " + response.body());
         return null;
     }
 
-    // Hàm phụ trợ dùng Regex để tách chuỗi giá trị từ JSON phản hồi
+
     private String getJsonKeyValue(String json, String key) {
         Pattern pattern = Pattern.compile("\"" + key + "\":\\s*\"([^\"]+)\"");
         Matcher matcher = pattern.matcher(json);
@@ -142,19 +142,19 @@ public class GoogleLoginServlet extends HttpServlet {
         }
         return null;
     }
-    // Hàm gửi Get  request kèm Access Token để lấy thông tin cá nhân từ   Google
+
     private String getUserInfo(String accessToken) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(GOOGLE_USERINFO_URL))
-                .header("Authorization", "Bearer " + accessToken)  //Gửi token lên header
+                .header("Authorization", "Bearer " + accessToken)
                 .GET()
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() == 200) {
-            return response.body();    // Trả về  chuỗi JSON chứa thông tin người   dùng
+            return response.body();
         }
         System.err.println("Yêu cầu UserInfo thất bại: " + response.body());
         return null;

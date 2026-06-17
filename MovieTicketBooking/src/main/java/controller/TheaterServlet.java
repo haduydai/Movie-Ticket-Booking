@@ -17,22 +17,22 @@ public class TheaterServlet extends HttpServlet {
             throws ServletException, IOException {
         CinemaDAO cinemaDAO = new CinemaDAO();
 
-        // Tìm kiếm rạp theo tên
+
         String keyword = request.getParameter("keyword");
         List<Cinema> listCinemas;
         if(keyword != null && !keyword.trim().isEmpty()){
             listCinemas = cinemaDAO.searchCinemaByName(keyword);
         }
         else {
-            // lấy danh sách tất cả các rạp
+
             listCinemas = cinemaDAO.getAllCinema();
 
         }
-        // Gửi dữ liệu sang trang JSP
+
         request.setAttribute("keyword", keyword);
         request.setAttribute("listCinemas", listCinemas);
         
-        // Chuyển hướng về giao diện
+
         request.getRequestDispatcher("/WEB-INF/view/theater.jsp").forward(request, response);
     }
 }

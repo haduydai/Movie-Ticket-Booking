@@ -20,7 +20,7 @@ public class ResetPasswordServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
-        // Nếu chưa xác thực email (chưa có resetEmail trong session) thì đá về login
+
         if (session.getAttribute("resetEmail") == null) {
             response.sendRedirect("login"); 
             return;
@@ -61,17 +61,17 @@ public class ResetPasswordServlet extends HttpServlet {
             return;
         }
 
-        //mã hóa và cập nhật mật khẩu mới
+
         try {
             user.setPassword(PasswordUtils.hashPassword(newPass));
             dao.updateUser(user);
 
-            //Xóa session OTP và thông tin reset để bảo mật
+
             session.removeAttribute("otp");
             session.removeAttribute("resetUsername");
             session.removeAttribute("resetEmail");
 
-            // trả về JSON thành công, gửi kèm hướng đi kế tiếp
+
             sendJsonResponse(response, "success", "login");
         } catch (Exception e) {
             e.printStackTrace();

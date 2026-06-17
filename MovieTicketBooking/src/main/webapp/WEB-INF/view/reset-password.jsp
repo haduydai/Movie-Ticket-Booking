@@ -22,23 +22,23 @@
                 Hãy thiết lập mật khẩu mới an toàn cho tài khoản của bạn.
             </p>
 
-            <%-- Mật khẩu mới --%>
+            
             <div class="form-group-auth">
                 <label for="newPass">Mật khẩu mới</label>
                 <input type="password" id="newPass" name="newPass" placeholder="Nhập mật khẩu mới" required>
             </div>
 
-            <%-- Xác nhận mật khẩu --%>
+            
             <div class="form-group-auth">
                 <label for="confirmPass">Nhập lại mật khẩu</label>
                 <input type="password" id="confirmPass" name="confirmPass" placeholder="Xác nhận mật khẩu mới" required>
             </div>
 
-            <%-- Thông báo lỗi động --%>
+            
             <p id="errorMsg" style="color: red; text-align: center; margin-bottom: 10px; display: none;"></p>
 
             <button type="submit" class="auth-btn">Đổi Mật Khẩu</button>
-            <%-- Các link điều hướng phụ trợ --%>
+            
             <div class="auth-link" style="margin-top: 15px; font-size: 14px; text-align: center;">
                 <p>
                     <a href="forgot-password">Quay lại trang trước</a>

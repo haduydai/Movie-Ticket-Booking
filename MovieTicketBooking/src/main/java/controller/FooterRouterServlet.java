@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-// Map các URL cho trang tĩnh
+
 @WebServlet(urlPatterns = { "/about", "/contact", "/news", "/careers", "/privacy"})
 public class FooterRouterServlet extends HttpServlet {
 	@Override

@@ -9,7 +9,7 @@
     <title>${movie != null ? movie.name : 'Chi tiết phim'} - MyCinema</title>
     <link rel="stylesheet" href="styles.css">
 
-    <%-- CSS riêng cho trang movieDetail (giữ gọn, không đụng tới styles.css chung) --%>
+    
     <style>
         .movie-detail-page { padding: var(--spacing-lg) 0; }
 
@@ -165,10 +165,10 @@
     <jsp:include page="header.jsp" />
 
     <main class="movie-detail-page">
-        <%-- Fallback ảnh --%>
+        
         <c:set var="posterUrl" value="${empty movie.imageUrl ? 'https://via.placeholder.com/400x600?text=No+Image' : movie.imageUrl}" />
 
-        <%-- HERO: Poster + thông tin nhanh + nút Đặt vé (chuyển sang chọn suất chiếu) --%>
+        
         <section class="md-hero" style="background-image: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.85)), url('${posterUrl}');">
             <div class="md-hero-inner">
                 <div class="md-poster">
@@ -202,7 +202,7 @@
                     </div>
 
                     <div class="md-actions">
-                        <%-- Nút Đặt vé: chuyển sang trang chọn suất chiếu (book-ticket.jsp) --%>
+                        
                         <c:choose>
                             <c:when test="${movie.movieStatus == 'NOW_SHOWING'}">
                                 <a class="btn" href="book-ticket?movieId=${movie.id}">Đặt vé</a>
@@ -218,7 +218,7 @@
             </div>
         </section>
 
-        <%-- NỘI DUNG: Giữ phần mô tả chi tiết phim --%>
+        
         <section class="md-content">
             <div>
             <div class="md-card">

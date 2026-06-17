@@ -77,7 +77,7 @@
 		</table>
 	</div>
 	
-	<!-- Thông báo xác nhận xoá phim -->
+	
 	<div class="modal fade" id="confirmDeleteModal" tabindex="-1">
 	    <div class="modal-dialog modal-dialog-centered">
 	        <div class="modal-content">

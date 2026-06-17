@@ -15,7 +15,7 @@
 
 	<main class="profile-container">
 
-		<%-- Nếu đã đăng nhập --%>
+		
 		<c:if test="${not empty sessionScope.user}">
 
 			<div class="profile-section">
@@ -23,12 +23,12 @@
 					style="text-align: center; margin-bottom: 20px; color: var(--primary-color);">HỒ
 					SƠ CÁ NHÂN</h2>
 
-				<%-- Thông báo lỗi/thành công động --%>
+				
                 <p id="msgAlert" style="text-align: center; padding: 10px; border-radius: 4px; margin-bottom: 15px; display: none;"></p>
 
 				<form id="profileForm">
 
-					<%-- THÔNG TIN CƠ BẢN --%>
+					
 					<div class="profile-info">
 						<div class="profile-field">
 							<label>Tên đăng nhập</label> 
@@ -47,14 +47,14 @@
 						</div>
 					</div>
 
-					<%-- NÚT BẬT TÍNH NĂNG ĐỔI MẬT KHẨU --%>
+					
 					<div style="text-align: right;">
 						<button type="button" class="btn-toggle"
 							onclick="togglePasswordForm()">🔒 Đổi mật khẩu</button>
 					</div>
 
-					<%-- KHỐI ĐỔI MẬT KHẨU --%>
-					<%-- QUAN TRỌNG: Thêm style="display: none;" vào đây để mặc định ẩn đi --%>
+					
+					
 					<div id="passwordSection" style="display: none;">
 						<h3 style="color: var(--secondary-color); margin-bottom: 10px;">Thay
 							Đổi Mật Khẩu</h3>
@@ -81,7 +81,7 @@
 						</div>
 					</div>
 
-					<%-- NÚT LƯU CHUNG --%>
+					
 					<div
 						style="text-align: center; margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
 						<button type="submit" class="btn" style="min-width: 200px;">Lưu
@@ -91,7 +91,7 @@
 				</form>
 			</div>
 
-			<%-- LỊCH SỬ ĐẶT VÉ (Không thay đổi) --%>
+			
 			<section class="profile-section">
 				<h3>Lịch Sử Đặt Vé</h3>
 				<div class="booking-history">
@@ -150,10 +150,13 @@
 												<c:when test="${t.status == 'UNPAID'}">
 													<span style="color: yellow; font-weight: bold;">Chưa thanh toán</span>
 												</c:when>
+												<c:when test="${t.status == 'REFUND_PENDING'}">
+													<span style="color: orange; font-weight: bold;">Chờ hoàn tiền</span>
+												</c:when>
 											</c:choose></td>
 
 										<td>
-											<c:if test="${t.status != 'CANCELLED'}">
+											<c:if test="${t.status == 'PAID' or t.status == 'UNPAID'}">
 												<form action="cancel-ticket" method="post"
 													onsubmit="return confirm('Bạn có chắc chắn muốn hủy vé ${t.uid}?');">
 													<input type="hidden" name="ticketId" value="${t.id}">

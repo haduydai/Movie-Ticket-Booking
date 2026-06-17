@@ -26,7 +26,7 @@ public class ProfileServlet extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 		
 		ITicketDAO ticketDAO = new TicketDAO();
-	    // Lấy danh sách vé của user hiện tại
+
 	    List<Ticket> history = ticketDAO.getTicketsByUserId(user.getId());
 	    
 	    request.setAttribute("ticketHistory", history);
@@ -37,10 +37,10 @@ public class ProfileServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// Thiết lập tiếng Việt
+
 		request.setCharacterEncoding("UTF-8");
 
-		// Lấy user từ session
+
 		HttpSession session = request.getSession();
 		User currentUser = (User) session.getAttribute("user");
 
@@ -81,7 +81,7 @@ public class ProfileServlet extends HttpServlet {
 			return;
 		}
 
-		// Xử lý logic Đổi Mật Khẩu (nếu người dùng có nhập mật khẩu mới)
+
 		if (newPass != null && !newPass.isEmpty()) {
 			if (currentPass == null || currentPass.isEmpty()) {
 				sendJsonResponse(response, "error", "Vui lòng nhập mật khẩu hiện tại!");
@@ -89,25 +89,25 @@ public class ProfileServlet extends HttpServlet {
 			}
 
 			try {
-				// Kiểm tra mật khẩu hiện tại từ input với mật khẩu băm từ database
+
 				if (!PasswordUtils.checkPassword(currentPass, currentUser.getPassword())) {
 					sendJsonResponse(response, "error", "Mật khẩu hiện tại không đúng!");
 					return;
 				}
 
-				// Kiểm tra xác nhận mật khẩu
+
 				if (!newPass.equals(confirmPass)) {
 					sendJsonResponse(response, "error", "Mật khẩu xác nhận không khớp!");
 					return;
 				}
 
-				// Kiểm tra độ dài mật khẩu mới (phải từ 6 ký tự trở lên)
+
 				if (newPass.length() < 6) {
 					sendJsonResponse(response, "error", "Mật khẩu mới phải từ 6 ký tự trở lên!");
 					return;
 				}
 
-				// Mã hóa mật khẩu mới và cập nhật vào đối tượng User
+
 				String newPassHash = PasswordUtils.hashPassword(newPass);
 				currentUser.setPassword(newPassHash);
 			} catch (Exception e) {
@@ -117,18 +117,18 @@ public class ProfileServlet extends HttpServlet {
 			}
 		}
 
-		// Cập nhật các thông tin cá nhân khác
+
 		currentUser.setEmail(email);
 		currentUser.setPhoneNumber(phone);
 
-		// Lưu xuống Database
+
 		UserDAO dao = new UserDAO();
 		dao.updateUser(currentUser);
 
-		// Cập nhật lại Session để hiển thị thông tin mới
+
 		session.setAttribute("user", currentUser);
 
-		// Trả về JSON báo thành công
+
 		sendJsonResponse(response, "success", "Cập nhật thông tin thành công!");
 	}
 	private void sendJsonResponse(HttpServletResponse response, String status, String message) {

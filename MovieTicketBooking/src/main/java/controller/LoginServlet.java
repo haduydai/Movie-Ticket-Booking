@@ -59,11 +59,11 @@ import java.io.IOException;
             backToPage("Tài khoản không tồn tại.", request, response);
         } else {
 
-            // Trường hợp: Tài khoản có tồn tại, kiểm tra mật khẩu
-            //mã hóa mật khẩu người dùng vừa nhập vào form để so sánh với dữ liệu mật khẩu được mã hóa dưới database
+
+
 
             if (PasswordUtils.checkPassword(pass, user.getPassword())) {
-                // Đăng nhập thành công -> Lưu vào Session theo role
+
                 HttpSession session = request.getSession();
                 String redirectPath = "home";
                 if (Role.ADMIN.equals(user.getRole())) {
@@ -74,12 +74,12 @@ import java.io.IOException;
                     redirectPath = "home";
                 }
 
-                // TRẢ VỀ JSON THÀNH CÔNG (Thay vì sendRedirect)
+
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write("{\"status\": \"success\", \"message\": \"" + redirectPath + "\"}");
             } else {
-                // Sai mật khẩu -> Gọi hàm báo lỗi JSON
+
                 backToPage("Sai mật khẩu! Vui lòng thử lại.", request, response);
             }
 
@@ -88,7 +88,7 @@ import java.io.IOException;
     }
 
 
-    // Trả về lỗi dạng JSON thay vì tải lại trang
+
     private void backToPage(String message, HttpServletRequest request, HttpServletResponse response) {
         try {
             response.setContentType("application/json");

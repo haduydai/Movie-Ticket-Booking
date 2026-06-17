@@ -79,7 +79,7 @@ public class ShowTimeDAO implements IShowTimeDAO {
 	@Override
 	public List<ShowTime> getShowTimesByMovieIdAndNextNDays(int movieId, int day) {
 		List<ShowTime> list = new ArrayList<>();
-		// Query chuẩn không có ngoặc đơn
+
 		String query = "SELECT showtime_id, showtime_price, start_time, created_at, movie_id, cinema_id, room_id "
 				+ "FROM showtimes " + "WHERE movie_id = ? " + "AND start_time >= NOW() "
 				+ "AND start_time <= DATE_ADD(NOW(), INTERVAL ? DAY) AND deleted_at IS NULL " + "ORDER BY start_time ASC";

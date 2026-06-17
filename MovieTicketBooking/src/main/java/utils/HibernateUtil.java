@@ -25,7 +25,7 @@ public class HibernateUtil {
     }
 
     private static void addAnnotatedClasses(Configuration configuration) {
-        // Đăng ký toàn bộ các class thực thể JPA vào Hibernate
+
         configuration.addAnnotatedClass(model.User.class);
         configuration.addAnnotatedClass(model.Movie.class);
         configuration.addAnnotatedClass(model.Cinema.class);
@@ -80,7 +80,7 @@ public class HibernateUtil {
         configuration.setProperty("hibernate.hikari.connectionTimeout", props.getProperty("hikari.connectionTimeout", "30000"));
         configuration.setProperty("hibernate.hikari.maxLifetime", props.getProperty("hikari.maxLifetime", "1800000"));
 
-        // Đăng ký thêm phân hệ Giỏ hàng
+
         configuration.addAnnotatedClass(model.Cart.class);
         configuration.addAnnotatedClass(model.CartItem.class);
     }

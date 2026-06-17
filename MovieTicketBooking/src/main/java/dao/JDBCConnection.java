@@ -20,11 +20,11 @@ public class JDBCConnection {
         config.setPassword(PASS);
         config.setDriverClassName(DRIVER_NAME);
         
-        config.setMaximumPoolSize(15);      // Tổng số connection tối đa
-        config.setMinimumIdle(5);           // Số connection rảnh
-        config.setIdleTimeout(30000);       // Connection rảnh quá lâu sẽ đóng (ms)
-        config.setMaxLifetime(1800000);     // Tuổi thọ tối đa của connection (ms)
-        config.setConnectionTimeout(30000); // Chờ lấy connection tối đa trước khi lỗi
+        config.setMaximumPoolSize(15);
+        config.setMinimumIdle(5);
+        config.setIdleTimeout(30000);
+        config.setMaxLifetime(1800000);
+        config.setConnectionTimeout(30000);
         
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");

@@ -23,7 +23,7 @@
 		<section class="section">
 			<h2>Phim Đang Chiếu</h2>
 			<div class="movie-grid">
-				<%-- Dùng JSTL để lặp qua danh sách listShowing từ Servlet --%>
+				
 				<c:forEach items="${listShowing}" var="m">
 					<div class="movie-card">
 						<img src="${m.imageUrl}" alt="${m.name}" loading="lazy"

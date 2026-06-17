@@ -168,7 +168,7 @@ public class CinemaDAO implements dao.ICinemaDAO {
 		return update;
 	}
 
-	// Tìm kiếm tên rạp phim bao gồm chi tiết rạp và phim đang được chiếu tại rạp
+
 	public List<Cinema> searchCinemaByName(String keyword){
 		List<Cinema> list = new ArrayList<>();
 		try{

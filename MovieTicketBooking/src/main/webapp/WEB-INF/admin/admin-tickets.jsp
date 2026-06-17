@@ -91,6 +91,10 @@
 						            <span class="badge bg-primary">Đã check-in</span>
 						        </c:when>
 						
+						        <c:when test="${t.status == 'REFUND_PENDING'}">
+						            <span class="badge bg-info text-dark">Chờ hoàn tiền</span>
+						        </c:when>
+						
 						        <c:otherwise>
 						            
 						        </c:otherwise>
@@ -113,6 +117,15 @@
 						                <input type="hidden" name="action" value="checkin">
 						                <button type="submit" class="btn btn-success">
 						                    Check in
+						                </button>
+						            </form>
+						        </c:when>
+						        <c:when test="${t.status == 'REFUND_PENDING'}">
+						            <form action="${pageContext.request.contextPath}/admin/ticket/action" method="post">
+						                <input type="hidden" name="id" value="${t.id}">
+						                <input type="hidden" name="action" value="refund">
+						                <button type="submit" class="btn btn-danger" onclick="return confirm('Xác nhận duyệt hoàn tiền và hủy vé này?')">
+						                    Duyệt hoàn tiền
 						                </button>
 						            </form>
 						        </c:when>

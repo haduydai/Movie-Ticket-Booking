@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -48,64 +49,55 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>09/11/2025</td>
-                    <td>Quái Thú Vô Hình</td>
-                    <td>Cinestar Q6 - 16:30</td>
-                    <td>B3, B10</td>
-                    <td>110,000 VNĐ</td>
-                    <td><span class="status-badge status-confirmed">Đã Xác Nhận</span></td>
-                    <td>
-                        <a href="#" class="action-btn">Xem Vé</a>
-                        <button class="action-btn">Hủy</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>05/11/2025</td>
-                    <td>Avengers: Endgame</td>
-                    <td>Cinestar Hai Bà Trưng - 19:00</td>
-                    <td>A5, B2</td>
-                    <td>90,000 VNĐ</td>
-                    <td><span class="status-badge status-confirmed">Đã Xác Nhận</span></td>
-                    <td>
-                        <a href="#" class="action-btn">Xem Vé</a>
-                        <button class="action-btn">Hủy</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>01/11/2025</td>
-                    <td>Parasite</td>
-                    <td>Cinestar Quốc Thanh - 14:30</td>
-                    <td>C4</td>
-                    <td>45,000 VNĐ</td>
-                    <td><span class="status-badge status-cancelled">Đã Hủy</span></td>
-                    <td>
-                        <a href="#" class="action-btn">Chi Tiết</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>28/10/2025</td>
-                    <td>Joker</td>
-                    <td>Cinestar Hai Bà Trưng - 20:00</td>
-                    <td>D2, D3</td>
-                    <td>90,000 VNĐ</td>
-                    <td><span class="status-badge status-confirmed">Đã Xác Nhận</span></td>
-                    <td>
-                        <a href="#" class="action-btn">Xem Vé</a>
-                        <button class="action-btn">Hủy</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>25/10/2025</td>
-                    <td>Frozen 2</td>
-                    <td>Cinestar Q6 - 14:00</td>
-                    <td>E6</td>
-                    <td>45,000 VNĐ</td>
-                    <td><span class="status-badge status-pending">Đang Chờ</span></td>
-                    <td>
-                        <button class="action-btn">Xác Nhận</button>
-                    </td>
-                </tr>
+                <c:forEach items="${ticketList}" var="ticket">
+                    <tr>
+                        <td>
+                            <c:out value="${ticket.createdAt}" />
+                        </td>
+                        <td><c:out value="${ticket.showTime.movie.name}" /></td>
+                        <td>
+                            <c:out value="${ticket.showTime.cinema.name}" /> - <c:out value="${ticket.showTime.room.name}" />
+                            <br/>
+                            <span style="font-size: 12px; color: var(--text-muted);">
+                                <c:out value="${ticket.showTime.startTime}" />
+                            </span>
+                        </td>
+                        <td><c:out value="${ticket.seats}" /></td>
+                        <td>
+                            <span style="font-weight: 600;">
+                                <c:out value="${ticket.totalPrice}" /> đ
+                            </span>
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${ticket.status == 'PAID'}">
+                                    <span class="status-badge status-confirmed">Đã Thanh Toán</span>
+                                </c:when>
+                                <c:when test="${ticket.status == 'UNPAID'}">
+                                    <span class="status-badge status-pending">Chờ Thanh Toán</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="status-badge status-cancelled">Đã Hủy</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${ticket.status == 'UNPAID'}">
+                                    <a href="${pageContext.request.contextPath}/payment-page?ticketId=${ticket.id}" class="action-btn" style="background-color: var(--primary-color); color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 4px;">Thanh toán</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <span style="color: var(--text-muted); font-size: 12px;">N/A</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty ticketList}">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: var(--spacing-lg);">Bạn chưa có lịch sử đặt vé nào.</td>
+                    </tr>
+                </c:if>
             </tbody>
         </table>
 

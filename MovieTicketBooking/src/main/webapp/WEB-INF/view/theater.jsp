@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%-- Sửa lại thư viện JSTL theo yêu cầu của bạn --%>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 
 <!DOCTYPE html>
@@ -21,11 +21,11 @@
 </head>
 <body>
     
-    <%-- Gọi Header chung --%>
+    
     <jsp:include page="header.jsp" />
 
     <main>
-        <%-- Hero Section (Giữ nguyên) --%>
+        
         <section class="hero" style="height: 200px;">
             <div class="hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/1400x500?text=He+Thong+Rap+MyCinema');"></div>
             <div class="hero-overlay">
@@ -34,7 +34,7 @@
             </div>
         </section>
 
-        <%-- DANH SÁCH RẠP (Lấy dữ liệu động từ Database) --%>
+        
         <section class="section">
             <div style = "margin-bottom: 20px; text-align: center;">
                 <form action="theaters" method="get">
@@ -46,12 +46,12 @@
             
             <div class="cinema-grid">
                 
-                <%-- Kiểm tra nếu danh sách rỗng (tránh lỗi giao diện) --%>
+                
                 <c:if test="${empty listCinemas}">
                     <p style="color:white; font-style: italic;">Đang cập nhật danh sách rạp...</p>
                 </c:if>
 
-                <%-- Vòng lặp hiển thị từng rạp --%>
+                
                 <c:forEach items="${listCinemas}" var="c">
                     <div class="cinema-card">
                         
@@ -73,7 +73,7 @@
 
     </main>
 
-    <%-- Gọi Footer chung --%>
+    
     <jsp:include page="footer.jsp" />
 
 </body>

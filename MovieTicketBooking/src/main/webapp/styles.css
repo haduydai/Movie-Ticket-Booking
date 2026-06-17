@@ -1,39 +1,39 @@
-/* Import Google Fonts: Sử dụng Roboto để giống font sans-serif hiện đại của Cinestar */
+
 @import
 	url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap')
 	;
 
-/* :root - Định nghĩa biến CSS toàn cục cho theme dễ chỉnh sửa */
-/* Màu sắc: Giống Cinestar với nền đen, đỏ accent cho nút đặt vé, vàng cho logo */
+
+
 :root {
-	--primary-color: #e50914; /* Đỏ cho nút đặt vé và hover effects */
-	--secondary-color: #ffd700; /* Vàng cho logo và badge rating */
-	--bg-color: #000000; /* Nền đen chính cho dark theme */
-	--bg-secondary: #141414; /* Xám đen cho sections và cards */
-	--text-color: #ffffff; /* Trắng cho text chính */
-	--text-muted: #b3b3b3; /* Xám cho text phụ */
-	/* Typography: Font Roboto, kích thước nhỏ cho layout dense như Cinestar */
+	--primary-color: #e50914; 
+	--secondary-color: #ffd700; 
+	--bg-color: #000000; 
+	--bg-secondary: #141414; 
+	--text-color: #ffffff; 
+	--text-muted: #b3b3b3; 
+	
 	--font-family: 'Roboto', sans-serif;
 	--font-size-base: 14px;
 	--font-size-large: 18px;
 	--font-size-xl: 36px;
-	/* Spacing: Khoảng cách nhất quán cho padding/margin */
+	
 	--spacing-sm: 8px;
 	--spacing-md: 16px;
 	--spacing-lg: 24px;
-	/* Layout: Chiều rộng max và bo góc nhẹ */
+	
 	--max-width: 1400px;
 	--border-radius: 4px;
 	--cols:10px;
 	--spacing-xl:100px;
 }
-/* Reset CSS: Xóa margin/padding mặc định, box-sizing cho responsive */
+
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
-/* Body: Áp dụng font, màu nền, line-height cho toàn trang */
+
 body {
 	font-family: var(--font-family);
 	background-color: var(--bg-color);
@@ -41,7 +41,7 @@ body {
 	line-height: 1.4;
 	font-size: var(--font-size-base);
 }
-/* Header: Sticky top, nền đen với border dưới - Giống Cinestar header đơn giản */
+
 header {
 	background-color: var(--bg-color);
 	padding: 0;
@@ -53,7 +53,7 @@ header {
 /*--------------------------setting root ---------------------------------------------*/
 
 /*--------------------------Start CSS home.jsp & movies.jsp-----------------------------------------------*/
-/* Top-nav: Flex layout cho logo, menu, user actions - Responsive trên desktop */
+
 
 /*------------------Start thanh menu chinh------------------------------------*/
 .top-nav {
@@ -70,14 +70,14 @@ header {
 	color: var(--secondary-color);
 	text-decoration: none;
 	font-weight: 700;
-	letter-spacing: 1px; /* Spacing cho logo nổi bật */
+	letter-spacing: 1px; 
 }
 
 .nav-links {
 	display: flex;
 	list-style: none;
 	gap: var(--spacing-lg);
-	align-items: center; /* Thẳng hàng dọc */
+	align-items: center; 
 }
 
 .nav-links a {
@@ -86,17 +86,17 @@ header {
 	padding: var(--spacing-sm) var(--spacing-md);
 	transition: color 0.3s;
 	font-weight: 400;
-	line-height: 1.2; /* Thống nhất line-height */
-	height: auto; /* Không cố định height, tự fit */
+	line-height: 1.2; 
+	height: auto; 
 }
 
 .nav-links a:hover {
-	color: var(--primary-color); /* Hover đỏ để tương tác */
+	color: var(--primary-color); 
 }
 
 .nav-links li {
 	position: relative; /* Cho dropdown absolute */
-	height: auto; /* Không tăng height do dropdown */
+	height: auto; 
 }
 
 /* Media Query */
@@ -117,7 +117,7 @@ header {
 /*-------------------End thanh menu chinh------------------------------------*/
 
 /*-------------------Start thanh tim kiem search bar------------------------------------*/
-/* Search-bar-header: Thanh tìm kiếm riêng biệt dưới nav - Giống Cinestar với input lớn */
+
 .search-bar-header {
 	background-color: var(--bg-secondary);
 	padding: var(--spacing-md) 0;
@@ -162,7 +162,7 @@ header {
 /*-------------------End thanh tim kiem search bar------------------------------------*/
 
 /*-------------------Start Loign/Register------------------------------------*/
-/* Button chung: Style cho tất cả nút CTA (đặt vé, xem thêm) - Đỏ nổi bật như Cinestar */
+
 .btn {
 	background-color: var(--primary-color);
 	color: var(--text-color);
@@ -179,7 +179,7 @@ header {
 }
 
 .btn:hover {
-	background-color: #b20710; /* Đậm hơn khi hover */
+	background-color: #b20710; 
 }
 
 .btn-secondary {
@@ -193,7 +193,7 @@ header {
 	color: var(--primary-color);
 }
 
-/* Main: Container chính, padding side cho nội dung */
+
 main {
 	max-width: var(--max-width);
 	margin: 0 auto;
@@ -203,7 +203,7 @@ main {
 
 /*-------------------Start Banner------------------------------------*/
 
-/* Hero: Banner carousel với overlay - Giống Cinestar hero slideshow */
+
 .hero {
 	position: relative;
 	height: 500px;
@@ -212,7 +212,7 @@ main {
 	border-radius: var(--border-radius);
 }
 
-/* Hero-banner: Mỗi slide background image, opacity cho fade transition */
+
 .hero-banner {
 	position: absolute;
 	top: 0;
@@ -229,7 +229,7 @@ main {
 	opacity: 1;
 }
 
-/* Hero-overlay: Gradient dưới, text lớn cho title/desc/button */
+
 .hero-overlay {
 	position: absolute;
 	bottom: 0;
@@ -245,7 +245,7 @@ main {
 	font-weight: 700;
 	margin-bottom: var(--spacing-sm);
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-	/* Shadow cho dễ đọc trên image */
+	
 }
 
 .hero-overlay p {
@@ -256,7 +256,7 @@ main {
 /*-------------------End Banner------------------------------------*/
 
 /*-------------------Start CinemaSelect------------------------------------*/
-/* Cinema-select: Tabs cho chọn rạp/thành phố - Interactive với JS toggle */
+
 .cinema-select {
 	display: flex;
 	justify-content: center;
@@ -276,14 +276,14 @@ main {
 }
 
 .cinema-tab.active {
-	background: var(--primary-color); /* Active tab đỏ */
+	background: var(--primary-color); 
 }
 
 .cinema-tab:hover {
 	background: var(--primary-color);
 }
 
-/* Section chung: Wrapper cho các phần phim, với title uppercase */
+
 .section {
 	margin-bottom: var(--spacing-lg);
 }
@@ -299,7 +299,7 @@ main {
 	letter-spacing: 1px;
 }
 
-/* Movie-grid: Grid responsive cho cards phim - Auto-fit columns như Cinestar */
+
 .section .movie-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -316,7 +316,7 @@ main {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-/* Movie-card: Card phim với hover lift, shadow - Compact như Cinestar */
+
 .movie-card {
 	background-color: var(--bg-secondary);
 	border-radius: var(--border-radius);
@@ -332,7 +332,7 @@ main {
 .movie-card img {
 	width: 100%;
 	height: 270px;
-	object-fit: cover; /* Poster fit mà không méo */
+	object-fit: cover; 
 }
 
 .movie-info {
@@ -345,14 +345,14 @@ main {
 	font-weight: 700;
 }
 
-/* Genre: Text nhỏ cho thể loại/thời gian */
+
 .genre {
 	color: var(--text-muted);
 	font-size: 12px;
 	margin-bottom: var(--spacing-sm);
 }
 
-/* Rating: Badge vàng nhỏ cho điểm số - Giống badge trên Cinestar */
+
 .rating {
 	display: inline-block;
 	background: var(--secondary-color);
@@ -366,7 +366,7 @@ main {
 /*-------------------End SelectMovies------------------------------------*/
 
 /*-------------------Start Footer------------------------------------*/
-/* Footer: Nền xám, links center - Đơn giản như Cinestar */
+
 .footer {
 	background-color: var(--bg-secondary);
 	padding: var(--spacing-lg) 0;
@@ -398,11 +398,11 @@ main {
 
 
 /*-------------------Start DropDownOptionMovie------------------------------------*/
-/* Dropdown Menu: Pure CSS Click Toggle với Checkbox Hack - Chỉ hiện khi click "Phim" */
+
 .nav-links li.has-dropdown:hover .dropdown {
   display: block;
   opacity: 1;
-  transform: translateY(0); /* Slide down nhẹ */
+  transform: translateY(0); 
   
 }
 .nav-links li.has-dropdown {
@@ -410,7 +410,7 @@ main {
 }
 
 .dropdown-toggle {	
-	display: none; /* Checkbox ẩn */
+	display: none; 
 }
 
 .dropdown {
@@ -461,7 +461,7 @@ main {
 	
 }
 
-/* Style cho label "Phim" (clickable như button) */
+
 .has-dropdown label {
 	cursor: pointer;
 	display: inline-block;
@@ -475,7 +475,7 @@ main {
 	opacity: 1;
 }
 
-/* Media Query: Ẩn dropdown trên mobile */
+
 @media ( max-width : 768px) {
 	.dropdown {
 		display: none !important;
@@ -489,10 +489,10 @@ main {
 
 
 
-/*--------------------------Start CSS theater.jsp-----------------------------------------------*//* Cinema Grid: Tương tự movie-grid cho danh sách rạp */
+/*--------------------------Start CSS theater.jsp-----------------------------------------------*/
 section .cinema-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 item mỗi hàng */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 24px;
 }
 
@@ -500,7 +500,7 @@ section .cinema-grid {
     background-color: var(--bg-secondary);
     border-radius: var(--border-radius);
     overflow: hidden;
-    padding: 16px;                /* thêm padding cho đẹp */
+    padding: 16px;                
     transition: transform 0.2s;
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     display: flex;
@@ -508,7 +508,7 @@ section .cinema-grid {
 }
 
 .cinema-card:hover {
-    transform: translateY(-4px);  /* hiệu ứng hover nhẹ */
+    transform: translateY(-4px);  
     box-shadow: 0 6px 12px rgba(0,0,0,0.45);
 }
 
@@ -516,7 +516,7 @@ section .cinema-grid {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  background: linear-gradient(to bottom, var(--bg-color), var(--bg-secondary)); /* Placeholder nếu không có ảnh */
+  background: linear-gradient(to bottom, var(--bg-color), var(--bg-secondary)); 
 }
 
 .cinema-info {
@@ -529,7 +529,7 @@ section .cinema-grid {
 .cinema-info h3 {
   font-size: var(--font-size-large);
   margin-bottom: var(--spacing-sm);
-  color: var(--secondary-color); /* Vàng cho tên rạp */
+  color: var(--secondary-color); 
 }
 
 .cinema-info p {
@@ -562,7 +562,7 @@ section .cinema-grid {
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-/* Media Query: Thu nhỏ grid trên mobile */
+
 @media (max-width: 768px) {
   .cinema-grid {
     grid-template-columns: 1fr;
@@ -572,29 +572,29 @@ section .cinema-grid {
     height: 300px;
   }
 }
-/*--------------------------Start CSS theater.jsp-----------------------------------------------*//* Cinema Grid: Tương tự movie-grid cho danh sách rạp */
+/*--------------------------Start CSS theater.jsp-----------------------------------------------*/
 
 
 
 
 
-/*--------------------------Start CSS promotions.jsp(lược bỏ)-----------------------------------------------*//* Cinema Grid: Tương tự movie-grid cho danh sách rạp */
-/* Promotion Grid: Tương tự movie-grid cho danh sách ưu đãi */
+
+
 .promotion-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--spacing-md);
 }
 
-/*--------------------------End CSS promotions.jsp(lược bỏ)-----------------------------------------------*//* Cinema Grid: Tương tự movie-grid cho danh sách rạp */
 
 
 
 
 
-/*--------------------------Start CSS book-ticket.jsp-----------------------------------------------*//* Cinema Grid: Tương tự movie-grid cho danh sách rạp */
 
-/* Date Tabs: Chọn ngày chiếu */
+/*--------------------------Start CSS book-ticket.jsp-----------------------------------------------*/
+
+
 .date-tabs {
   display: flex;
   gap: var(--spacing-sm);
@@ -619,7 +619,7 @@ section .cinema-grid {
   color: var(--text-color);
 }
 
-/* Theater List: Accordion cho rạp */
+
 .theater-list {
   margin-bottom: var(--spacing-lg);
 }
@@ -708,7 +708,7 @@ section .cinema-grid {
   color: var(--bg-color);
 }
 
-/* Ticket Type: Loại vé bên trái sơ đồ */
+
 .ticket-type {
   display: flex;
   flex-direction: column;
@@ -742,7 +742,7 @@ section .cinema-grid {
   margin-top: var(--spacing-sm);
 }
 
-/* Seat Map: Lưới 2D chữ nhật (16 hàng A-P x 10 cột, label dãy bằng kích thước ghế) */
+
 .seat-map {
   background: linear-gradient(to bottom, #1a1a1a, #000);
   padding: var(--spacing-lg);
@@ -823,7 +823,7 @@ section .cinema-grid {
 }
 
 .screen {
-  grid-column: 2 / -1; /* Chiếm 10 cột ghế */
+  grid-column: 2 / -1; 
   grid-row: 1;
   background: #000;
   color: #fff;
@@ -848,21 +848,21 @@ section .cinema-grid {
 }
 
 .row-label {
-  grid-column: 1; /* Cột 1 (cột 0 trong 1-based) */
-  aspect-ratio: 1; /* Square như ghế */
+  grid-column: 1; 
+  aspect-ratio: 1; 
   background: #444;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 10px; /* Bằng font ghế */
+  font-size: 10px; 
   border: 1px solid #555;
   text-transform: uppercase;
 }
 
 .col-label {
-  display: none; /* Ẩn label cột, chỉ giữ label dãy */
+  display: none; 
 }
 
 .seat-cell {
@@ -879,8 +879,8 @@ section .cinema-grid {
 }
 
 .seat-cell.double-span {
-  grid-column: span 2; /* Ghế đôi: 1 hàng 2 cột */
-  justify-self: center; /* Căn giữa 2 cột */
+  grid-column: span 2; 
+  justify-self: center; 
 }
 
 .seat-cell.available {
@@ -1054,7 +1054,7 @@ section .cinema-grid {
   }
 
   .seat-grid {
-    grid-template-columns: repeat(10, 1fr); /* Không label trên mobile */
+    grid-template-columns: repeat(10, 1fr); 
     gap: 0.5px;
   }
 
@@ -1063,7 +1063,7 @@ section .cinema-grid {
   }
 
   .row-label {
-    display: none; /* Ẩn label dãy trên mobile nếu cần */
+    display: none; 
   }
 
   .seat-cell {
@@ -1082,14 +1082,14 @@ section .cinema-grid {
     font-size: 14px;
   }
 }
-/*--------------------------End CSS book-ticket.jsp-----------------------------------------------*//* Cinema Grid: Tương tự movie-grid cho danh sách rạp */
+/*--------------------------End CSS book-ticket.jsp-----------------------------------------------*/
 
 
 
 
 
 
-/*--------------------------Start CSS loign.jsp/register.jsp-----------------------------------------------*//* Cinema Grid: Tương tự movie-grid cho danh sách rạp */
+/*--------------------------Start CSS loign.jsp/register.jsp-----------------------------------------------*/
 
 /* Login/Register Form Styles: Dark theme, centered form */
 .auth-container {
@@ -1245,7 +1245,7 @@ section .cinema-grid {
   }
 }
 
-/*--------------------------End CSS loign.jsp/register.jsp  -----------------------------------------------*//* Cinema Grid: Tương tự movie-grid cho danh sách rạp */
+/*--------------------------End CSS loign.jsp/register.jsp  -----------------------------------------------*/
 
 
 
@@ -1567,7 +1567,7 @@ section .cinema-grid {
 
 
 /*-------------------------------------------------Start my-booking.jsp(xem lich su dat ve)------------------------------------------*/
-/* Styles cho my-bookings.jsp: Bảng lịch sử đặt vé, filter, status badges */
+
 .bookings-container {
   padding: var(--spacing-md);
 }
@@ -1699,7 +1699,7 @@ section .cinema-grid {
 
 
 
-/*-------------------------------------------------Start forgot-password.jsp(quên mật khẩu)------------------------------------------*/
+
 
 /* Forgot Password Form: Similar to login, email only */
 .forgot-container {
@@ -1752,27 +1752,27 @@ section .cinema-grid {
 }
 
 
-/*-------------------------------------------------End forgot-password.jsp(quên mật khẩu)------------------------------------------*/
 
-/* ... (Code cũ giữ nguyên) ... */
+
+
 
 /*-------------------------------------------------Start Profile Page Enhancements------------------------------------------*/
-/* Hiệu ứng ẩn hiện mượt mà cho form đổi mật khẩu */
+
 #passwordSection {
-    display: none; /* Mặc định ẩn */
+    display: none; 
     margin-top: var(--spacing-lg);
     border-top: 1px dashed #555;
     padding-top: var(--spacing-lg);
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Định nghĩa Animation */
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Nút bật tắt form đổi mật khẩu */
+
 .btn-toggle {
     background-color: transparent;
     border: 1px solid #555;
@@ -1792,8 +1792,8 @@ section .cinema-grid {
 }
 /*-------------------------------------------------End Profile Page Enhancements------------------------------------------*/
 .password-wrapper {
-	position: relative; /*vị trí tương đối*/
-	/*input chừa ra 40px bên phải để không bị chữ đè lên con mắt */
+	position: relative; 
+	
 }
 .password-wrapper input{
 	width:100%;
@@ -1806,12 +1806,167 @@ section .cinema-grid {
 	top:50%;
 	 transform: translateY(-50%);
 	 cursor: pointer;
-	 user-select: none; /* Tránh bị bôi đen khi click nhanh */
+	 user-select: none; 
  }
-	/* Hiệu ứng nhỏ khi di chuột vào con mắt */
+	
 	.toggle-password-icon:hover {
 		opacity: 0.7;
 	}
+
+
+
+
+input[type="text"], 
+input[type="password"], 
+input[type="email"], 
+input[type="tel"], 
+select, 
+textarea {
+    background-color: #111 !important;
+    color: var(--text-color) !important;
+    border: 1px solid #333 !important;
+    border-radius: var(--border-radius) !important;
+    padding: 10px 14px !important;
+    font-family: var(--font-family) !important;
+    font-size: 14px !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+input[type="text"]:focus, 
+input[type="password"]:focus, 
+input[type="email"]:focus, 
+input[type="tel"]:focus, 
+select:focus, 
+textarea:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 8px rgba(229, 9, 20, 0.4) !important;
+    outline: none !important;
+}
+
+
+.bookings-table, 
+.booking-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background-color: var(--bg-secondary) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    margin: var(--spacing-md) 0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid #222 !important;
+}
+
+.bookings-table th, 
+.booking-table th {
+    background-color: #1a1a1a !important;
+    color: var(--secondary-color) !important;
+    padding: 14px 16px !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+    border-bottom: 2px solid #333 !important;
+    text-transform: uppercase !important;
+    font-size: 13px !important;
+    letter-spacing: 0.5px !important;
+}
+
+.bookings-table td, 
+.booking-table td {
+    padding: 14px 16px !important;
+    border-bottom: 1px solid #222 !important;
+    color: var(--text-color) !important;
+    font-size: 14px !important;
+}
+
+.bookings-table tr:hover, 
+.booking-table tr:hover {
+    background-color: rgba(229, 9, 20, 0.05) !important;
+}
+
+
+.status-badge {
+    display: inline-block !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+    letter-spacing: 0.5px !important;
+}
+
+.status-confirmed {
+    background-color: rgba(46, 204, 113, 0.15) !important;
+    color: #2ecc71 !important;
+    border: 1px solid rgba(46, 204, 113, 0.3) !important;
+}
+
+.status-pending {
+    background-color: rgba(241, 196, 15, 0.15) !important;
+    color: #f1c40f !important;
+    border: 1px solid rgba(241, 196, 15, 0.3) !important;
+}
+
+.status-cancelled {
+    background-color: rgba(231, 76, 60, 0.15) !important;
+    color: #e74c3c !important;
+    border: 1px solid rgba(231, 76, 60, 0.3) !important;
+}
+
+
+.action-btn {
+    display: inline-block !important;
+    padding: 6px 14px !important;
+    border-radius: 4px !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    text-align: center !important;
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.action-btn:hover {
+    filter: brightness(1.1) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+.action-btn:active {
+    transform: translateY(0) !important;
+}
+
+
+@media (max-width: 768px) {
+    .top-nav {
+        flex-direction: column !important;
+        gap: var(--spacing-md) !important;
+        text-align: center !important;
+        padding: var(--spacing-md) 0 !important;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        width: 100% !important;
+        padding: 0 !important;
+        gap: var(--spacing-sm) !important;
+    }
+    
+    .nav-links li {
+        margin: 4px 0 !important;
+    }
+    
+    .user-actions {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        width: 100% !important;
+        gap: var(--spacing-sm) !important;
+    }
+}
+
 
 
 

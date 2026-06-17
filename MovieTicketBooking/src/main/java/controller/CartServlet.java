@@ -60,14 +60,14 @@ public class CartServlet extends HttpServlet {
 
         try {
             if ("add".equals(action)) {
-                String typeStr = request.getParameter("type"); // "TICKET" hoặc "COMBO"
+                String typeStr = request.getParameter("type");
                 CartItemType type = CartItemType.valueOf(typeStr);
 
                 if (type == CartItemType.TICKET) {
                     int showtimeId = Integer.parseInt(request.getParameter("showtimeId"));
                     int seatId = Integer.parseInt(request.getParameter("seatId"));
 
-                    // Kiểm tra xem vé ghế này đã có trong giỏ hàng chưa
+
                     boolean exists = false;
                     for (CartItem ci : cart.getItems()) {
                         if (ci.getItemType() == CartItemType.TICKET &&

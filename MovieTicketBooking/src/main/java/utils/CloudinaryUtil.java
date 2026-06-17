@@ -8,16 +8,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * tiện ích quản lý upload và xóa ảnh trên Cloudinary
- */
+
 public class CloudinaryUtil {
     private static final Logger logger = Logger.getLogger(CloudinaryUtil.class.getName());
     private static Cloudinary cloudinary;
 
     static {
         try {
-            // Đọc thông số API key từ file application.properties
+
             String cloudName = ApplicationLoader.get("cloud_name");
             String apiKey = ApplicationLoader.get("cloud_api_key");
             String apiSecret = ApplicationLoader.get("cloud_api_secret");
@@ -38,15 +36,7 @@ public class CloudinaryUtil {
         }
     }
 
-    /**
-     * Tải ảnh lên Cloudinary
-     * @param inputStream Luồng dữ liệu của file ảnh
-     * @param fileName Tên file ảnh
-     * @param folder Thư mục lưu trên Cloudinary (ví dụ: "avatars", "movies")
-     * @param publicId Public ID của ảnh cũ cần ghi đè (nếu có)
-     * @return Map chứa thông tin kết quả upload (bao gồm url và public_id mới)
-     * @throws IOException Nếu xảy ra lỗi upload
-     */
+    
     public static Map<?, ?> uploadImage(InputStream inputStream, String fileName, String folder, String publicId) throws IOException {
         if (cloudinary == null) {
             throw new IOException("Cloudinary is not configured");
@@ -69,11 +59,7 @@ public class CloudinaryUtil {
         }
     }
 
-    /**
-     * Xóa ảnh trên Cloudinary
-     * @param publicId Public ID của ảnh cần xóa
-     * @return true nếu xóa thành công
-     */
+    
     public static boolean deleteImage(String publicId) {
         if (cloudinary == null || publicId == null || publicId.trim().isEmpty()) {
             return false;
@@ -89,9 +75,7 @@ public class CloudinaryUtil {
         }
     }
 
-    /**
-     * Kiểm tra Cloudinary đã sẵn sàng chưa
-     */
+    
     public static boolean isConfigured() {
         return cloudinary != null;
     }

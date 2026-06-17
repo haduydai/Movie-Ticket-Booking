@@ -44,6 +44,10 @@ public class Ticket {
 	@Column(name = "ticket_status")
 	private TicketStatus status;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "booking_id")
+	private Booking booking;
+
 	@Column(name = "created_at", insertable = false, updatable = false)
 	private LocalDateTime createdAt;
 

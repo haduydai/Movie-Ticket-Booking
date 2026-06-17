@@ -21,7 +21,7 @@ public interface IMovieDAO {
 	//Get all movies with status
 	List<Movie> getMoviesWithStatus(MovieStatus status);
 
-	// Tìm kiếm phim theo tên
+
 	List<Movie> getMoviesHaveNameLikeKeyword(String keyword);
 
 	// Get movie by id
@@ -42,7 +42,7 @@ public interface IMovieDAO {
 	// Get movies by cinema id
 	List<Movie> getMoviesByCinemaId(int cinemaId);
 
-	// Lọc thể loại phim, tag, quốc gia
+
 	List<Movie> filterMovies(String type, String country,String tag);
 
 

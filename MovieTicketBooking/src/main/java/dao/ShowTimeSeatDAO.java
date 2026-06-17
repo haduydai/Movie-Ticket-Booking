@@ -85,12 +85,12 @@ public class ShowTimeSeatDAO implements IShowTimeSeatDAO {
 			Connection conn = JDBCConnection.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 
-			// Tắt auto commit để batch hiệu quả
+
 			conn.setAutoCommit(false);
 
 			for (ShowTimeSeat sts : list) {
 				st.setString(1, sts.getSeatName());
-				// user_id có thể null
+
 				if (sts.getBookedBy() != null) {
 					st.setInt(2, sts.getBookedBy().getId());
 				} else {
@@ -102,7 +102,7 @@ public class ShowTimeSeatDAO implements IShowTimeSeatDAO {
 				st.addBatch();
 			}
 
-			// Thực thi batch
+
 			st.executeBatch();
 			conn.commit();
 			st.close();

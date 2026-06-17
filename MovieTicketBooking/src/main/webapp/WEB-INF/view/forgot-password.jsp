@@ -34,7 +34,7 @@
                 <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
             </div>
 
-            <%-- Thông báo lỗi động --%>
+            
             <p id="errorMsg" style="color: red; text-align: center; margin-bottom: 10px; display: none;"></p>
 
             <button type="submit" class="auth-btn">Gửi Mã OTP</button>

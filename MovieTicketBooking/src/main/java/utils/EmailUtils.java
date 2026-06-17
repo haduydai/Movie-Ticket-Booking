@@ -12,7 +12,7 @@ import jakarta.mail.internet.MimeMessage;
 
 public class EmailUtils {
     
-    // Tạo mã OTP ngẫu nhiên 6 số
+
     public static String generateOTP() {
         Random random = new Random();
         int otp = 100000 + random.nextInt(900000);
@@ -20,9 +20,9 @@ public class EmailUtils {
     }
 
     public static void sendEmail(String toEmail, String subject, String body) throws Exception {
-        // Cấu hình SMTP (Ví dụ dùng Gmail)
+
         final String fromEmail = "golike000004@gmail.com";
-        final String password = "ntbdcygslqcmeroi"; // Đảm bảo App Password này còn hạn nhé!
+        final String password = "ntbdcygslqcmeroi";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -37,7 +37,7 @@ public class EmailUtils {
             }
         });
 
-        // Bỏ try-catch ở đây để ném lỗi thẳng ra cho RegisterServlet bắt
+
         MimeMessage msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress(fromEmail));
         msg.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));

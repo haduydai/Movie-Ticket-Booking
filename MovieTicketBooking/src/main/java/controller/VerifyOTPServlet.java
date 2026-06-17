@@ -25,7 +25,7 @@ public class VerifyOTPServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String sessionOtp = (String) session.getAttribute("otp");
 
-        // kiem tra OTP hợp lệ hay không
+
         if (sessionOtp == null) {
             sendJsonResponse(response, "error", "Mã OTP đã hết hạn hoặc không tồn tại. Vui lòng gửi lại OTP!");
             return;
@@ -36,21 +36,21 @@ public class VerifyOTPServlet extends HttpServlet {
             return;
         }
 
-        //lấy object newUser từ session (được set ở RegisterServlet)
+
         model.User newUser = (model.User) session.getAttribute("newUser");
         if (newUser != null) {
-            // TH1: ĐĂNG KÝ
+
             dao.UserDAO dao = new dao.UserDAO();
             boolean isAdded = dao.addUser(newUser);
             if (isAdded) {
-                session.removeAttribute("newUser"); // xóa vì đã tồn tại user này
-                session.removeAttribute("otp"); // xóa otp
+                session.removeAttribute("newUser");
+                session.removeAttribute("otp");
                 sendJsonResponse(response, "success", "login");
             } else {
                 sendJsonResponse(response, "error", "Đăng ký thất bại vui lòng thử lại.");
             }
         } else {
-            // TH2: QUÊN MẬT KHẨU
+
             sendJsonResponse(response, "success", "reset-password");
         }
 

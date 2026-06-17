@@ -62,7 +62,7 @@ public class AddAccountServlet extends HttpServlet {
 			    return;
 			}
 
-			// check regex phone number: bắt đầu 0, đủ 10 số
+
 			if (!phonenumber.matches("^0\\d{9}$")) {
 			    backToAddPage(request, response, "Số điện thoại phải bắt đầu bằng 0 và đủ 10 số");
 			    return;

@@ -24,7 +24,7 @@
     <jsp:include page="header.jsp" />
 
     <main>
-        <%-- Hero Banner (Giữ nguyên) --%>
+        
         <section class="hero" style="height: 200px">
             <div class="hero-banner"
                 style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://www.impawards.com/2019/posters/avengers_endgame.jpg');"></div>
@@ -76,7 +76,7 @@
             <h2>Phim Đang Chiếu</h2>
             <div class="movie-grid">
                 
-                <%-- Kiểm tra nếu danh sách rỗng --%>
+                
                 <c:if test="${empty listShowing}">
                     <p style="color:white; font-style: italic;">Hiện chưa có phim đang chiếu.</p>
                 </c:if>
@@ -92,7 +92,7 @@
                             <h3>${m.name}</h3>
                             <div class="rating">${m.duration} phút</div>
                             <p class="genre">${m.type}</p>
-                            <%-- Nút Đặt Vé cho phim đang chiếu --%>
+                            
                             <a href="movie-detail?movieId=${m.id}" class="btn">Chi tiết</a>
                             <a href="book-ticket?movieId=${m.id}" class="btn">Đặt Vé</a>
                         </div>
@@ -105,7 +105,7 @@
             <h2>Phim Sắp Chiếu</h2>
             <div class="movie-grid">
                 
-                <%-- Kiểm tra nếu danh sách rỗng --%>
+                
                 <c:if test="${empty listUpcoming}">
                     <p style="color:white; font-style: italic;">Hiện chưa có phim sắp chiếu.</p>
                 </c:if>

@@ -17,7 +17,7 @@ import utils.EmailUtils;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
-	// Thêm hàm doGet để mở trang đăng ký
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(req, resp);
@@ -65,7 +65,7 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
         
-        // Kiểm tra xem Email đã tồn tại chưa
+
         if (dao.getUserByEmail(email) != null) {
             sendJsonResponse(response, "error", "Email này đã tồn tại.");
             return;
@@ -106,21 +106,21 @@ public class RegisterServlet extends HttpServlet {
 
         User newUser = new User(username, pass, email, phone, Role.USER);
        try {
-           //tạo mã otp ngâu nhiên
+
            String otp = EmailUtils.generateOTP();
-           //gửi mã vào email của người dùng
+
            EmailUtils.sendEmail(email, "Xác thực đăng ký MyCinema", "Mã otp của bạn là: " + otp);
 
-           //tạo session lưu tạm user vào
-                //khỏi tạo session
+
+
                 HttpSession session = request.getSession();
-                //xóa biến của luồng quên mật khẩu:
+
                 session.removeAttribute("resetEmail");
                    session.removeAttribute("resetUsername");
                 session.setAttribute("newUser",newUser);
-                //lưu tạm otp
+
             session.setAttribute("otp",otp);
-                //tụ huỷ sau 5p
+
             session.setMaxInactiveInterval(300);
              sendJsonResponse(response,"success","verify-otp");
 
@@ -130,7 +130,7 @@ public class RegisterServlet extends HttpServlet {
        }
     }
 
-        //  biến Servlet thành API trả về JSON
+
     private void sendJsonResponse(HttpServletResponse response, String status, String message) {
         try {
             response.setContentType("application/json; charset=UTF-8");

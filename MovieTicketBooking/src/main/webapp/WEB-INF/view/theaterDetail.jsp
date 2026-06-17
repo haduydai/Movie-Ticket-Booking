@@ -34,26 +34,50 @@
     <jsp:include page="header.jsp" />
 
     <main>
-        <%-- PHẦN 1: THÔNG TIN RẠP (Thay cho map) --%>
+        
         <section class="theater-info-header">
             <h1>${cinema.name}</h1>
             <p>📍 Địa chỉ: ${cinema.address}</p>
         </section>
 
-        <%-- PHẦN 2: DANH SÁCH PHIM TẠI RẠP NÀY --%>
+        
+        <section class="section" style="padding-bottom: 0;">
+            <h2 style="border-left: 4px solid var(--primary-color); padding-left: 10px; margin-bottom: 15px;">Chọn Phòng Chiếu</h2>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="theater-detail?id=${cinema.id}" 
+                   style="padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s;
+                          background-color: ${empty selectedRoomId ? 'var(--primary-color)' : '#222'};
+                          color: ${empty selectedRoomId ? 'white' : '#ccc'};
+                          border: 1px solid ${empty selectedRoomId ? 'var(--primary-color)' : '#444'};">
+                    Tất Cả Phòng
+                </a>
+                
+                <c:forEach items="${rooms}" var="r">
+                    <a href="theater-detail?id=${cinema.id}&roomId=${r.id}" 
+                       style="padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s;
+                              background-color: ${selectedRoomId == r.id ? 'var(--primary-color)' : '#222'};
+                              color: ${selectedRoomId == r.id ? 'white' : '#ccc'};
+                              border: 1px solid ${selectedRoomId == r.id ? 'var(--primary-color)' : '#444'};">
+                        Phòng ${r.name}
+                    </a>
+                </c:forEach>
+            </div>
+        </section>
+
+        
         <section class="section">
             <h2 style="border-left: 4px solid var(--primary-color); padding-left: 10px;">Phim Đang Chiếu Tại Đây</h2>
             
             <div class="movie-grid">
-                <%-- Nếu không có phim nào --%>
+                
                 <c:if test="${empty moviesAtCinema}">
                     <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                        <p style="color: white; font-size: 1.2rem;">Hiện chưa có lịch chiếu tại rạp này.</p>
-                        <a href="movies" class="btn" style="margin-top: 10px;">Xem Phim Tại Rạp Khác</a>
+                        <p style="color: white; font-size: 1.2rem;">Hiện chưa có lịch chiếu nào phù hợp tại đây.</p>
+                        <a href="theater-detail?id=${cinema.id}" class="btn" style="margin-top: 10px;">Xem Tất Cả Phòng</a>
                     </div>
                 </c:if>
 
-                <%-- Vòng lặp hiển thị phim --%>
+                
                 <c:forEach items="${moviesAtCinema}" var="m">
                     <div class="movie-card">
                       <img src="${m.imageUrl}" 
@@ -65,8 +89,8 @@
                             <div class="rating">★ ${m.duration} phút</div>
                             <p class="genre">${m.type}</p>
                             
-                            <%-- Nút đặt vé: Gửi kèm cả ID Phim và ID Rạp --%>
-                            <a href="book-ticket.jsp?id=${m.id}&cinemaId=${cinema.id}" class="btn">Đặt Vé</a>
+                            
+                            <a href="${pageContext.request.contextPath}/book-ticket?movieId=${m.id}" class="btn">Đặt Vé</a>
                         </div>
                     </div>
                 </c:forEach>

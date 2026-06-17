@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<%-- Nhúng CSS và Font --%>
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 
@@ -27,16 +27,16 @@
 
             <li><a href="theaters">Rạp</a></li>
             
-            <%-- Link Tài Khoản chỉ hiện khi đã đăng nhập (hoặc bạn có thể để luôn hiện để redirect) --%>
+            
             <c:if test="${not empty sessionScope.user}">
                 <li><a href="profile">Hồ Sơ</a></li>
             </c:if>
         </ul>
 
-        <%-- PHẦN XỬ LÝ ẨN/HIỆN ĐĂNG NHẬP --%>
+        
         <div class="user-actions">
     <c:choose>
-        <%-- Nếu ĐÃ đăng nhập (session có user) -> Hiện Tên & nút Logout --%>
+        
         <c:when test="${not empty sessionScope.user}">
             <span style="color: white; margin-right: 15px;">
                 Xin chào, <b>${sessionScope.user.username}</b>
@@ -44,7 +44,7 @@
             <a href="logout" class="btn btn-secondary">Đăng Xuất</a>
         </c:when>
 
-        <%-- Nếu CHƯA đăng nhập -> Hiện nút Login/Register --%>
+        
         <c:otherwise>
             <a href="login" class="btn btn-secondary">Đăng Nhập</a> 
             <a href="register" class="btn">Đăng Ký</a>
@@ -55,7 +55,7 @@
 
     <div class="search-bar-header">
         <div class="search-container">
-<%--             Tìm kiếm phim theo tên--%>
+
             <form action="search" method="get">
                 <input type="text" name="keyword" placeholder="Tìm kiếm phim">
                 <button type="submit" class="btn">Tìm Kiếm</button>
