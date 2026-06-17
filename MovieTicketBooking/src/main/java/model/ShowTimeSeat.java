@@ -3,7 +3,6 @@ package model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -85,6 +84,4 @@ public class ShowTimeSeat {
 	public int getShowTimeId() {
 		return showTime.getId();
 	}
-
-
 }
