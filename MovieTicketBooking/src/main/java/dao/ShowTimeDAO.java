@@ -36,7 +36,7 @@ public class ShowTimeDAO implements IShowTimeDAO {
 	public List<ShowTime> getAllShowTime() {
 		List<ShowTime> list = new ArrayList<>();
 		try {
-			String query = "SELECT showtime_id, showtime_price, start_time, created_at, movie_id, cinema_id, room_id FROM showtimes;";
+			String query = "SELECT showtime_id, showtime_price, start_time, created_at, movie_id, cinema_id, room_id FROM showtimes WHERE deleted_at IS NULL;";
 			Connection connect = JDBCConnection.getConnection();
 			Statement st = connect.createStatement();
 			ResultSet rs = st.executeQuery(query);
@@ -57,7 +57,7 @@ public class ShowTimeDAO implements IShowTimeDAO {
 	public ShowTime getShowTimeById(int id) {
 		ShowTime showTime = null;
 		try {
-			String query = "SELECT showtime_id, showtime_price, start_time, created_at, movie_id, cinema_id, room_id FROM showtimes WHERE showtime_id = ?;";
+			String query = "SELECT showtime_id, showtime_price, start_time, created_at, movie_id, cinema_id, room_id FROM showtimes WHERE showtime_id = ? AND deleted_at IS NULL;";
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
 			st.setInt(1, id);
@@ -82,7 +82,7 @@ public class ShowTimeDAO implements IShowTimeDAO {
 		// Query chuẩn không có ngoặc đơn
 		String query = "SELECT showtime_id, showtime_price, start_time, created_at, movie_id, cinema_id, room_id "
 				+ "FROM showtimes " + "WHERE movie_id = ? " + "AND start_time >= NOW() "
-				+ "AND start_time <= DATE_ADD(NOW(), INTERVAL ? DAY) " + "ORDER BY start_time ASC";
+				+ "AND start_time <= DATE_ADD(NOW(), INTERVAL ? DAY) AND deleted_at IS NULL " + "ORDER BY start_time ASC";
 		try {
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -106,7 +106,7 @@ public class ShowTimeDAO implements IShowTimeDAO {
 	public boolean addShowTime(ShowTime showTime) {
 		String conflictQuery = "SELECT COUNT(*) AS cnt FROM showtimes s JOIN movies m ON s.movie_id = m.movie_id "
 				+ "WHERE s.room_id = ? AND (? < DATE_ADD(s.start_time, INTERVAL m.movie_duration MINUTE)) "
-				+ "AND (s.start_time < DATE_ADD(?, INTERVAL ? MINUTE))";
+				+ "AND (s.start_time < DATE_ADD(?, INTERVAL ? MINUTE)) AND s.deleted_at IS NULL";
 		String insertQuery = "INSERT INTO showtimes (showtime_price, start_time, movie_id, cinema_id, room_id) VALUES "
 				+ "(?, ?, ?, ?, ?);";
 		try {
@@ -165,7 +165,7 @@ public class ShowTimeDAO implements IShowTimeDAO {
 	@Override
 	public boolean deleteShowTimeById(int id) {
 		try {
-			String query = "DELETE FROM showtimes WHERE showtime_id = ?;";
+			String query = "UPDATE showtimes SET deleted_at = NOW() WHERE showtime_id = ?;";
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
 			st.setInt(1, id);

@@ -74,7 +74,11 @@
                     <button type="button">Áp Dụng</button>
                 </div>
 
-                <button class="pay-btn">Thanh Toán 80,000 VNĐ</button>
+                <form action ="${pageContext.request.contextPath}/payment" method ="get">
+                    <input type ="hidden" name="ticketId" value="${ticket.id}">
+                    <button type="submit" class="pay-btn">Thanh Toán ${ticket.totalPrice} VNĐ</button>
+                </form>
+
                 <p style="color: var(--text-muted); font-size: 12px; text-align: center; margin-top: var(--spacing-md);">* Vé không hoàn tiền. Áp dụng ưu đãi nếu hợp lệ.</p>
             </section>
         </div>

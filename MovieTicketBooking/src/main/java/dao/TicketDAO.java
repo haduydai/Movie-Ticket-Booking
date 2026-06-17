@@ -137,7 +137,7 @@ public class TicketDAO implements ITicketDAO {
 			String ticketUid = UUID.randomUUID().toString();
 
 			// 2. Insert vào bảng TICKETS (Giữ nguyên)
-			String sqlTicket = "INSERT INTO tickets (ticket_uid, ticket_price, payment_method, ticket_status, ticket_seats, user_id, showtime_id) VALUES (?, ?, ?, 'PAID', ?, ?, ?)";
+			String sqlTicket = "INSERT INTO tickets (ticket_uid, ticket_price, payment_method, ticket_status, ticket_seats, user_id, showtime_id) VALUES (?, ?, ?, 'UNPAID', ?, ?, ?)";
 			psTicket = conn.prepareStatement(sqlTicket, Statement.RETURN_GENERATED_KEYS);
 			psTicket.setString(1, ticketUid);
 			psTicket.setBigDecimal(2, java.math.BigDecimal.valueOf(totalPrice));
@@ -266,6 +266,24 @@ public class TicketDAO implements ITicketDAO {
 			}
 		}
 		return sb.toString();
+	}
+
+	// tích hợp thanh toán VNPay
+	public int getLastetTicketIdByUser(int userId){
+		String sql = "SELECT ticket_id FROM tickets WHERE user_id = ? ORDER BY ticket_id DESC LIMIT 1";
+		try{
+			Connection conn = JDBCConnection.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1,userId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+				return rs.getInt("ticket_id");
+			}
+
+		} catch(Exception e){
+			logger.log(Level.SEVERE, "Error in getLastetTicketIdByUser", e);
+		}
+		return -1;
 	}
 
 }

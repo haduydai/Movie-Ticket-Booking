@@ -20,7 +20,7 @@ public class UserDAO implements IUserDAO {
 	@Override
 	public List<User> getAllUser() {
 		List<User> list = new ArrayList<>();
-		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users";
+		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE deleted_at IS NULL";
 		try (Connection connect = JDBCConnection.getConnection();
 				PreparedStatement st = connect.prepareStatement(query)) {
 			try (ResultSet rs = st.executeQuery()) {
@@ -40,7 +40,7 @@ public class UserDAO implements IUserDAO {
 	@Override
 	public User getUserById(int id) {
 		User user = null;
-		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE user_id = ?;";
+		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE user_id = ? AND deleted_at IS NULL;";
 		try (Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);) {
 			st.setInt(1, id);
@@ -61,7 +61,7 @@ public class UserDAO implements IUserDAO {
 	@Override
 	public User checkUser(String username) {
 		User user = null;
-		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE username = ?;";
+		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE username = ? AND deleted_at IS NULL;";
 		try (Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);){
 			st.setString(1, username);
@@ -82,7 +82,7 @@ public class UserDAO implements IUserDAO {
 	@Override
 	public User getUserByEmail(String email) {
 	    User user = null;
-	    String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE email = ?";
+		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE email = ? AND deleted_at IS NULL";
 	    try (Connection connect = JDBCConnection.getConnection();
 	        PreparedStatement st = connect.prepareStatement(query);) {
 	        st.setString(1, email);
@@ -101,7 +101,7 @@ public class UserDAO implements IUserDAO {
 	@Override
 	public User getUserByPhone(String phone) {
 		User user = null;
-		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE phonenumber = ?";
+		String query = "SELECT user_id, username, password, email, phonenumber, role FROM users WHERE phonenumber = ? AND deleted_at IS NULL";
 		try (Connection connect = JDBCConnection.getConnection();
 		     PreparedStatement st = connect.prepareStatement(query);) {
 			st.setString(1, phone);
@@ -161,7 +161,7 @@ public class UserDAO implements IUserDAO {
 	public boolean deleteUser(int id) {
 		try {
 			// Query string to get data
-			String queryString = "DELETE FROM users WHERE user_id = ?";
+			String queryString = "UPDATE users SET deleted_at = NOW() WHERE user_id = ?";
 			// Create connection
 			Connection connect = JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(queryString);

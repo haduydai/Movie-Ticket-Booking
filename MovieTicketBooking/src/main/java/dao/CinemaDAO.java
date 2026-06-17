@@ -21,7 +21,7 @@ public class CinemaDAO implements dao.ICinemaDAO {
 	public List<Cinema> getAllCinema() {
 		List<Cinema> list = new ArrayList<>();
 		try {
-			String query = "SELECT cinema_id, cinema_name, cinema_address, cinema_status FROM cinemas;";
+			String query = "SELECT cinema_id, cinema_name, cinema_address, cinema_status FROM cinemas WHERE deleted_at IS NULL;";
 			// Create connect
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -61,7 +61,7 @@ public class CinemaDAO implements dao.ICinemaDAO {
 	public Cinema getCinemaById(int id) {
 		Cinema cinema = null;
 		try {
-			String query = "SELECT cinema_id, cinema_name, cinema_address, cinema_status FROM cinemas WHERE cinema_id = ?;";
+			String query = "SELECT cinema_id, cinema_name, cinema_address, cinema_status FROM cinemas WHERE cinema_id = ? AND deleted_at IS NULL;";
 			// Create connect
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -131,7 +131,7 @@ public class CinemaDAO implements dao.ICinemaDAO {
 	@Override
 	public boolean deleteCinemaById(int id) {
 		try {
-			String query = "DELETE FROM cinemas WHERE cinema_id = ?;";
+			String query = "UPDATE cinemas SET deleted_at = NOW() WHERE cinema_id = ?;";
 			// Create connect
 			Connection connect = dao.JDBCConnection.getConnection();
 			PreparedStatement st = connect.prepareStatement(query);
@@ -172,7 +172,7 @@ public class CinemaDAO implements dao.ICinemaDAO {
 	public List<Cinema> searchCinemaByName(String keyword){
 		List<Cinema> list = new ArrayList<>();
 		try{
-			String sql = "SELECT cinema_id, cinema_name, cinema_address FROM cinemas WHERE cinema_name LIKE ? ";
+			String sql = "SELECT cinema_id, cinema_name, cinema_address FROM cinemas WHERE cinema_name LIKE ? AND deleted_at IS NULL";
 			Connection conn = dao.JDBCConnection.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + keyword + "%");

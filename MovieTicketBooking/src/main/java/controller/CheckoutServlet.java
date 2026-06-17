@@ -41,6 +41,10 @@ public class CheckoutServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+        if(user == null){
+            response.sendRedirect("login");
+            return;
+        }
         int showtimeId = Integer.parseInt(request.getParameter("showtimeId"));
         String seatsStr = request.getParameter("selectedSeats"); // "A1,A2"
        //double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
@@ -69,7 +73,11 @@ public class CheckoutServlet extends HttpServlet {
         if (success) {
             // Chuyển sang trang "Vé của tôi" hoặc trang "Thành công"
             // Ở đây mình chuyển về trang lịch sử đặt vé bạn đã có
-            response.sendRedirect("profile"); 
+            int ticketId = dao.getLastetTicketIdByUser(user.getId());
+            response.sendRedirect(request.getContextPath()
+                        + "/payment"
+                        + "?ticketId="
+                        + ticketId);
         } else {
             request.setAttribute("error", "Lỗi thanh toán! Ghế có thể đã bị người khác đặt.");
             request.getRequestDispatcher("/WEB-INF/view/checkout.jsp").forward(request, response);
