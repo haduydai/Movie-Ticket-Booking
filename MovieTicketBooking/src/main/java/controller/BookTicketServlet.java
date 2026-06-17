@@ -50,7 +50,8 @@ public class BookTicketServlet extends HttpServlet {
             
             // Lấy tên phim từ suất chiếu đầu tiên (nếu có) để hiển thị tiêu đề
             IMovieDAO movieDao = new MovieDAO();
-            if (!allShowTimes.isEmpty()) {
+            model.Movie movie = movieDao.getMovieById(movieId);
+            if (movie != null) {
                 request.setAttribute("movieName", movieDao.getMovieById(movieId).getName());
             }
 

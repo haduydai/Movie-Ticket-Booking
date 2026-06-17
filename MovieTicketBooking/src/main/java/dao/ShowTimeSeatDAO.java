@@ -19,6 +19,7 @@ public class ShowTimeSeatDAO implements IShowTimeSeatDAO {
 	private IShowTimeDAO showtimeDAO;
 	private IRoomDAO roomDAO;
 
+
 	public ShowTimeSeatDAO() {
 		userDAO = new UserDAO();
 		showtimeDAO = new ShowTimeDAO();
@@ -96,7 +97,7 @@ public class ShowTimeSeatDAO implements IShowTimeSeatDAO {
 					st.setNull(2, java.sql.Types.INTEGER);
 				}
 
-				st.setInt(3, sts.getShowTimeId());
+				st.setInt(3, sts.getShowTime().getId());
 				st.setInt(4, sts.getRoom().getId());
 				st.addBatch();
 			}
@@ -130,7 +131,7 @@ public class ShowTimeSeatDAO implements IShowTimeSeatDAO {
 				ps.setNull(1, java.sql.Types.INTEGER);
 				ps.setNull(2, java.sql.Types.INTEGER);
 			}
-			ps.setInt(2, showTimeSeatId);
+			ps.setInt(3, showTimeSeatId);
 			ps.executeUpdate();
 			ps.close();
 			conn.close();
@@ -138,7 +139,54 @@ public class ShowTimeSeatDAO implements IShowTimeSeatDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Override
+	public List<String> getBookedSeatNames(int showTimeId) {
+		List<String> seats = new ArrayList<>();
+		try{
+			String sql = "SELECT seat_name FROM showtimeseats WHERE showtime_id = ? AND user_id IS NOT NULL";
+			Connection conn = JDBCConnection.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, showTimeId);
+
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()){
+				seats.add(rs.getString("seat_name"));
+			}
+			rs.close();
+			ps.close();
+			conn.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return seats;
+	}
+
+	@Override
+	public void bookSeats(List<Integer> showTimeSeatId, User user, int ticketId) {
+		try{
+			String sql ="UPDATE showtimeseats SET user_id = ?, ticket_id = ? WHERE showtimeseat_id = ? ";
+			Connection conn = JDBCConnection.getConnection();
+			conn.setAutoCommit(false);
+			PreparedStatement ps = conn.prepareStatement(sql);
+			for(Integer seatId : showTimeSeatId){
+				ps.setInt(1,user.getId());
+				ps.setInt(2, ticketId);
+				ps.setInt(3, seatId);
+
+				ps.addBatch();
+			}
+			ps.executeBatch();
+			conn.commit();
+			ps.close();
+			conn.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	// map result set to show time seat
 	private ShowTimeSeat mapResultSetToShowTimeSeat(ResultSet rs) {
 		ShowTimeSeat sts = null;
@@ -152,9 +200,8 @@ public class ShowTimeSeatDAO implements IShowTimeSeatDAO {
 				bookedBy = userDAO.getUserById((int) user);
 			}
 				
-			ShowTime showTime = new ShowTime();
-			showTime.setId(rs.getInt("showtime_id"));
-			Room room = null;
+			ShowTime showTime = showtimeDAO.getShowTimeById(rs.getInt("showtime_id"));
+			Room room = roomDAO.getRoomById(rs.getInt("room_id"));
 			LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
 			LocalDateTime updatedAt = rs.getTimestamp("updated_at").toLocalDateTime();
 			sts = new ShowTimeSeat(id, seatName, room, bookedBy, showTime, createdAt, updatedAt);

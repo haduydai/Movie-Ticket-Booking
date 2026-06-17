@@ -136,13 +136,11 @@ public class TicketDAO implements ITicketDAO {
 			// 1. Tạo mã vé (Ticket UID)
 			String ticketUid = UUID.randomUUID().toString();
 
-			double pricePerSeat = totalPrice / seats.length;
-
 			// 2. Insert vào bảng TICKETS (Giữ nguyên)
-			String sqlTicket = "INSERT INTO tickets (ticket_uid, ticket_price, payment_method, ticket_status, ticket_seats, user_id, showtime_id) VALUES (?, ?, ?, 'PAID', ?, ?, ?)";
+			String sqlTicket = "INSERT INTO tickets (ticket_uid, ticket_price, payment_method, ticket_status, ticket_seats, user_id, showtime_id) VALUES (?, ?, ?, 'UNPAID', ?, ?, ?)";
 			psTicket = conn.prepareStatement(sqlTicket, Statement.RETURN_GENERATED_KEYS);
 			psTicket.setString(1, ticketUid);
-			psTicket.setBigDecimal(2, java.math.BigDecimal.valueOf(pricePerSeat));
+			psTicket.setBigDecimal(2, java.math.BigDecimal.valueOf(totalPrice));
 			psTicket.setString(3, paymentMethod);
 			psTicket.setString(4, convertListToString(seats));
 			psTicket.setInt(5, user.getId());
@@ -158,7 +156,7 @@ public class TicketDAO implements ITicketDAO {
 			}
 			// 3. Update bảng SHOWTIMESEATS (THAY ĐỔI Ở ĐÂY: Dùng UPDATE thay vì INSERT)
 			// Tìm đúng ghế của suất chiếu đó và cập nhật user_id
-			String sqlSeat = "UPDATE showtimeseats SET user_id = ?, ticket_id = ? WHERE showtime_id = ? AND seat_name = ?";
+			String sqlSeat = "UPDATE showtimeseats SET user_id = ?, ticket_id = ? WHERE showtime_id = ? AND seat_name = ? AND user_id IS NULL";
 			psSeat = conn.prepareStatement(sqlSeat);
 
 			for (String seat : seats) {
@@ -176,7 +174,7 @@ public class TicketDAO implements ITicketDAO {
 			for (int count : updateCounts) {
 				if (count == 0) {
 					// Nếu count == 0 tức là không tìm thấy ghế để update (Sai tên hoặc sai ID)
-					System.out.println("LỖI: Không tìm thấy ghế trong DB để update. Kiểm tra lại tên ghế!");
+//					System.out.println("LỖI: Không tìm thấy ghế trong DB để update. Kiểm tra lại tên ghế!");
 					throw new SQLException("Lỗi: Ghế không tồn tại hoặc đã bị người khác đặt.");
 				}
 			}
@@ -268,6 +266,24 @@ public class TicketDAO implements ITicketDAO {
 			}
 		}
 		return sb.toString();
+	}
+
+	// tích hợp thanh toán VNPay
+	public int getLastetTicketIdByUser(int userId){
+		String sql = "SELECT ticket_id FROM tickets WHERE user_id = ? ORDER BY ticket_id DESC LIMIT 1";
+		try{
+			Connection conn = JDBCConnection.getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1,userId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+				return rs.getInt("ticket_id");
+			}
+
+		} catch(Exception e){
+			logger.log(Level.SEVERE, "Error in getLastetTicketIdByUser", e);
+		}
+		return -1;
 	}
 
 }

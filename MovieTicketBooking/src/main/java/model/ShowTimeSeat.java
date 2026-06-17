@@ -41,7 +41,13 @@ public class ShowTimeSeat {
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private LocalDateTime updatedAt;
 
-	public ShowTimeSeat() {}
+	@Transient
+	private boolean vip;
+	@Transient
+	private double price;
+
+	public ShowTimeSeat() {
+	}
 
 	public ShowTimeSeat(int id, String seatName, Room room, User bookedBy, ShowTime showTime, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
