@@ -121,9 +121,7 @@ public class AddMovieServlet extends HttpServlet {
 			}
 		    String status = request.getParameter("status");
 		    String description = request.getParameter("description");
-		    String movieTag = request.getParameter("movieTag");
-		    String trailerUrl = request.getParameter("trailerUrl");
-			Movie movie = new Movie(name, type, directorName, actorsName, description, duration, country, imageUrl, MovieStatus.valueOf(status), movieTag, trailerUrl);
+			Movie movie = new Movie(name, type, directorName, actorsName, description, duration, country, imageUrl, MovieStatus.valueOf(status));
 			HttpSession session = request.getSession();
 			try {
 				boolean res = new MovieDAO().addMovie(movie);

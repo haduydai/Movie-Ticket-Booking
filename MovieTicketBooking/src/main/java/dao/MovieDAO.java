@@ -351,15 +351,8 @@ public class MovieDAO implements dao.IMovieDAO {
 			String description = rs.getString("movie_description");
 			String country = rs.getString("movie_country");
 			String imageUrl = rs.getString("movie_image_url");
-			String tag = null;
-			try {
-				tag = rs.getString("movie_tag");
-			} catch (SQLException ex) {}
-
-			String trailer = null;
-			try {
-				trailer = rs.getString("trailer_url");
-			} catch (SQLException ex) {}
+			String tag = rs.getString("movie_tag");
+			String trailer = rs.getString("trailer_url");
 
 			MovieStatus movieStatus = MovieStatus.valueOf(rs.getString("movie_status"));
 
