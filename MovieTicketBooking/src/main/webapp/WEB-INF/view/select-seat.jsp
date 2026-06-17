@@ -46,6 +46,7 @@
             
             <div class="seat-legend">
                 <div class="legend-item"><div class="legend-color available"></div><span>Ghế thường</span></div>
+                <div class="legend-item"><div class="legend-color vip"></div><span>Ghế VIP</span></div>
                 <div class="legend-item"><div class="legend-color selected"></div><span>Ghế chọn</span></div>
                 <div class="legend-item"><div class="legend-color taken"></div><span>Ghế đã đặt</span></div>
             </div>
@@ -57,8 +58,10 @@
             		<c:if test="${vs.index % cols == 0 }">
             			<div class="seat-cell">${alphabet[vs.index / cols] }</div>
             		</c:if>
-					<div class="seat-cell ${statusClass = (seat.bookedBy != null) ? 'taken' : 'available'}"
+					<div class="seat-cell ${seat.bookedBy != null ? 'taken' : 'available'}
+                                            ${seat.vip ? 'vip' : ''}"
 					     data-seat="${seat.seatName}"
+                         data-price="${seat.price}"
 					     onclick="toggleSeat(this, '${seat.seatName}')">
 					     ${seat.seatName}
 					     
@@ -91,7 +94,7 @@
     <jsp:include page="footer.jsp" />
 
     <script>
-        const ticketPrice = ${showTime.pricePerTicket};
+        <%--const ticketPrice = ${showTime.pricePerTicket};--%>
         let selectedSeats = [];
 
         function toggleSeat(element, seatName) {
@@ -112,7 +115,7 @@
             updateSummary();
         }
 
-        function updateSummary() {
+        /* function updateSummary() {
             const count = selectedSeats.length;
             const total = count * ticketPrice;
             
@@ -126,6 +129,21 @@
             // Cập nhật giá trị input ẩn form
             document.getElementById('inputSeats').value = selectedSeats.join(',');
             document.getElementById('inputTotal').value = total;
+        } */
+
+        function updateSummary() {
+            let total =0;
+            document.querySelectorAll(".seat-cell.selected").forEach(seat => {
+                total += parseFloat(seat.dataset.price);
+            });
+
+            document.getElementById("total-price-display").innerText = "Tổng tiên: "
+                + total.toLocaleString("vi-VN") + " VNĐ";
+
+            document.getElementById("seats-display").innerText = "Ghế đã chọn: "
+                + (selectedSeats.length > 0 ? selectedSeats.join(", "): "Chưa chọn");
+            document.getElementById("inputSeats").value = selectedSeats.join(",");
+            document.getElementById("inputTotal").value = total;
         }
 
         function submitBooking() {

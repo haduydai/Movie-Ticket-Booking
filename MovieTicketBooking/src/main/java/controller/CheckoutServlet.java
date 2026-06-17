@@ -41,12 +41,30 @@ public class CheckoutServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+        if(user == null){
+            response.sendRedirect("login");
+            return;
+        }
         int showtimeId = Integer.parseInt(request.getParameter("showtimeId"));
         String seatsStr = request.getParameter("selectedSeats"); // "A1,A2"
-        double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
+       //double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
+        // tính tổng tiền vé trong giỏ hàng
         String paymentMethod = request.getParameter("paymentMethod");
 
         String[] seats = seatsStr.split(",");
+        // tính tổng tiền vé dựa vào việc chọn ghế ngồi
+        double totalPrice = 0;
+        for(String seat : seats){
+            char row= seat.charAt(0);
+            if(row == 'A' || row == 'B'){
+                totalPrice += 120000;
+            }
+            else{
+                totalPrice += 90000;
+            }
+        }
+
+        request.setAttribute("totalPrice", totalPrice);
         
         TicketDAO dao = new TicketDAO();
         // Gọi hàm Transaction vừa viết ở DAO
@@ -55,7 +73,11 @@ public class CheckoutServlet extends HttpServlet {
         if (success) {
             // Chuyển sang trang "Vé của tôi" hoặc trang "Thành công"
             // Ở đây mình chuyển về trang lịch sử đặt vé bạn đã có
-            response.sendRedirect("profile"); 
+            int ticketId = dao.getLastetTicketIdByUser(user.getId());
+            response.sendRedirect(request.getContextPath()
+                        + "/payment"
+                        + "?ticketId="
+                        + ticketId);
         } else {
             request.setAttribute("error", "Lỗi thanh toán! Ghế có thể đã bị người khác đặt.");
             request.getRequestDispatcher("/WEB-INF/view/checkout.jsp").forward(request, response);

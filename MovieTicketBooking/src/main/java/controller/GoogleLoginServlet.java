@@ -45,9 +45,6 @@ public class GoogleLoginServlet extends HttpServlet {
             resp.sendRedirect(authorizationUrl);
             return;
         }
-        //new
-        // gọi API lấy Access  Token
-        //test
         // --- Lấy thông tin Email và Name ---
         // ---  Kiểm tra DB và xử lý đăng nhập ---
         try {

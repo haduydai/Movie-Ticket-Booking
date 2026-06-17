@@ -121,27 +121,21 @@ public class EditMovieServlet extends HttpServlet {
 					}
 					String submitted = Paths.get(posterPart.getSubmittedFileName()).getFileName().toString();
 					String fileName = System.currentTimeMillis() + "-" + submitted;
-
-					// Xoa ảnh	 cu tren Cloudinary neu co
-					if (existingPublicId != null && !existingPublicId.trim().isEmpty()) {
-						utils.CloudinaryUtil.deleteImage(existingPublicId);
-						System.out.println("đã xóa ảnh cũ trên cloud, id: " + existingPublicId);
+					String uploadDir = request.getServletContext().getRealPath("/images/posters");
+					Path uploadPath = Paths.get(uploadDir);
+					if (!Files.exists(uploadPath)) {
+						Files.createDirectories(uploadPath);
 					}
-
-					// Upload anh moi len Cloudinary
+					Path filePath = uploadPath.resolve(fileName);
 					try (InputStream is = posterPart.getInputStream()) {
-						java.util.Map<?, ?> ketQua = utils.CloudinaryUtil.uploadImage(is, fileName, "movies", null);
-						imageUrl = (String) ketQua.get("url");
-						publicId = (String) ketQua.get("public_id");
-						System.out.println("đã xóa ảnh mới trên cloud, url: " + imageUrl);
+						Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
 					}
+					imageUrl = request.getContextPath() + "/images/posters/" + fileName;
 				} else {
 					imageUrl = request.getParameter("existingImageUrl");
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				backToEditPage(request, response, "Lỗi khi xử lý ảnh trên Cloudinary");
-
+			} catch (IllegalStateException ex) {
+				backToEditPage(request, response, "File tải lên quá lớn");
 				return;
 			}
 		    if(imageUrl == null || imageUrl.isBlank()) {
@@ -150,8 +144,12 @@ public class EditMovieServlet extends HttpServlet {
 			}
 		    String status = request.getParameter("status");
 		    String description = request.getParameter("description");
-			Movie movie = new Movie(name, type, directorName, actorsName, description, duration, country, imageUrl, MovieStatus.valueOf(status));
+
+			String movieTag = request.getParameter("movieTag");
+			String trailerUrl = request.getParameter("trailerUrl");
+			Movie movie = new Movie(name, type, directorName, actorsName, description, duration, country, imageUrl, MovieStatus.valueOf(status), movieTag, trailerUrl);
 			movie.setImagePublicId(publicId);
+
 		    int update = new MovieDAO().updateMovie(id, movie);
 		    // Put message to session
 		    HttpSession session = request.getSession();

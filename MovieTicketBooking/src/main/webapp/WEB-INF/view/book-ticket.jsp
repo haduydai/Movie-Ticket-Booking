@@ -91,7 +91,9 @@
 			                <a href="select-seat?showtimeId=${st.id}" class="showtime-slot" 
 			                    style="background:#c40000; text-decoration:none; color:white; text-align:center; padding:10px 14px; border-radius:6px;">
 			                    <span style="font-size: 18px; font-weight:bold;">
-			                        ${st.startTime.toLocalTime()}
+									<fmt:formatDate value="${st.startTimeAsDate}" pattern="HH:mm">
+
+									</fmt:formatDate>
 			                    </span><br>
 			                    <span style="font-size: 12px; font-weight: normal; color:#fff;">
 			                        <fmt:formatNumber value="${st.pricePerTicket}" type="currency" currencySymbol="₫"/>
